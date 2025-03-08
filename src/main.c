@@ -17,19 +17,17 @@ struct Function {
 };
 
 void print(struct Function *func) {
-  for (size_t i = 0; i < func->size; i++)
-  {
-    printf("%lu : %p\n", i, (void*)(func->steps[i]));
-  } 
+  for (size_t i = 0; i < func->size; i++) {
+    //printf("%lu : %p\n", i, (void *)(func->steps[i]));
+  }
 }
-
 
 struct Function init(size_t size) {
   struct Function func;
 
   func.size = size;
 
-  size_t block_size = size * sizeof(function_t);
+  //size_t block_size = size * sizeof(function_t);
 
   func.steps = (function_t *)calloc(size, sizeof(function_t));
   if (func.steps == NULL)
@@ -64,8 +62,7 @@ struct Function build_function(size_t size, char *args[]) {
   return func;
 }
 
-double evaluate(const struct Function *func) {
-  double x = 2;
+double evaluate(const struct Function *func, double x) {
   for (size_t i = 0; i < func->size; i++) {
     function_t step = func->steps[i];
     if (step == NULL)
@@ -76,20 +73,27 @@ double evaluate(const struct Function *func) {
 }
 
 int main(int argc, char *argv[]) {
-  printf("Identity address: %p | Add address : %p | Mult address: %p \n",
-         &identity, &add, &mult);
+  //printf("Identity address: %p | Add address : %p | Mult address: %p \n",
+  //       &identity, &add, &mult);
 
   if (argc < 2)
     return -1;
-  
-  printf("Building function with %d steps.\n", argc-1);
-  struct Function func = build_function(argc - 1, argv + 1); 
-  
+
+  printf("Building function with %d steps.\n", argc - 1);
+  struct Function func = build_function(argc - 1, argv + 1);
+
   print(&func);
 
-  double y = evaluate(&func);
-  printf("Output: %f", y);
-  
+  double x = 0;
+  char buffer[64];
+
+  while (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+    if (buffer[0] == '\n' || buffer[0] == '\0') break;
+    sscanf(buffer, "%lf", &x);
+    double y = evaluate(&func, x);
+    printf("Output: %lf\n", y);
+  }
+
   destroy(&func);
 
   return 0;
