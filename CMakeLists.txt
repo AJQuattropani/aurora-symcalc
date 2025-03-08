@@ -13,6 +13,7 @@ cmake_policy(SET CMP0072 NEW)
 find_package(OpenGL REQUIRED)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
+# file(GLOB HEAD_FILES ${PROJECT_SOURCE_DIR}/src/*.h)
 
 if(MSVC)
   add_compile_options(/W4)
