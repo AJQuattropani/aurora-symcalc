@@ -1,4 +1,8 @@
 # Aurora Scientific Calculator
+
+In-Dev Project for performing conventional and abstract calculations on input functions such as direct evaluation, graphing, symbolic differentiation, root-finding, and integration.
+For when Desmos just isn't cutting it!
+
 ## How To Build:
 1. Make a new directory and cd into new directory.
 ```bash
