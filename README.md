@@ -1,5 +1,4 @@
-# aurora-scicalc
-
+# Aurora Scientific Calculator
 ## How To Build:
 1. Make a new directory and cd into new directory.
 ```bash
