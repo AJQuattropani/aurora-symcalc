@@ -1,68 +1,55 @@
 #include "function.h"
 
 
-struct Function init(size_t size) {
-  struct Function func;
 
-  func.size = size;
-
-  //size_t block_size = size * sizeof(function_t);
-
-  func.steps = (function_t *)calloc(size, sizeof(function_t));
-  if (func.steps == NULL)
+struct Operation *a_operation(size_t n) {
+  struct Operation *operation =
+      (struct Operation *)calloc(n, sizeof(struct Operation));
+  if (operation == NULL) {
+    fprintf(stderr, "Operations buffer allocation failed.");
     exit(-1);
-
-  for (size_t i = 0; i < size; i++) {
-    func.steps[i] = &_identity;
   }
-  return func;
+  return operation;
 }
 
-void destroy(struct Function *func) {
-  func->size = 0;
-  free(func->steps);
-  func->steps = NULL;
+void a_free(struct Operation *operation) {
+  // protection against writing/freeing to null
+  if (operation == NULL)
+    return;
+  free(operation);
+  operation = NULL;
 }
 
-void print(struct Function *func) {
-  for (size_t i = 0; i < func->size; i++) {
-    //printf("%lu : %p\n", i, (void *)(func->steps[i]));
-  }
+void a_free_recursive(struct Operation *operation) {
+  if (operation == NULL)
+    return;
+  // free left and right branches
+  a_free_recursive(operation->_left);
+  a_free_recursive(operation->_right);
+
+  free(operation);
+  operation = NULL;
 }
 
+double a_evaluate(const struct Operation *operation, double x) {
+  // BASE CASE 1: no operation - identity
+  if (operation == NULL)
+    return x;
 
-struct Function build_function(size_t size, char *args[]) {
-  struct Function func = init(size);
+  //
+  mon_function_t mono = operation->post_function;
+  if (mono == NULL)
+    mono = &identity;
 
-  for (size_t i = 0; i < size; i++) {
-    if (strncmp(args[i], "add", 3) == 0) {
-      func.steps[i] = &_add;
-      continue;
-    }
-    if (strncmp(args[i], "mult", 4) == 0) {
-      func.steps[i] = &_mult;
-      continue;
-    }
-    if (strncmp(args[i], "pow", 3) == 0) {
-      func.steps[i] = &_pow;
-      continue;
-    }
+  // BASE CASE 2: operation exists with no dependencies - constant
+  if ((operation->_left == NULL && operation->_right == NULL) ||
+      operation->binary_function == NULL)
+    return mono(operation->_default);
 
-  }
-  return func;
+  double in_left = a_evaluate(operation->_left, x);
+  double in_right = a_evaluate(operation->_right, x);
+
+  double y = operation->binary_function(in_left, in_right);
+  return mono(y);
 }
-
-double evaluate(const struct Function *func, double x) {
-  for (size_t i = 0; i < func->size; i++) {
-    function_t step = func->steps[i];
-    if (step == NULL)
-      exit(-1);
-    x = step(x, x);
-  }
-  return x;
-}
-
-
-
-
 

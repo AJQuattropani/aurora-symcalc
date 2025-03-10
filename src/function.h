@@ -1,46 +1,27 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 
-#include "fmath.h"
-
-typedef double (*function_t)(double, double);
-struct Function {
-  // double(**steps)(double,double);
-  function_t *steps;
-  size_t size;
-};
-
-
+#include "operation.h"
 
 /**
- * Returns the identity function with n entries.
-  */
-struct Function init(size_t n);
-
-/**
- * Performs memory cleanup on the function.
- */
-void destroy(struct Function *func);
-
-/**
-* Prints the steps of the function.
- */
-void print(struct Function* func);
-
-/**
-* Builds a new functiom from a set strings encoding instructions.
+* Initializes a buffer of operations.
 */
-struct Function build_function(size_t size, char* args[]);
+struct Operation *a_operation(size_t n);
 
 /**
-* Evaluates the function from input variable x.
+* Frees the data without destroying branches.
 */
-double evaluate(const struct Function *func, double x);
+void a_free(struct Operation *operation);
 
+/**
+* Frees the operation and recursively destroys all sub-branches.
+*/
+void a_free_recursive(struct Operation *operation);
 
-
-
-
+/**
+* Evaluates recursively from its branches up to its root.
+*/
+double a_evaluate(const struct Operation *operation, double x);
