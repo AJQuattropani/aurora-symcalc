@@ -2,6 +2,8 @@
 
 #include "../src/operations.h"
 
+const double EPS = 0.000000000001;
+
 void test_add()
 {
   double a = 1.0;
@@ -31,13 +33,13 @@ void test_mult()
 
   double prod = a_mult(&nums[0], 5);
   double ans = a*b*c*d*e;
-  const double EPS = 0.000000001;
-  double err = fabs(prod-ans);
-  if (fabs(prod-ans) < EPS) {
-    printf("FAILED test_mult(1), a_mult yieled %lf | expected: %lf \n", prod, a*b*c*d*e);
+  double err = fabs((prod-ans)/ans);
+  printf("INFO: test_mult(1) error was %lf \n", err);
+  if (err >= EPS) {
+    printf("FAILED test_mult(1), a_mult yieled %lf | expected: %lf \n", prod, ans);
     return;
   }
-  printf("INFO: test_mult(1) error was %lf \n", err);
+
 
   prod = a_mult(&nums[0], 1);
   if (prod != a) {
@@ -54,10 +56,36 @@ void test_mult()
   printf("test_mult passed.\n");
 }
 
+void test_log()
+{
+  double a = 345.24;
+  double b = 250.0;
+  double c = 2.2;
+  double d = 29;
+  double e = 0.45;
+
+  double nums[5] = {a,b,c,d,e};
+
+  double ans = log(a) * log(c) * log(e) / (log(b) * log(d));
+  
+  double prod = a_log(&nums[0], 5);
+  double err = fabs((prod-ans)/ans);
+  printf("INFO: test_log(1) error was %lf \n", err);
+  if (err >= EPS) {
+    printf("FAILED test_log(1), a_log yieled %lf | expected %lf \n", prod, ans);
+    return;
+  }
+
+  printf("test_log passed.\n");
+
+}
+
 
 int main() {
   test_add();
   test_mult();
+  test_log();
+
   return 0;
 }
 
