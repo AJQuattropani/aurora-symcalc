@@ -30,6 +30,9 @@ endif()
 file(GLOB TEST_FILES ${PROJECT_SOURCE_DIR}/*.c)
 message("Collecting these tests: ${TEST_FILES} \n")
 
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 foreach(test ${TEST_FILES})
   get_filename_component( testname ${test} NAME_WE)
   message("Building executable for ${testname}")
