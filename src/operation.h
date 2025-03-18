@@ -1,5 +1,13 @@
 #pragma once
 
+enum Type {
+  CNS = 0, // values mapped to priority
+  IDX = 1,
+  UNR = 2,
+  BIN = 3
+};
+
+
 typedef double (*bin_function_t)(const double, const double);
 typedef double (*mon_function_t)(const double);
 
