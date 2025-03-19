@@ -3,7 +3,7 @@
 // #include "../src/elementary.h"
 
 int main() {
-  printf("No tests.");
+  printf("No tests.\n");
   return 0;
 }
 

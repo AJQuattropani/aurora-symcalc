@@ -1,7 +1,7 @@
 #include "../src/tokenlist.h"
 
 void print_id(const struct token_list* tok) {
-  printf("ID: %d | ", tok->token.id);
+  printf("ID: %d\n", tok->token.id);
 }
 
 int main() {
