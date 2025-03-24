@@ -16,19 +16,40 @@ struct token {
   };
 };
 
-struct token_list {
+struct token_node {
   struct token token;
-  struct token_list* next;
+  struct token_node* next;
 };
 
-struct token_list *new_list();
+struct token_list {
+  struct token_node* head;
+  struct token_node* tail;
+  size_t size;
+};
 
-void free_list(struct token_list *list);
+/*
+ * Frees all elements.
+ */
+void empty_list(struct token_list* list);
 
-void for_each(struct token_list *list, void (*method)(const struct token_list *));
+/*
+ * Performs an operation accepting each element of the list as an input.
+ */
+void for_each(const struct token_list *list,
+              void (*method)(const struct token_node *));
 
-void emplace_front(struct token_list **list, struct token);
+/*
+ * Places an element at the back of the list.
+ */
+void emplace_back(struct token_list* list, const struct token* token);
 
-void combine_front(struct token_list **list, struct token_list *appendix);
+/*
+* Prints each element of the list in order.
+*/
+void print(const struct token_list *list);
 
-void print(const struct token_list *tok);
+
+
+
+
+

@@ -1,50 +1,82 @@
 #include "tokenlist.h"
 
-struct token_list *new_list() {
-  struct token_list *list =
-      (struct token_list *)calloc(1, sizeof(struct token_list));
+struct token_node *_new_node();
+
+/*
+ * Internal implementation functions.
+ */
+void _free_list(struct token_node *node);
+
+void _for_each(struct token_node *first, void (*method)(const struct token_node *));
+
+void _print(const struct token_node *tok);
+
+/*
+ * Definition of header functions.
+ */
+void print(const struct token_list *list) { 
+  printf("Size of list: %ld\n", list->size);
+  for_each(list, _print); 
+}
+
+void for_each(const struct token_list *list,
+              void (*method)(const struct token_node *)) {
+  _for_each(list->head, method);
+}
+
+void empty_list(struct token_list* list) {
+  _free_list(list->head);
+  list->size = 0;
+  list->tail = NULL;
+}
+
+void emplace_back(struct token_list* list, const struct token* token) {
+  struct token_node *tok = _new_node();
+  memcpy(&tok->token, token, sizeof(struct token));
+  
+  list->size++;
+
+  if (list->size == 0 || list->tail == NULL || list->head == NULL) {
+    list->tail = tok;
+    list->head = tok;
+    return;
+  }
+
+  list->tail->next = tok;
+  list->tail = tok;
+}
+
+
+/*
+ * Definitions of implementation functions.
+ */
+struct token_node *_new_node() {
+  struct token_node *list =
+      (struct token_node *)calloc(1, sizeof(struct token_node));
   if (list == NULL)
     exit(-1);
   return list;
 }
 
-void free_list(struct token_list *list) {
-  if (list == NULL) {
+void _free_list(struct token_node *node) {
+  if (node == NULL) {
     return;
   }
-  free_list(list->next);
-  free(list);
-  list = NULL;
+  _free_list(node->next);
+  free(node);
+  node = NULL;
 }
 
-void for_each(struct token_list *list, void (*method)(const struct token_list *)) {
-  for (struct token_list *ptr = list; ptr != NULL; ptr = ptr->next)
+void _for_each(struct token_node *list, void (*method)(const struct token_node *)) {
+  for (struct token_node *ptr = list; ptr != NULL; ptr = ptr->next)
     method(ptr);
 }
 
-void emplace_front(struct token_list **list, struct token token) {
-  struct token_list *appendix = (struct token_list*)malloc(sizeof(struct token_list));
-  if (appendix == NULL) {
-    fprintf(stderr, "Emplace malloc failed.");
-    exit(-1);
-  }
-  memcpy(&appendix->token, &token, sizeof(struct token));
-  appendix->next = *list; 
-  *list = appendix;
-}
-
-void combine_front(struct token_list **list, struct token_list *appendix) {
-  if (appendix == NULL) return;
-  struct token_list *last_ptr;
-  for (last_ptr = appendix; last_ptr->next != NULL; last_ptr = last_ptr->next);
-  last_ptr->next = *list;
-  *list = appendix;
-}
-
-void print(const struct token_list *tok) {
+void _print(const struct token_node *tok) {
   const struct token *t = &tok->token;
   printf("{%ld,", t->priority);
   if(t->type != CNS) printf("%c}, ", t->id);
   else
   printf("%lf}, ", t->cnst);
 }
+
