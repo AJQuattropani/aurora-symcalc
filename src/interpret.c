@@ -1,9 +1,9 @@
 #include "interpret.h"
 
-struct token_list *parse_string_tokens(const char *string, size_t n) {
+struct token_list parse_string_tokens(const char *string, size_t n) {
+  struct token_list token_list = {};
   if (string == NULL)
-    return NULL;
-  struct token_list *token_list;
+    return token_list;
 
   char *buff = (char *)malloc((n + 1) * sizeof(char));
   if (buff == NULL) {
@@ -39,7 +39,7 @@ struct token_list *parse_string_tokens(const char *string, size_t n) {
       }
       tok.type = CNS;
       tok.cnst = constant;
-      emplace_front(&token_list, tok);
+      emplace_back(&token_list, &tok);
       ptr += offset;
       break;
     }
@@ -55,14 +55,14 @@ struct token_list *parse_string_tokens(const char *string, size_t n) {
       }
       tok.type = BIN;
       tok.id = c;
-      emplace_front(&token_list, tok);
+      emplace_back(&token_list, &tok);
       ptr++;
       break;
     }
     case 'x': {
       tok.type = IDX;
       tok.id = c;
-      emplace_front(&token_list, tok);
+      emplace_back(&token_list, &tok);
       ptr++;
       break;
     }
@@ -71,7 +71,7 @@ struct token_list *parse_string_tokens(const char *string, size_t n) {
       { // handles implied multiplication using parens
         tok.type = BIN;
         tok.id = '*';
-        emplace_front(&token_list, tok);
+        emplace_back(&token_list, &tok);
       }
     default:
       tok.priority += -1 * (')' == c) | 1 * ('(' == c);

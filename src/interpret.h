@@ -9,7 +9,7 @@
 #include "function.h"
 #include "tokenlist.h"
 
-struct token_list *parse_string_tokens(const char *string, size_t n);
+struct token_list parse_string_tokens(const char *string, size_t n);
 
 struct Operation *build_function(const struct token_list* tokens);
 

@@ -8,11 +8,11 @@ int main() {
   char* string = "x^2-(1+2.5(x/2.2)^3)-3.3/x";
   //build_function(string, strlen(string));
   
-  struct token_list* tokens = parse_string_tokens(string, strlen(string));
+  struct token_list tokens = parse_string_tokens(string, strlen(string));
   
-  for_each(tokens, print);
+  print(&tokens);
 
-  free_list(tokens);
+  empty_list(&tokens);
 
   return 0;
 }
