@@ -15,6 +15,8 @@ int main() {
   emplace_back(&list, &c);
   
   print(&list);
+  
+  //for_each(&list, &print_id);
 
   empty_list(&list);
 
