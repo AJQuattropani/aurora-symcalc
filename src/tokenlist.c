@@ -30,6 +30,7 @@ void empty_list(struct token_list* list) {
   _free_list(list->head);
   list->size = 0;
   list->tail = NULL;
+  list->head = NULL;
 }
 
 void emplace_back(struct token_list* list, const struct token* token) {
