@@ -1,90 +1,47 @@
 #include "interpret.h"
 
 struct token_list parse_string_tokens(const char *string, size_t n) {
+  static struct reader_table READER_TABLE;
+  if (!INITIALIZED_READER_TABLE) init_parse_map(&READER_TABLE);
+  char *buff = (char *)malloc((n + 1) * sizeof(char));
+  
+  //context 
+  char *ptr = buff; // current location on the buffer over which
   struct token_list token_list = {};
+  struct token tok = {.type=BEG};
+  
   if (string == NULL)
     return token_list;
-
-  char *buff = (char *)malloc((n + 1) * sizeof(char));
+  // copy string input into buffer
   if (buff == NULL) {
-    fprintf(stderr, "Buffer allocation failed.");
+    fprintf(stderr, "Buffer allocation failed.\n");
     exit(-1);
   };
   strncpy(buff, string, n);
   
-  struct token tok;
-
-  char *ptr = buff;
   while (ptr < (buff + n)) {
     char c = *ptr;
-    switch (c) {
-    case '\0':
-      goto loopexit;
-    case '.':
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9': {
-      double constant;
-      int offset;
-      if (sscanf(ptr, "%lf%n", &constant, &offset) == 0) {
-        fprintf(stderr, "Unable to scan value at %s", ptr);
-        exit(1);
-      }
-      tok.type = CNS;
-      tok.cnst = constant;
-      emplace_back(&token_list, &tok);
-      ptr += offset;
-      break;
+    reader perform = READER_TABLE.pointers[(size_t)c];
+    if (perform == NULL) {
+      printf("Unrecognized value at %s\n", ptr);
+      exit(-2);
     }
-    case '+':
-    case '-':
-    case '*':
-    case '/':
-    case '^': {
-      if (!(tok.type == IDX || tok.type == CNS || tok.type == ')'))
-      { // syntax check ensuring operations are balanced by inputs
-        fprintf(stderr, "Syntax error: operation missing valid input.");
-        exit(3);
-      }
-      tok.type = BIN;
-      tok.id = c;
-      emplace_back(&token_list, &tok);
-      ptr++;
-      break;
+    int status = perform(ptr, &token_list, &tok);
+    if (0 == status) break;
+    if (0 > status) {
+      printf("\"%s\" Returned an error: %d at \'%c\'\n", __func__, status, c);
+      print(&token_list);
+      printf("Context:\n");
+      printf("{%ld,", tok.priority);
+      if(tok.type != CNS) printf("%c}, ", tok.id);
+      else
+        printf("%lf}, ", tok.cnst);
+      printf("%d \n", tok.type);
+      exit(-3);
     }
-    case 'x': {
-      tok.type = IDX;
-      tok.id = c;
-      emplace_back(&token_list, &tok);
-      ptr++;
-      break;
-    }
-    case '(':
-      if (tok.type == IDX || tok.type == CNS || tok.type == ')')
-      { // handles implied multiplication using parens
-        tok.type = BIN;
-        tok.id = '*';
-        emplace_back(&token_list, &tok);
-      }
-    default:
-      tok.priority += -1 * (')' == c) | 1 * ('(' == c);
-      tok.id = c;
-      if (0 > tok.priority) {
-        fprintf(stderr, "Syntax error: Malformed parenthesis.");
-        exit(3);
-      }
-      ptr++;
-    }
+    ptr += status;
   }
 
-loopexit:
   free(buff);
 
   return token_list;
