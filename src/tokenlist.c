@@ -15,8 +15,10 @@ void _print(const struct token_node *tok);
  * Definition of header functions.
  */
 void print(const struct token_list *list) { 
+  // TODO use formatters to limit number of prints
   printf("Size of list: %ld\n", list->size);
-  for_each(list, _print); 
+  for_each(list, _print);
+  printf("\n");
 }
 
 void for_each(const struct token_list *list,
