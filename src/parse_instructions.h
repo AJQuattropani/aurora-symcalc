@@ -24,6 +24,8 @@ enum PARSE_ERR {
   EXIT = 0,
   PAREN_ERROR = -1,
   INVALID_INPUT = -2,
+  INVALID_FUNC = -4,
+  FAILED_STR_READ = -5,
   FAILED_DBL_READ = -6,
 };
 

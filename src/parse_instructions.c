@@ -59,11 +59,94 @@ int p_binary(const char *string, struct token_list *list,
   return 1;
 }
 
-// TO DO IMPLEMENT. EXITS.
-int p_function([[maybe_unused]]const char *string, [[maybe_unused]]struct token_list *list,
+int p_function(const char *string, [[maybe_unused]]struct token_list *list,
                [[maybe_unused]]struct token *context) {
-  int skip = 0;
-  return skip;
+  char buff[7];
+  int displacement;
+  if (sscanf(string, "\\%6[^(]%n", &buff[0], &displacement) == 0) {
+    return FAILED_STR_READ;
+  }
+  size_t name_len = strlen(buff);
+  printf("Scanned: %s\n", buff);
+  if (name_len % 3 != 0) // only considering 3 and 6-letter named functions.
+    return INVALID_FUNC;
+  
+  context->type = UNR;
+  int lookup_result = INVALID_FUNC;
+  
+  if (0 == strcmp("sin", buff))
+  {
+    context->id = 's';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("cos", buff))
+  {
+    context->id = 'c';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("tan", buff))
+  {
+    context->id = 't';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("log", buff))
+  {
+    context->id = 'l';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("inv", buff))
+  {
+    context->id = '/';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("cot", buff))
+  {
+    context->id = 'T';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("sec", buff))
+  {
+    context->id = 'C';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("csc", buff))
+  {
+    context->id = 'S';
+    lookup_result = 4;
+  }
+  if (0 == strcmp("arccos", buff))
+  {
+    context->id = -'c';
+    lookup_result = 7;
+  }
+  if (0 == strcmp("arcsin", buff))
+  {
+    context->id = -'s';
+    lookup_result = 7;
+  }
+  if (0 == strcmp("arctan", buff))
+  {
+    context->id = -'t';
+    lookup_result = 7;
+  }
+  if (0 == strcmp("arcsec", buff))
+  {
+    context->id = -'C';
+    lookup_result = 7;
+  }
+  if (0 == strcmp("arccsc", buff))
+  {
+    context->id = -'S';
+    lookup_result = 7;
+  }
+  if (0 == strcmp("arccot", buff))
+  {
+    context->id = -'T';
+    lookup_result = 7;
+  }
+  if (lookup_result) emplace_back(list, context); 
+
+  return lookup_result;
 }
 
 int p_open_paren(const char* string, struct token_list *list, struct token *context) {
