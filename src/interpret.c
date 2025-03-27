@@ -28,7 +28,8 @@ struct token_list parse_string_tokens(const char *string, size_t n) {
     reader perform = READER_TABLE.pointers[(size_t)c];
     if (perform == NULL) {
       printf("Unrecognized value at %s\n", ptr);
-      exit(-2);
+      empty_list(&token_list);
+      break;
     }
     int status = perform(ptr, &token_list, &tok);
     if (0 == status) break;
@@ -41,9 +42,15 @@ struct token_list parse_string_tokens(const char *string, size_t n) {
       else
         printf("%lf}, ", tok.cnst);
       printf("%d \n", tok.type);
-      exit(-3);
+      empty_list(&token_list);
+      break;
     }
     ptr += status;
+  }
+  
+  if(tok.priority != 0) {
+    printf("Incomplete or invalid parenthesis in expression!\n");
+    empty_list(&token_list);
   }
 
   free(buff);
