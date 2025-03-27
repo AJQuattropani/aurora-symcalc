@@ -43,7 +43,6 @@ int p_exit(const char *string, struct token_list *list, struct token *context);
 int p_skip(const char *string, struct token_list *list, struct token *context);
 
 /**
- * NOT IMPLEMENTED YET
  * Instructions for when a open-unary-function character is reached, such as ['\\log'].
  */
 int p_function(const char *string, struct token_list *list,

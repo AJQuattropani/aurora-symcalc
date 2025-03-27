@@ -59,8 +59,8 @@ int p_binary(const char *string, struct token_list *list,
   return 1;
 }
 
-int p_function(const char *string, [[maybe_unused]]struct token_list *list,
-               [[maybe_unused]]struct token *context) {
+int p_function(const char *string, struct token_list *list,
+               struct token *context) {
   char buff[7];
   int displacement;
   if (sscanf(string, "\\%6[^(]%n", &buff[0], &displacement) == 0) {
