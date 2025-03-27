@@ -32,7 +32,7 @@ int p_implicit_mult([[maybe_unused]] const char *string, struct token_list *list
   */
 
 int p_exit([[maybe_unused]] const char *string, [[maybe_unused]] struct token_list *list, [[maybe_unused]] struct token *context) {
-  return 0; // 0 is the canonical value of "exit loop:"
+  return EXIT; // 0 is the canonical value of "exit loop:"
 }
 
 int p_skip([[maybe_unused]] const char *string, [[maybe_unused]] struct token_list *list, [[maybe_unused]] struct token *context) {
@@ -52,7 +52,7 @@ int p_variable(const char *string, struct token_list *list,
 
 int p_binary(const char *string, struct token_list *list,
              struct token *context) {
-  if (!valid_lvalue(context)) return -1; // throws an error
+  if (!valid_lvalue(context)) return INVALID_INPUT; // throws an error
   context->type = BIN;
   context->id = *string;
   emplace_back(list, context);
@@ -79,7 +79,7 @@ int p_open_paren(const char* string, struct token_list *list, struct token *cont
 }
 
 int p_close_paren([[maybe_unused]] const char *string, [[maybe_unused]]struct token_list *list, struct token *context) {
-  if (0 > context->priority) return -1; // if priority goes negative, invalid expression
+  if (0 > context->priority) return PAREN_ERROR; // if priority goes negative, invalid expression
   context->priority--;
   context->type = UNR; // unary used as type flag for parens
   context->id = ')';
@@ -108,7 +108,7 @@ int p_const(const char *string, struct token_list *list,
   double constant;
   int offset;
   if(sscanf(string, "%lf%n", &constant, &offset) == 0) {
-    return -6;
+    return FAILED_DBL_READ;
   }
   if (is_negative(context)) constant *= -1.0;
   context->type = CNS;

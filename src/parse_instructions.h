@@ -20,6 +20,12 @@
  *  may emerge.
  */
 
+enum PARSE_ERR {
+  EXIT = 0,
+  PAREN_ERROR = -1,
+  INVALID_INPUT = -2,
+  FAILED_DBL_READ = -6,
+};
 
 // type for function references. returns a positive integer to change offset by, or 0/negative for failures.
 typedef int (*reader)(const char* string, struct token_list *list, struct token *context);

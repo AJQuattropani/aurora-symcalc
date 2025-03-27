@@ -130,6 +130,5 @@ void init_parse_map(struct reader_table *table) {
   pointers['}'] = NULL;           // 7D
   pointers['~'] = NULL;           // 7E
   pointers[0x7F] = NULL;
-  INITIALIZED_READER_TABLE = 1;
 }
 

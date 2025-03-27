@@ -1,8 +1,12 @@
 #include "interpret.h"
 
 struct token_list parse_string_tokens(const char *string, size_t n) {
+  static int INITIALIZED_READER_TABLE = 0;
   static struct reader_table READER_TABLE;
-  if (!INITIALIZED_READER_TABLE) init_parse_map(&READER_TABLE);
+  if (!INITIALIZED_READER_TABLE) {
+    init_parse_map(&READER_TABLE);
+    INITIALIZED_READER_TABLE = 1;
+  }
   char *buff = (char *)malloc((n + 1) * sizeof(char));
   
   //context 
