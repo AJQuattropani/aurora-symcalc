@@ -4,22 +4,24 @@
 
 //#include "helpers/testing.h"
 
-int main() {
-  char* string = "x^2-(1+2.5(x/2.2)^3)-3.3/x\n";
-
+void test_for(const char* string)
+{
   printf("%s\n", string);
-
   struct token_list tokens = parse_string_tokens(string, strlen(string));
-  
   print(&tokens);
-  
-  char* string2 = "(x+1.1^1.1)(e^x-x*x)  - 2.2 \n";
-
-  struct token_list tokens2 = parse_string_tokens(string2, strlen(string2));
-  print(&tokens2);
-
   empty_list(&tokens);
-  empty_list(&tokens2);
+}
+
+int main() {
+  test_for("x^2-(1+2.5(x/2.2)^3)-3.3/x\n");
+  test_for("(x+1.1^1.1)(e^x-x*x)  - 2.2 \n");
+  test_for("x_2 + 13- \\sin(x) + \\arctan(x)");
+  test_for("x_2 + 13- \\sin(x^2) + \\arctan(x)");
+  test_for("x_2 + 13- \\sin(x^5) + \\arctan(x_3)");
+  test_for("x_2 + 13- \\sin(x + \\arctan(x)");
+  test_for("x_2 + 13- \\sinx) + \\arctanx ");
+  test_for("x_2 + 13- \\sinx ");
+
   return 0;
 }
 
