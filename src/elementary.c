@@ -1,7 +1,5 @@
 #include "elementary.h"
 
-
-
 double b_add(double left, double right) { return left + right; }
 double b_mult(double left, double right) { return left * right; }
 double b_pow(double base, double exp) { return pow(base, exp); }
