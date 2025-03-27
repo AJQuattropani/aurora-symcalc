@@ -1,6 +1,7 @@
 #pragma once
 
 enum Type {
+  BEG = -1,
   CNS = 0, // values mapped to priority
   IDX = 1,
   UNR = 2,
