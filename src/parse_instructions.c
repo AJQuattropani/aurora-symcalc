@@ -67,7 +67,7 @@ int p_function(const char *string, struct token_list *list,
     return FAILED_STR_READ;
   }
   size_t name_len = strlen(buff);
-  printf("Scanned: %s\n", buff);
+  //printf("Scanned: %s\n", buff);
   if (name_len % 3 != 0) // only considering 3 and 6-letter named functions.
     return INVALID_FUNC;
   
