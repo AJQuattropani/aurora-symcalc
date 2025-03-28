@@ -155,7 +155,7 @@ int p_function(const char *string, struct token_list *list,
 
 int p_open_paren(const char* string, struct token_list *list, struct token *context) {
   int result = p_implicit_mult(string, list, context); 
-  if (result) result = 0; 
+  if (1 == result) result = 0; 
   // REEXAMINE THIS LINE.
   // if (0 >= result) return result; // if implicit mult fails return its fail value
   // check for parenthetical multiplication and 
