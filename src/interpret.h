@@ -14,8 +14,4 @@ extern int INITIALIZED_READER_TABLE;
 
 struct token_list parse_string_tokens(const char *string, size_t n);
 
-struct Operation *build_function(const struct token_list* tokens);
-
-
-
-
+struct Operation *build_function(const struct token_list *tokens);

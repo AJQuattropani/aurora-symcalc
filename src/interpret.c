@@ -57,3 +57,7 @@ struct token_list parse_string_tokens(const char *string, size_t n) {
 
   return token_list;
 }
+struct Operation *build_function(const struct token_list *tokens) {
+
+  return NULL;
+};
