@@ -19,7 +19,7 @@ int main() {
   test_for("2x + 13.45- \\sin(e^2) + \\arctan(x)");
   test_for("x_2(x) + 13- \\sin(x + \\arctan(x)");
   test_for("x_2 + 13- \\sinx) + \\arctanx ");
-  test_for("x_2 + 13- \\ssnx ");
+  test_for("x_2 + e_(2\\sin(x-1.5))-\\arctan(x/2)^(2-x)x");
 
   return 0;
 }
