@@ -41,6 +41,8 @@ int p_skip([[maybe_unused]] const char *string, [[maybe_unused]] struct token_li
 
 int p_variable(const char *string, struct token_list *list,
                struct token *context) {
+  int result = p_implicit_mult(string, list, context); 
+  if (1 == result) result = 0;
   if (is_negative(context)) { // pushes back unary minus if unhandled negative preceeds it
     emplace_back(list, context);
   }
@@ -61,6 +63,8 @@ int p_binary(const char *string, struct token_list *list,
 
 int p_function(const char *string, struct token_list *list,
                struct token *context) {
+  int result = p_implicit_mult(string, list, context);
+  if (1 == result) result = 0;
   char buff[7];
   int displacement;
   if (sscanf(string, "\\%6[^(]%n", &buff[0], &displacement) == 0) {
