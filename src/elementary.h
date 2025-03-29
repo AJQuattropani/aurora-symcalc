@@ -7,6 +7,7 @@
 
 // Binary functions
 double b_add(double left, double right);
+double b_sub(double left, double right);
 double b_mult(double left, double right);
 double b_pow(double base, double exp);
 double b_log(double arg, double base);

@@ -1,9 +1,10 @@
 #include "elementary.h"
 
 double b_add(double left, double right) { return left + right; }
+double b_sub(double left, double right) { return left - right; }
 double b_mult(double left, double right) { return left * right; }
 double b_pow(double base, double exp) { return pow(base, exp); }
-double b_log(double arg, double base) { return log(arg) / log(base); }
+double b_log(double base, double arg) { return log(arg) / log(base); }
 double b_div(double num, double den) { return num / den; }
 
 double u_inv(double arg) { return 1.0 / arg; }
