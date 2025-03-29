@@ -2,7 +2,7 @@
 
 enum Type {
   BEG = -1,
-  CNS = 0, // values mapped to priority
+  CNS = 0, // values mapped to reverse-priority
   IDX = 1,
   UNR = 2,
   BIN = 3
