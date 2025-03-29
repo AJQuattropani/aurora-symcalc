@@ -25,3 +25,7 @@ void a_free_recursive(struct Operation *operation);
 * Evaluates recursively from its branches up to its root.
 */
 double a_evaluate(const struct Operation *operation, double x);
+
+
+
+
