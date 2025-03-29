@@ -9,7 +9,6 @@ void _free_list(struct token_node *node);
 
 void _for_each(struct token_node *first, void (*method)(const struct token_node *));
 
-void _print(const struct token_node *tok);
 
 /*
  * Definition of header functions.

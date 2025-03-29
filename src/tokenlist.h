@@ -48,8 +48,7 @@ void emplace_back(struct token_list* list, const struct token* token);
 */
 void print(const struct token_list *list);
 
-
-
-
-
-
+/*
+* Prints an individual token.
+*/
+void _print(const struct token_node *tok);
