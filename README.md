@@ -33,4 +33,10 @@ cmake ../aurora-scicalc/test
 cmake --build .
 ```
 
+## How To Use:
+Aurora Scientific Calculator is a script environment. Open program via the terminal with `./aurora-scicalc [optional-files]`. List addition files with the handle `.ask` to run them on startup. `.ask` files are script documents containing commands the calculator can perform.
+
+[NOT IMPLEMENTED] Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
+
+Additional documentation will come as features are added.
 
