@@ -98,8 +98,10 @@ struct Operation *least_significant_operation(const struct token_node *begin,
   const struct token_node *lso = begin;
   // FIND THE LEAST SIGNIFICANT OPERATION
   for (const struct token_node *node = begin; node != end; node = node->next) {
-    if (node->token.priority > lso->token.priority)
+    if (node->token.priority != lso->token.priority) {
+      lso = min_priority(lso, node);
       continue;
+    }
     if (node->token.type < lso->token.type)
       continue;
     if (BIN == lso->token.type) {
@@ -146,6 +148,11 @@ const struct token_node *sadmep(const struct token_node *lso,
   // compiler optimizes away jump
   if (binary_priority(lso->token.id) > binary_priority(node->token.id))
     return node;
+  return lso;
+}
+
+const struct token_node *min_priority(const struct token_node *lso, const struct token_node *node) {
+  if (lso->token.priority > node->token.priority) return node;
   return lso;
 }
 

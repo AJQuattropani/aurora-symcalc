@@ -21,6 +21,8 @@ int binary_priority(char t);
 const struct token_node *sadmep(const struct token_node *lso,
                                 const struct token_node *node);
 
+const struct token_node *min_priority(const struct token_node *lso, const struct token_node *node);
+
 struct token_list parse_string_tokens(const char *string, size_t n);
 
 struct Operation *build_function(const char *string, size_t n);
