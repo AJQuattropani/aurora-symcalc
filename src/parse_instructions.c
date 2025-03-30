@@ -166,8 +166,8 @@ int p_open_paren(const char* string, struct token_list *list, struct token *cont
 }
 
 int p_close_paren([[maybe_unused]] const char *string, [[maybe_unused]]struct token_list *list, struct token *context) {
-  if (0 > context->priority) return PAREN_ERROR; // if priority goes negative, invalid expression
   context->priority--;
+  if (0 > context->priority) return PAREN_ERROR; // if priority goes negative, invalid expression
   context->type = UNR; // unary used as type flag for parens
   context->id = ')';
   return 1; // shift ptr right 1
