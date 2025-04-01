@@ -4,16 +4,12 @@ void run_command_environment() {
   // main loop
   struct environment env = initialize_environment();
 
-  char *line;
+  /*char *line;
   size_t size;
   struct stringview_list views = new_list(4);
   for (ssize_t read = getline(&line, &size, env.current_file); read >= 0;
        read = getline(&line, &size, env.current_file)) {
 
-    //if(line[size-1] != '\0') {
-    //  fprintf(stderr, "Malformed input. Aborting for security.");
-    //  exit(-1);
-    //}
     // push first character to arg[0]
     push_view(&views, line);
     line[strcspn(line, "\n")] = '\0'; // remove endline char
@@ -42,11 +38,12 @@ void run_command_environment() {
     empty_stringlist(&views); // this buffer can only get larger over
     // the program's lifetime.
   }
-
-  
-
-  empty_symbolmap(&env.symbol_map); // clear symbolmap
   free_stringlist(&views);
   free(line);
+  */
+  read_with_state(&env);
+
+  empty_symbolmap(&env.symbol_map); // clear symbolmap
+  
   printf("\nFinished running program.\n");
 }

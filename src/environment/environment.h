@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "symbol_map.h"
+#include "file_reader.h"
 
 enum environment_status {
   OK = 0,

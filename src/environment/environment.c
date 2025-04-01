@@ -24,7 +24,7 @@ void reset_environment(struct environment *state, char **args,
 /**
  * Changes the file that is being read from.
  */
-void fetch_file(struct environment *state, char **args, const size_t argn);
+void run_file(struct environment *state, char **args, const size_t argn);
 
 //////////////////////////////////////
 //////// IMPLEMENTATION //////////////
@@ -62,7 +62,7 @@ struct symbol_map initialize_symbolmap() {
   {
     struct symbol *open = get_or_add_value(&symbols, "open");
     open->type = RESERVED;
-    open->reserved = &fetch_file;
+    open->reserved = &run_file;
   }
   return symbols;
 }
@@ -76,6 +76,10 @@ struct environment initialize_environment(){
 
 void exit_environment(struct environment *state,__attribute__((unused)) char **args,
                      __attribute__((unused)) const size_t argn) {
+  if (stdin != state->current_file) {
+    fprintf(stderr, "[skipped] cannot exit program from file.\n");
+    return;
+  }
   state->status = ESC;                 // set flag to exit
   if (state->current_file != stdin)
     fclose(state->current_file); // closes any file
@@ -84,6 +88,10 @@ void exit_environment(struct environment *state,__attribute__((unused)) char **a
 
 void reset_environment(struct environment *state,__attribute__((unused)) char **args,
                       __attribute__((unused)) const size_t argn) {
+  if (stdin != state->current_file) {
+    fprintf(stderr, "[skipped] cannot exit program from file.\n");
+    return;
+  }
   empty_symbolmap(&state->symbol_map);
   state->symbol_map = initialize_symbolmap();
   if (state->current_file != stdin)
@@ -92,7 +100,7 @@ void reset_environment(struct environment *state,__attribute__((unused)) char **
   printf("[reset] environment variables reset.\n");
 }
 
-void fetch_file(struct environment *state, char **args, const size_t argn) {
+void run_file(struct environment *state, char **args, const size_t argn) {
   if (state->current_file !=
       stdin) { // open is only a valid command from terminal
     fprintf(stderr, "[open] called from file is invalid.\n");
@@ -121,24 +129,18 @@ void fetch_file(struct environment *state, char **args, const size_t argn) {
       return;
     }
     
+    {
     FILE* fptr = fopen(path, "r");
     if (fptr == NULL) {
       fprintf(stderr, "File not found: %s\n", path);
       return; 
+    } 
+    state->current_file = fptr;
     }
     printf("Beginning to read %s\n", path);
-    
-    state->current_file = fptr;
-    fptr = NULL;
 
-    char *line = NULL;
-    size_t size = 0;
-    for (ssize_t read = getline(&line, &size, state->current_file); read >= 0;
-         read = getline(&line, &size, state->current_file)) {
-      printf("> %s", line);
-    }
+    read_with_state(state);    
 
-    free(line);
     fclose(state->current_file);
 
     state->current_file = stdin;
