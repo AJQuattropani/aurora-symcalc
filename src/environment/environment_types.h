@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include "../function.h"
 
 struct environment;
 
