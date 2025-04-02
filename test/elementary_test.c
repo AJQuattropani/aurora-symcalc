@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-// #include "../src/elementary.h"
+#include "../src/utils/elementary.h"
 
 int main() {
   printf("No tests.\n");

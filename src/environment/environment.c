@@ -27,9 +27,14 @@ void reset_environment(struct environment *state, char **args,
 void run_file(struct environment *state, char **args, const size_t argn);
 
 /**
- * Changes the file that is being read from.
+ * Sets or creates a variable.
  */
 void set_var(struct environment *state, char **args, const size_t argn);
+
+/**
+ * Sets or creates a function.
+ */
+void set_func(struct environment *state, char **args, const size_t argn);
 
 //////////////////////////////////////
 //////// IMPLEMENTATION //////////////
@@ -73,6 +78,11 @@ struct symbol_map initialize_symbolmap() {
     struct symbol *var = get_or_add_value(&symbols, "var");
     var->type = RESERVED;
     var->reserved = &set_var;
+  }
+  {
+    struct symbol *func = get_or_add_value(&symbols, "func");
+    func->type = RESERVED;
+    func->reserved = &set_func;
   }
   return symbols;
 }
@@ -198,3 +208,15 @@ void set_var(struct environment *state, char **args, const size_t argn) {
   var->type = LITERAL;
 
 }
+
+void set_func(struct environment *state, char **args, const size_t argn) {
+  
+
+
+
+}
+
+
+
+
+
