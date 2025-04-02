@@ -19,12 +19,17 @@ void exit_environment(struct environment *state, char **args,
  * Empties the symbol map and reinitializes with only RESERVED symbols.
  */
 void reset_environment(struct environment *state, char **args,
-                      const size_t argn);
+                       const size_t argn);
 
 /**
  * Changes the file that is being read from.
  */
 void run_file(struct environment *state, char **args, const size_t argn);
+
+/**
+ * Changes the file that is being read from.
+ */
+void set_var(struct environment *state, char **args, const size_t argn);
 
 //////////////////////////////////////
 //////// IMPLEMENTATION //////////////
@@ -64,30 +69,37 @@ struct symbol_map initialize_symbolmap() {
     open->type = RESERVED;
     open->reserved = &run_file;
   }
+  {
+    struct symbol *var = get_or_add_value(&symbols, "var");
+    var->type = RESERVED;
+    var->reserved = &set_var;
+  }
   return symbols;
 }
 
-struct environment initialize_environment(){
+struct environment initialize_environment() {
   struct environment e = {.status = OK,
                           .symbol_map = initialize_symbolmap(),
                           .current_file = stdin};
   return e;
 }
 
-void exit_environment(struct environment *state,__attribute__((unused)) char **args,
-                     __attribute__((unused)) const size_t argn) {
+void exit_environment(struct environment *state,
+                      __attribute__((unused)) char **args,
+                      __attribute__((unused)) const size_t argn) {
   if (stdin != state->current_file) {
     fprintf(stderr, "[skipped] cannot exit program from file.\n");
     return;
   }
-  state->status = ESC;                 // set flag to exit
+  state->status = ESC; // set flag to exit
   if (state->current_file != stdin)
     fclose(state->current_file); // closes any file
   state->current_file = NULL;    // deallocates file pointer
 }
 
-void reset_environment(struct environment *state,__attribute__((unused)) char **args,
-                      __attribute__((unused)) const size_t argn) {
+void reset_environment(struct environment *state,
+                       __attribute__((unused)) char **args,
+                       __attribute__((unused)) const size_t argn) {
   if (stdin != state->current_file) {
     fprintf(stderr, "[skipped] cannot exit program from file.\n");
     return;
@@ -128,23 +140,61 @@ void run_file(struct environment *state, char **args, const size_t argn) {
               extension);
       return;
     }
-    
+
     {
-    FILE* fptr = fopen(path, "r");
-    if (fptr == NULL) {
-      fprintf(stderr, "File not found: %s\n", path);
-      return; 
-    } 
-    state->current_file = fptr;
+      FILE *fptr = fopen(path, "r");
+      if (fptr == NULL) {
+        fprintf(stderr, "File not found: %s\n", path);
+        return;
+      }
+      state->current_file = fptr;
     }
     printf("Beginning to read %s\n", path);
 
-    read_with_state(state);    
+    read_with_state(state);
 
     fclose(state->current_file);
 
     state->current_file = stdin;
     printf("Finished reading %s\n", path);
-
   }
+}
+
+void set_var(struct environment *state, char **args, const size_t argn) {
+  if (2 >= argn) { // if no value is set
+    printf("Please specify a definition to declare a literal.");
+    return;
+  }
+  const char *name = args[1];
+  struct symbol *var = get_or_add_value(&state->symbol_map, name);
+
+  // add a check for the value being some other type (and to free it? or
+  // ignore?)
+  if (var->type != LITERAL && var->type != NONE) {
+    printf("Attempt to write to non-literal is not supported.");
+    return;
+  }
+
+  // begin reading in values after 2nd arg
+  const size_t offs_consumed_args = 2;
+  const size_t vec_size = argn - offs_consumed_args;
+
+  double *buff = (double *)realloc(var->data, vec_size * (sizeof(double)));
+  if (NULL == buff) {
+    fprintf(stderr, "Buffer reallocation failed for variable.");
+    return;
+  }
+
+  char **def = &args[offs_consumed_args]; 
+  for (size_t i = 0; i < vec_size; i++) {
+    if (0 >= sscanf(def[i], "%lf", &buff[i])) { // reads in a double from each
+      fprintf(stderr, "Improper definition provided for input %ld.", i);
+      buff[i] = 0;
+      continue;
+    }
+  }
+  
+  var->data = buff;
+  var->type = LITERAL;
+
 }
