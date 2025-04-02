@@ -5,9 +5,10 @@
 #include "environment_types.h"
 
 enum symbol_type {
+  NONE,
   RESERVED,
   LITERAL,
-  FUNCTION
+  FUNCTION,
 };
 
 struct symbol{
