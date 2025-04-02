@@ -67,7 +67,7 @@ int p_function(const char *string, struct token_list *list,
   if (1 == result) result = 0;
   char buff[7];
   int displacement;
-  if (sscanf(string, "\\%6[^(]%n", &buff[0], &displacement) == 0) {
+  if (0 >= sscanf(string, "\\%6[^(]%n", &buff[0], &displacement)) {
     return FAILED_STR_READ;
   }
   size_t name_len = strlen(buff);
@@ -194,7 +194,7 @@ int p_const(const char *string, struct token_list *list,
             struct token *context) {
   double constant;
   int offset;
-  if(sscanf(string, "%lf%n", &constant, &offset) == 0) {
+  if(0 >= sscanf(string, "%lf%n", &constant, &offset)) {
     return FAILED_DBL_READ;
   }
   if (is_negative(context)) constant *= -1.0;
