@@ -43,6 +43,19 @@ void empty_symbolmap(struct symbol_map *map) {
       next = head->next;
       free(head->key); // no check: if there is a node without a key, the
                        // program should crash
+      struct symbol* val = &(head->value);
+      if (NULL != val->data) {
+        switch (val->type) {
+          case LITERAL:
+            free(val->data);
+          break;
+          case FUNCTION:
+            a_free_recursive((struct Operation*)val->data);
+          break;
+          case RESERVED: break;
+          default: break;
+        }
+      }
       free(head); // this needs to be replaced in the future with a general free function
     }
     map->buckets[i] = NULL;
