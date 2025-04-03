@@ -1,4 +1,4 @@
-#include "../src/tokenlist.h"
+#include "../src/functional/tokenlist.h"
 
 void print_id(const struct token_node* tok) {
   printf("ID: %d\n", tok->token.id);

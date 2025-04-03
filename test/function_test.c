@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "../src/function.h"
-#include "../src/elementary.h"
+#include "../src/functional/function.h"
+#include "../src/utils/elementary.h"
 
 #include "helpers/testing.h"
 
