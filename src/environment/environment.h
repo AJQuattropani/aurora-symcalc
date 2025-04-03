@@ -1,11 +1,11 @@
 #pragma once
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
 #include "symbol_map.h"
 #include "file_reader.h"
+#include "../utils/strings.h"
 
 enum environment_status {
   OK = 0,
