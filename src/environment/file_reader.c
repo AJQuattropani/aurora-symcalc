@@ -6,7 +6,7 @@ void read_with_state(struct environment *env) {
   struct stringview_list views = new_list(4);
   for (ssize_t read = getline(&line, &size, env->current_file); read >= 0;
        read = getline(&line, &size, env->current_file)) {
-
+    if (2 >= size || '\n' == line[0]) continue;
     printf("> %s\n", line);
     // push first character to arg[0]
     push_view(&views, line);
