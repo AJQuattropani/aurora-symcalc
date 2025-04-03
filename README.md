@@ -1,7 +1,6 @@
 # Aurora Scientific Calculator
 
-In-Dev Project for performing conventional and abstract calculations on input functions such as direct evaluation, graphing, symbolic differentiation, root-finding, and integration.
-For when Desmos just isn't cutting it!
+In-Dev Project for performing conventional and abstract calculations on input functions such as direct evaluation, graphing, symbolic differentiation, root-finding, integration, and more via a command-line interface.
 
 ## How To Build:
 1. Make a new directory and cd into new directory.
@@ -21,7 +20,7 @@ cmake ../aurora-scicalc
 cmake --build .
 ```
 
-4. Run the output executable. You should get a response from the console.
+4. Run the output executable to enter the command environment.
 ```bash
 ./aurora-scicalc
 ```
@@ -36,7 +35,9 @@ cmake --build .
 ## How To Use:
 Aurora Scientific Calculator is a script environment. Open program via the terminal with `./aurora-scicalc [optional-files]`. List addition files with the handle `.ask` to run them on startup. `.ask` files are script documents containing commands the calculator can perform.
 
-[NOT IMPLEMENTED] Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
+Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
+
+[TODO add list of currently implemented commands]
 
 Additional documentation will come as features are added.
 

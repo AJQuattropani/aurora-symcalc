@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 project(
   aurora-scicalc
   VERSION 0.0
-  DESCRIPTION "Like Desmos."
+  DESCRIPTION "Symbolic computation environment."
   LANGUAGES C)
 
 set(CMAKE_C_STANDARD 23)
