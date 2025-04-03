@@ -17,6 +17,7 @@ struct symbol{
     void* data;
     reserved reserved;
   };
+  size_t buff_size;
 };
 
 struct symbol_node{
