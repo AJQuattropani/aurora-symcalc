@@ -46,11 +46,16 @@ void empty_symbolmap(struct symbol_map *map) {
       struct symbol* val = &(head->value);
       if (NULL != val->data) {
         switch (val->type) {
-          case LITERAL:
+          case LITERAL: {
             free(val->data);
+          }
           break;
-          case FUNCTION:
-            a_free_recursive((struct Operation*)val->data);
+          case FUNCTION: {
+            struct Operation **func_list = (struct Operation **)val->data;
+            for (size_t i = 0; i < val->buff_size; i++)
+              a_free_recursive(func_list[i]);
+            free(func_list);
+          }
           break;
           case RESERVED: break;
           default: break;
