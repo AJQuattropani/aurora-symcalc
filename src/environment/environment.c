@@ -51,10 +51,32 @@ void execute_from_symbol(struct environment *state, const struct symbol *symbol,
   case RESERVED: {
     reserved state_function = symbol->reserved;
     state_function(state, args, argn);
-    break;
   }
+  return;
+  case FUNCTION: {
+    if (argn <= 1) {
+
+    }
+    const struct symbol* in = get_value(&state->symbol_map, args[1]);
+    if (NULL == in) {
+      printf("%s not found.", args[1]);
+      return;
+    }
+    if (LITERAL != in->type) {
+      printf("Invalid input.");
+      return;
+    }
+    double x = ((double*)in->data)[0];
+    struct Operation** function_list = (struct Operation**)symbol->data;
+    for(size_t i = 0; i < symbol->buff_size; i++) {
+      double y = a_evaluate(function_list[i], x);
+      printf("(%lf,%lf)\n", x, y);
+    }
+    return;
+  }
+  return;
   default: {
-    break;
+    return;
   }
   }
 }
@@ -89,9 +111,9 @@ struct symbol_map initialize_symbolmap() {
     var->buff_size = 0;
   }
   {
-    //struct symbol *func = get_or_add_value(&symbols, "func");
-    //func->type = RESERVED;
-    //func->reserved = &set_func;
+    struct symbol *func = get_or_add_value(&symbols, "func");
+    func->type = RESERVED;
+    func->reserved = &set_func;
   }
   {
     struct symbol *print = get_or_add_value(&symbols, "peak");
@@ -185,7 +207,8 @@ void run_file(struct environment *state, char **args, const size_t argn) {
 }
 
 void set_var(struct environment *state, char **args, const size_t argn) {
-  if (2 >= argn) { // if no value is set
+  const size_t offs_consumed_args = 2;
+  if (offs_consumed_args >= argn) { // if no value is set
     printf("Please specify a definition to declare a literal.\n");
     return;
   }
@@ -200,7 +223,6 @@ void set_var(struct environment *state, char **args, const size_t argn) {
   }
 
   // begin reading in values after 2nd arg
-  const size_t offs_consumed_args = 2;
   const size_t vec_size = argn - offs_consumed_args;
 
   double *buff = (double *)realloc(var->data, vec_size * (sizeof(double)));
@@ -225,16 +247,41 @@ void set_var(struct environment *state, char **args, const size_t argn) {
 }
 
 void set_func(struct environment *state, char **args, const size_t argn) {
+  const size_t offs_consumed_args = 2;
+  if (offs_consumed_args >= argn) {
+    printf("Not enough arguments provided.\n");
+  }
+  const char* name = args[1];
+  struct symbol* key = get_or_add_value(&state->symbol_map, name);
+
+  if (NONE != key->type) {
+    printf("Attempt to overwrite function is not presently supported.\n");
+    return;
+  }
+  size_t vec_size = argn - offs_consumed_args;
+
+  struct Operation **operations 
+    = (struct Operation**)malloc(vec_size * sizeof(struct Operation*));
+  if (operations == NULL) {
+    fprintf(stderr, "Allocation of buffer for Operations failed.");
+    exit(-1);
+  }
   
+  char **definitions = &args[offs_consumed_args];
+  for (size_t i = 0; i < vec_size; i++) {
+    operations[i] = build_function(definitions[i], strlen(definitions[i]));
+  }
 
-
-
+  key->data = operations;
+  key->type = FUNCTION;
+  key->buff_size = vec_size;
 }
 
 void print_generic(struct environment *state, char **args, const size_t argn) {
   const size_t offs_consumed_args = 1;
   if (offs_consumed_args >= argn) {
     printf("No arguments provided.\n");
+    return;
   }
   
   char **names = &args[offs_consumed_args];

@@ -5,6 +5,7 @@
 
 #include "symbol_map.h"
 #include "file_reader.h"
+#include "../functional/interpret.h"
 #include "../utils/strings.h"
 
 enum environment_status {
