@@ -21,7 +21,7 @@ struct token_list parse_string_tokens(const char *string, size_t n) {
     fprintf(stderr, "Buffer allocation failed.\n");
     exit(-1);
   };
-  strncpy(buff, string, n);
+  strncpy(buff, string, n + 1);
 
   while (ptr < (buff + n)) {
     char c = *ptr;
