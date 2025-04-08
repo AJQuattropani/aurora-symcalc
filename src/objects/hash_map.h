@@ -2,9 +2,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "mstrings.h"
+#include "../strings/mstring.h"
+#include "object.h"
 
-typedef int _value;
+typedef Object _value;
 typedef mString _key;
 
 struct map_node;
@@ -16,8 +17,7 @@ struct map_node {
   _mnode *next;
 };
 
-//#define STATIC_MAP_SIZE 4099
-#define STATIC_MAP_SIZE 2
+#define STATIC_MAP_SIZE 4099
 // struct map;
 // typedef struct map Map;
 typedef _mnode *Map[STATIC_MAP_SIZE];
@@ -28,6 +28,8 @@ const _value *lookup_value_const(const Map *map, _key key);
 
 _value *acquire_value(Map *map, _key key);
 
+void cinsert(Map *map, const char* ckey, _value value);
+
 void insert(Map *map, _key key, _value value);
 
 void delete_pair(Map *map, _key key);
@@ -37,3 +39,9 @@ void empty_map(Map *map);
 void print_map(Map *map);
 
 size_t hash_key(const _key *key);
+
+void mn_destroy(_mnode *node);
+
+
+
+
