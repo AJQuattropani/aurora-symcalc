@@ -72,8 +72,8 @@ struct function_node {
       u_opliteral op;
       f_node* in;
     } uf;
-    struct { // none needed for constant
-    } cf;
+    //struct { // none needed for constant
+    //} cf;
     // identity: index of input args
     struct {
       size_t index;
