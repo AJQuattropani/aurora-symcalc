@@ -9,7 +9,7 @@ _value *lookup_value(const Map *map, _key key) {
   return NULL;
 }
 
-const _value *lookup_value_const(const Map *map, _key key) {
+const _value *lookup_value_const(const Map *map, const _key key) {
   size_t index = hash_key(&key);
   for (const _mnode *node = (*map)[index]; node != NULL; node = node->next) {
     if (m_same(&node->key, &key)) {
