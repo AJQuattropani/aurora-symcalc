@@ -61,7 +61,7 @@ void g_append_back(gString *gstr, const char *appendix, size_t len) {
       2 * (gstr->capacity + len);
     char *temp = (char *)realloc(gstr->cstring, (new_cap+1) * sizeof(char));
     // make a buffer double the size of the new capacity
-    if (temp == NULL) {
+    if (NULL == temp) {
       fprintf(stderr, "realloc failed in %s\n", __func__);
       exit(1);
     }
