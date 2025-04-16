@@ -1,6 +1,10 @@
 #pragma once
+
 #include "../objects/types.h"
 #include "../objects/hash_map.h"
+
+#include "commands.h"
+#include "operators.h"
 
 enum env_status {
   OK,
@@ -13,4 +17,11 @@ struct environment {
   FILE* current_file;
   env_status status;
 };
+
+void default_map(Map *map);
+
+
+
+
+
 
