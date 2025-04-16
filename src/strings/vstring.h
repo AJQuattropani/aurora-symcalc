@@ -7,7 +7,7 @@
 struct view_string;
 typedef struct view_string vString;
 struct view_string {
-  const char* ref;
+  char* ref;
   size_t len;
 };
 
