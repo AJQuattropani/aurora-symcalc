@@ -7,17 +7,8 @@
  * Applicable functions for CONTEXT type
  */
 
-void exit_env(env* context, vList* args) {
-  empty_map(&context->map);
-  context->current_file = 0;
-  context->status = EXIT;
-}
+void exit_env(env *context, vList *args);
 
-void reset_env(env* context, vList* args) {
+void reset_env(env *context, vList *args);
 
-}
-
-void open_file(env* context, vList* args) {
-
-}
-
+void open_file(env *context, vList *args);
