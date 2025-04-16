@@ -33,7 +33,7 @@ void v_empty(vList *list) {
     fprintf(stderr, "skipping attempt to empty freed list");
     return;
   }
-  memset(list->data, 0, list->capacity * sizeof(vList));
+  memset(list->data, 0, list->capacity * sizeof(vString));
   list->size = 0;
 }
 
@@ -48,7 +48,7 @@ void v_free(vList *list) {
   list->data = NULL;
 }
 
-vString v_view(const char *ref) {
+vString v_view(char *ref) {
   return (vString){.ref = ref, .len = strlen(ref)};
 }
 

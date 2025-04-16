@@ -11,7 +11,7 @@ struct view_string {
   size_t len;
 };
 
-vString v_view(const char *ref);
+vString v_view(char *ref);
 
 struct view_list;
 typedef struct view_list vList;
