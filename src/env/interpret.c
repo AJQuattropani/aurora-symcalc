@@ -11,10 +11,10 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   if (0 >= read || NULL == buff->cstring) return read;
   char *sp = buff->cstring;
   char *ep = NULL;
-  sp[read-1] = '\0';
+  size_t diff; 
   while (NULL != (ep = strpbrk(sp, " \n()"))) {
-    size_t diff = ep - sp;
-    if (diff > 0) {
+    diff = ep - sp;
+    if (0 < diff) {
       v_push_cstr(vlist, sp, diff);
     }
     sp = ep + 1;
@@ -22,6 +22,8 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
       v_push_cstr(vlist, ep, 1);
     }
   }
+  sp[read-1] = '\0';
+
   return read;
 }
 
