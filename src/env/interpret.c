@@ -11,15 +11,43 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   if (0 >= read || NULL == buff->cstring) return read;
   char *sp = buff->cstring;
   char *ep = NULL;
-  while (NULL != (ep = strpbrk(sp, " \n"))) {
-    *ep = '\0';
+  sp[read-1] = '\0';
+  while (NULL != (ep = strpbrk(sp, " \n()"))) {
     size_t diff = ep - sp;
     if (diff > 0) {
       v_push_cstr(vlist, sp, diff);
     }
     sp = ep + 1;
-    
+    if (')' == *ep || '(' == *ep) {
+      v_push_cstr(vlist, ep, 1);
+    }
   }
   return read;
+}
+
+token_array tokenize(Map* map, const vList *vlist) {
+  token_array tokens = new_token_array(vlist->size);
+  token curr = {NULL, 0};
+  for (size_t i = 0; i < vlist->size; i++) {
+    if ('(' == vlist->data[i].ref[0]) {
+      curr.priority++;
+      continue;
+    }
+    if (')' == vlist->data[i].ref[0]) {
+      --curr.priority;
+      if (0 > curr.priority) goto catch_paren_error;
+      continue;
+    }
+    curr.token = acquire_value(map, (mString){vlist->data[i].ref,vlist->data[i].len});
+    push_token_back(&tokens, &curr);
+  }
+  if (0 != curr.priority) {
+    goto catch_paren_error;
+  }
+  return tokens;
+catch_paren_error:
+    fprintf(stderr, "Invalid or malformed parenthesis.\n");
+    destroy_token_array(&tokens);
+    return tokens;
 }
 
