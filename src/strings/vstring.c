@@ -16,7 +16,7 @@ vList v_from_capacity(size_t capacity) {
 void v_push_cstr(vList *list, char *ref, size_t len) {
   if (list->size >= list->capacity) {
     size_t new_capacity = list->size * 2;
-    vString* temp = (vString*)realloc(list->data, new_capacity * sizeof(vList));
+    vString* temp = (vString*)realloc(list->data, new_capacity * sizeof(vString));
     if (NULL == temp) {
       fprintf(stderr, "realloc failed in %s", __func__);
       exit(1);
@@ -29,12 +29,12 @@ void v_push_cstr(vList *list, char *ref, size_t len) {
 }
 
 void v_empty(vList *list) {
+  list->size = 0;
   if (NULL == list->data) {
     fprintf(stderr, "skipping attempt to empty freed list");
     return;
   }
   memset(list->data, 0, list->capacity * sizeof(vString));
-  list->size = 0;
 }
 
 void v_free(vList *list) {
