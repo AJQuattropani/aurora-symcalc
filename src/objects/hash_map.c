@@ -136,7 +136,7 @@ size_t hash_key(const _key *key) {
     val += (key->cstring)[i];
   }
   val %= STATIC_MAP_SIZE;
-  printf("hashed [%s, %ld] : %ld\n", key->cstring, key->size, val);
+  printf("hashed [%.*s, %ld] : %ld\n", (int)key->size, key->cstring, key->size, val);
   return val; // float mod
 }
 
