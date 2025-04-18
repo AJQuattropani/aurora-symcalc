@@ -5,6 +5,7 @@
 
 #include "commands.h"
 #include "operators.h"
+#include "interpret.h"
 
 enum env_status {
   OK,
@@ -20,8 +21,6 @@ struct environment {
 
 void default_map(Map *map);
 
+void init_env(env *env);
 
-
-
-
-
+void runtime();

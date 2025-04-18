@@ -21,3 +21,50 @@ void default_map(Map *map) {
   cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER});
   cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER});
 }
+
+void init_env(env *env) {
+  default_map(&env->map);
+  env->current_file = stdin;
+  env->status = OK;
+}
+
+void runtime() {
+  env env;
+  init_env(&env);
+  {
+    mString mstr;
+    vList vlist = v_from_capacity(10);
+    while (0 <= v_get_line(&vlist, &mstr, env.current_file)) {
+      printf("Extracted: ");
+      for (size_t i = 0; i < vlist.size; i++) {
+        vString word = vlist.data[i];
+        printf("\"%.*s\"[%ld] ", (int)word.len, word.ref, word.len);
+      }
+      printf("\n");
+
+      token_array arr = tokenize(&env.map, &vlist);
+      if (NULL == arr.data || 0 >= arr.size) continue;
+      
+      Object *obj = arr.data[0].token;
+      if (CONTEXT == obj->ty) {
+        mf_context mc = obj->mContext;
+        mc(&env, &vlist);
+      }
+
+      destroy_token_array(&arr);
+      if (EXIT == env.status) {
+        break;
+      }
+      if (NULL == env.current_file) {
+        fprintf(stderr, "Read from empty file detected, aborting.\n");
+        exit(1);
+      }
+    }
+    v_free(&vlist);
+    m_deletestr(&mstr);
+  }
+  empty_map(&env.map);
+}
+
+
+
