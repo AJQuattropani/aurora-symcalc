@@ -18,6 +18,7 @@ int main(void) {
   v_free(&vlist);
   m_deletestr(&mstr);
   empty_map(&map);
+  return 0;
 }
 
 
