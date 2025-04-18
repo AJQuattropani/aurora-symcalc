@@ -17,10 +17,10 @@ struct token_array {
   size_t size;
 };
 
-token_array new_array(size_t capacity);
+token_array new_token_array(size_t capacity);
 
-void empty_array(token_array *arr);
+void empty_token_array(token_array *arr);
 
-void destroy_array(token_array *arr);
+void destroy_token_array(token_array *arr);
 
-void push_back(token_array *arr, const token *tok);
+void push_token_back(token_array *arr, const token *tok);
