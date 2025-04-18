@@ -49,7 +49,7 @@ int m_same(const mString *str1, const mString *str2) {
   if (str1->size != str2->size) {
     return 0;
   }
-  int check = strcmp(str1->cstring, str2->cstring);
+  int check = strncmp(str1->cstring, str2->cstring, str1->size);
   return !check;
 }
 
