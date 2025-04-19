@@ -48,11 +48,8 @@ void runtime() {
     while (0 <= v_get_line(&vlist, &mstr, env.current_file)) {
       
       g_append_back(&output_buffer, "Extracted: ", 11);
-      //strncat(out, "Extracted: ", out_size);
       for (size_t i = 0; i < vlist.size; i++) {
         vString word = vlist.data[i];
-        //printf("\"%.*s\"[%ld] ", (int)word.len, word.ref, word.len);
-        //sprintf(out, "%s %.*s[%ld]", out, (int)word.len, word.ref, word.len);
         g_append_back(&output_buffer, word.ref, word.len);
         g_append_back(&output_buffer, " | ", 3);
       }
@@ -71,6 +68,7 @@ void runtime() {
       if (EXIT == env.status) {
         break;
       }
+
       if (NULL == env.current_file) {
         fprintf(stderr, "Read from empty file detected, aborting.\n");
         exit(1);
