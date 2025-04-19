@@ -11,6 +11,13 @@
 struct environment;
 typedef struct environment env;
 
+
+struct token;
+typedef struct token token;
+
+struct token_array;
+typedef struct token_array token_array;
+
 /*
  * List of cursory types an object can have.
  * Switches and checks of these values allows for
@@ -37,7 +44,7 @@ struct vector_literal {
   double* data;
   size_t size;
 };
-typedef void(*context_modifier)(env* context, vList* args);
+typedef void(*context_modifier)(env* context, const token_array* args);
 typedef context_modifier mf_context; // generic type for functions that modify the runtime environment
 typedef int(*binary_operation_literal)(vd_literal *o, const vd_literal *l, const vd_literal *r);
 typedef binary_operation_literal b_opliteral; // generic type for operations on two vectors

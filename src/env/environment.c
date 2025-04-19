@@ -64,7 +64,7 @@ void runtime() {
       Object *obj = &arr.data[0].token->value;
       if (CONTEXT == obj->ty) {
         mf_context mc = obj->mContext;
-        mc(&env, &vlist);
+        mc(&env, &arr);
       }
 
       destroy_token_array(&arr);

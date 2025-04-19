@@ -4,8 +4,6 @@
 #include "../strings/mstring.h"
 #include "hash_map.h"
 
-struct token;
-typedef struct token token;
 struct token {
   _kvpair* token;
   //mString key;
@@ -13,8 +11,6 @@ struct token {
   int priority;
 };
 
-struct token_array;
-typedef struct token_array token_array;
 struct token_array {
   token *data;
   size_t capacity;
