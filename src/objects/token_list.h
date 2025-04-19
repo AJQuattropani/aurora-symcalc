@@ -5,7 +5,8 @@
 #include "hash_map.h"
 
 struct token {
-  _kvpair* token;
+  _mnode* token;
+  //_kvpair* token;
   //mString key;
   //Object token;
   int priority;
