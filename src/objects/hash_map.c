@@ -42,6 +42,30 @@ _value *acquire_value(Map *map, _key key) {
   return &(**node_addr).value;
 }
 
+_kvpair *acquire_pair(Map *map, _key key) {
+  size_t index = hash_key(&key);
+  _mnode **node_addr;
+  _mnode *prev_node = NULL;
+  for (node_addr = &(*map)[index]; *node_addr != NULL;
+       node_addr = &(*node_addr)->next) {
+    prev_node = *node_addr;
+    if (m_same(&prev_node->key, &key)) {
+      return &prev_node->pair;
+    }
+  }
+  // initialize a node in the place
+  *node_addr = (_mnode *)malloc(sizeof(_mnode));
+  if (NULL == *node_addr) {
+    fprintf(stderr, "malloc failed in %s\n", __func__);
+    exit(1);
+  }
+  (**node_addr).key = m_from_copy(key);
+  (**node_addr).prev = prev_node;
+  (**node_addr).next = NULL;
+  return &(**node_addr).pair;
+}
+
+
 void cinsert(Map *map, const char* ckey, _value value) {
   mString key = m_from_cstr(ckey);
   size_t index = hash_key(&key);
@@ -145,4 +169,5 @@ void mn_destroy(_mnode *node) {
   free_object(&node->value);
   free(node); // free node
 }
+
 

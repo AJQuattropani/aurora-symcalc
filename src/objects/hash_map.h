@@ -8,11 +8,23 @@
 typedef Object _value;
 typedef mString _key;
 
+struct key_value_pair;
+typedef struct key_value_pair _kvpair;
+struct key_value_pair {
+  _key key;
+  _value value;
+};
+
 struct map_node;
 typedef struct map_node _mnode;
 struct map_node {
-  _key key;
-  _value value;
+  union {
+    _kvpair pair;
+    struct {
+    _key key;
+    _value value;
+    };
+  };
   _mnode *prev;
   _mnode *next;
 };
@@ -27,6 +39,8 @@ _value *lookup_value(const Map *map, _key key);
 const _value *lookup_value_const(const Map *map, _key key);
 
 _value *acquire_value(Map *map, _key key);
+
+_kvpair *acquire_pair(Map *map, _key key);
 
 void cinsert(Map *map, const char* ckey, _value value);
 
