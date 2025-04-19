@@ -1,11 +1,15 @@
 #pragma once
 
 #include "types.h"
+#include "../strings/mstring.h"
+#include "hash_map.h"
 
 struct token;
 typedef struct token token;
 struct token {
-  Object* token;
+  _kvpair* token;
+  //mString key;
+  //Object token;
   int priority;
 };
 
