@@ -38,13 +38,13 @@ Aurora Scientific Calculator is a script environment. Open program via the termi
 Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
 
 [TODO add list of currently implemented commands]
-|Command|       Description                   |
-|:-----:|:-----------------------------------:|
-| exit  |         Closes the program.         |
-| reset |       Resets context to default.    |
-| var   |    Define a vector of doubles.      |
-| open  |       Read and execute a .ask       |
-| peak  | Prints the value of symbols by name |
+| Command |       Description                     |
+|:-------:|:-------------------------------------:|
+| exit    | Closes the program.                   |
+| reset   | Resets context to default.            |
+| set     | Define a value: [types:VECTOR] [data] |
+| open    | Read and execute a .ask               |
+| peak    | Prints the value of symbols by name.  |
 
 
 Additional documentation will come as features are added.
