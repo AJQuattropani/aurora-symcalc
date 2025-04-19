@@ -3,7 +3,7 @@
 void default_map(Map *map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
-  cinsert(map, "open", (_value){.mContext = open_file, .ty = CONTEXT});
+  //cinsert(map, "open", (_value){.mContext = open_file, .ty = CONTEXT});
   cinsert(map, "+", (_value){ .bOperation = vb_add, .ty = BOPER});
   cinsert(map, "-", (_value){ .bOperation = vb_sub, .ty = BOPER});
   cinsert(map, "*", (_value){ .bOperation = vb_mul, .ty = BOPER});
@@ -22,30 +22,46 @@ void default_map(Map *map) {
   cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER});
 }
 
-void init_env(env *env) {
+inline void init_env(env *env) {
   default_map(&env->map);
   env->current_file = stdin;
   env->status = OK;
 }
 
+inline void free_env(env *env) {
+  empty_map(&env->map);
+  if (stdin != env->current_file && stdout != env->current_file) {
+    fclose(env->current_file);
+  }
+  env->current_file = NULL;
+}
+
+#define OUTPUT_BUFFER_SIZE(x) x * 3
+
 void runtime() {
   env env;
   init_env(&env);
   {
+    gString output_buffer = g_from_capacity(256);
     mString mstr;
     vList vlist = v_from_capacity(10);
     while (0 <= v_get_line(&vlist, &mstr, env.current_file)) {
-      printf("Extracted: ");
+      
+      g_append_back(&output_buffer, "Extracted: ", 11);
+      //strncat(out, "Extracted: ", out_size);
       for (size_t i = 0; i < vlist.size; i++) {
         vString word = vlist.data[i];
-        printf("\"%.*s\"[%ld] ", (int)word.len, word.ref, word.len);
+        //printf("\"%.*s\"[%ld] ", (int)word.len, word.ref, word.len);
+        //sprintf(out, "%s %.*s[%ld]", out, (int)word.len, word.ref, word.len);
+        g_append_back(&output_buffer, word.ref, word.len);
+        g_append_back(&output_buffer, " | ", 3);
       }
-      printf("\n");
+      printf("%s\n", output_buffer.cstring);
 
       token_array arr = tokenize(&env.map, &vlist);
       if (NULL == arr.data || 0 >= arr.size) continue;
       
-      Object *obj = arr.data[0].token;
+      Object *obj = &arr.data[0].token->value;
       if (CONTEXT == obj->ty) {
         mf_context mc = obj->mContext;
         mc(&env, &vlist);
@@ -59,9 +75,12 @@ void runtime() {
         fprintf(stderr, "Read from empty file detected, aborting.\n");
         exit(1);
       }
+
+      g_empty(&output_buffer);
     }
     v_free(&vlist);
     m_deletestr(&mstr);
+    g_deletestr(&output_buffer);
   }
   empty_map(&env.map);
 }

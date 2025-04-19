@@ -3,6 +3,8 @@
 #include "../objects/types.h"
 #include "../objects/hash_map.h"
 
+#include "../strings/gstring.h"
+
 #include "commands.h"
 #include "operators.h"
 #include "interpret.h"
