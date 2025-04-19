@@ -21,3 +21,21 @@ vd_literal alloc_vdliteral(size_t n) {
   return lit;
 }
 
+void sprint_vector(gString *inp, vd_literal value) {
+  if (NULL == value.data) {
+    g_append_back(inp, "NULL", 4);
+    return;
+  }
+  g_append_back(inp, "< ", 2);
+  for (size_t i = 0; i < value.size; i++) {
+    char buff[17];
+    int len = snprintf(buff, 16, "%lf ", value.data[i]);
+    if (0 > len) {
+      fprintf(stderr, "Unknown error occurred in snprintf for %s.\n", __func__);
+      exit(1);
+    }
+    g_append_back(inp, buff, len);
+  }
+  g_append_back(inp, ">", 1);
+}
+
