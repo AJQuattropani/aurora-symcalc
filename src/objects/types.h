@@ -18,6 +18,9 @@ typedef struct token token;
 struct token_array;
 typedef struct token_array token_array;
 
+struct object;
+typedef struct object Object;
+
 /*
  * List of cursory types an object can have.
  * Switches and checks of these values allows for
@@ -30,6 +33,7 @@ enum object_type {
   UOPER,
   CONTEXT,
   FUNC,
+  READER,
 };
 typedef enum object_type obj_t;
 
@@ -44,12 +48,17 @@ struct vector_literal {
   double* data;
   size_t size;
 };
-typedef void(*context_modifier)(env* context, const token_array* args);
+typedef void(*context_modifier)(env *context, const token_array *args);
 typedef context_modifier mf_context; // generic type for functions that modify the runtime environment
+
 typedef int(*binary_operation_literal)(vd_literal *o, const vd_literal *l, const vd_literal *r);
 typedef binary_operation_literal b_opliteral; // generic type for operations on two vectors
+
 typedef int(*unary_operation_literal)(vd_literal *o, const vd_literal *i);
 typedef unary_operation_literal u_opliteral; // generic type for operations on one vector
+
+typedef Object(*reader_macro)(const token_array *args);
+typedef reader_macro r_macro;
 
 struct function_node;
 typedef struct function_node f_node;
@@ -92,8 +101,6 @@ struct function_node {
   opr_t ty;
 };
 
-struct object;
-typedef struct object Object;
 struct object {
   union {
     vd_literal vLiteral;
@@ -101,6 +108,7 @@ struct object {
     b_opliteral bOperation;
     u_opliteral uOperation;
     f_object fObject;
+    r_macro reader;
   };
   obj_t ty;
 };
