@@ -17,19 +17,19 @@ void print_env(env *context, [[maybe_unused]] const token_array *args) {
 void define_object([[maybe_unused]] env *context, const token_array *args) {
   if (4 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for set call.\n");
-    goto catch_error;
+    goto cleanup_and_exit;
   }
   Object *into = &args->data[1].token->value;
   if (NONE != into->ty) {
     _key *str = &args->data[1].token->key;
     fprintf(stderr, "[SKIPPED] Writing to existing type \"%.*s\" not supported.\n", (int)str->size, str->cstring);
-    goto catch_error;
+    goto cleanup_and_exit;
   }
 
   Object *read_type = &args->data[2].token->value;
   if (READER != read_type->ty) {
     fprintf(stderr, "[SKIPPED] Invalid type.\n");
-    goto catch_error;
+    goto cleanup_and_exit;
   }
   r_macro read_macro = read_type->reader;
   *into = read_macro(&(const token_array){
@@ -38,7 +38,7 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
       .size = args->size -
               3}); // read in remaining args as either function or vector
 
-catch_error:
+cleanup_and_exit:
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
     if (NONE == curr->token->value.ty)
