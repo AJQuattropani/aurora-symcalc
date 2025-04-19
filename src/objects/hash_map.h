@@ -25,6 +25,8 @@ struct map_node {
     _value value;
     };
   };
+  size_t hash_val;
+  _mnode **upstr;
   _mnode *prev;
   _mnode *next;
 };
@@ -40,13 +42,15 @@ const _value *lookup_value_const(const Map *map, _key key);
 
 _value *acquire_value(Map *map, _key key);
 
-_kvpair *acquire_pair(Map *map, _key key);
+_mnode *acquire_pair(Map *map, _key key);
 
 void cinsert(Map *map, const char* ckey, _value value);
 
 void insert(Map *map, _key key, _value value);
 
 void delete_pair(Map *map, _key key);
+
+void remove_node(_mnode *node);
 
 void empty_map(Map *map);
 
