@@ -4,6 +4,7 @@ void default_map(Map *map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
   cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT});
+  cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT});
   //cinsert(map, "open", (_value){.mContext = open_file, .ty = CONTEXT});
   cinsert(map, "+", (_value){ .bOperation = vb_add, .ty = BOPER});
   cinsert(map, "-", (_value){ .bOperation = vb_sub, .ty = BOPER});
@@ -25,18 +26,20 @@ void default_map(Map *map) {
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER});
 }
 
-inline void init_env(env *env) {
+void init_env(env *env) {
   default_map(&env->map);
   env->current_file = stdin;
   env->status = OK;
+  env->output_buffer = g_from_capacity(256);
 }
 
-inline void free_env(env *env) {
+void free_env(env *env) {
   empty_map(&env->map);
   if (stdin != env->current_file && stdout != env->current_file) {
     fclose(env->current_file);
   }
   env->current_file = NULL;
+  g_deletestr(&env->output_buffer);
 }
 
 #define OUTPUT_BUFFER_SIZE(x) x * 3
@@ -45,18 +48,16 @@ void runtime() {
   env env;
   init_env(&env);
   {
-    gString output_buffer = g_from_capacity(256);
     mString mstr;
     vList vlist = v_from_capacity(10);
     while (0 <= v_get_line(&vlist, &mstr, env.current_file)) {
       
-      g_append_back(&output_buffer, "Extracted: ", 11);
-      for (size_t i = 0; i < vlist.size; i++) {
-        vString word = vlist.data[i];
-        g_append_back(&output_buffer, word.ref, word.len);
-        g_append_back(&output_buffer, " | ", 3);
-      }
-      printf("%s\n", output_buffer.cstring);
+      //g_append_back(&env.output_buffer, "Extracted: ", 11);
+      //for (size_t i = 0; i < vlist.size; i++) {
+      //  vString word = vlist.data[i];
+      //  g_append_back(&env.output_buffer, word.ref, word.len);
+      //  g_append_back(&env.output_buffer, " | ", 3);
+      //}
 
       token_array arr = tokenize(&env.map, &vlist);
       if (NULL == arr.data || 0 >= arr.size) continue;
@@ -67,7 +68,10 @@ void runtime() {
         mc(&env, &arr);
       }
 
+      printf("%s\n", env.output_buffer.cstring);
+      
       destroy_token_array(&arr);
+
       if (EXIT == env.status) {
         break;
       }
@@ -76,14 +80,14 @@ void runtime() {
         fprintf(stderr, "Read from empty file detected, aborting.\n");
         exit(1);
       }
-
-      g_empty(&output_buffer);
+      
+      update_map(&env.map);
+      g_empty(&env.output_buffer);
     }
     v_free(&vlist);
     m_deletestr(&mstr);
-    g_deletestr(&output_buffer);
   }
-  empty_map(&env.map);
+  free_env(&env);
 }
 
 

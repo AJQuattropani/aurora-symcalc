@@ -14,22 +14,39 @@ void print_env(env *context, [[maybe_unused]] const token_array *args) {
   print_map(&context->map);
 }
 
+void print_tok(env *context, const token_array *args) {
+  if (2 > args->size) {
+    fprintf(stderr, "[SKIPPED] Insufficient arguments for print call.\n");
+    return;
+  }
+  
+  g_append_back(&context->output_buffer, "Peak: ", 6);
+  for (size_t i = 1; i < args->size; i++) {
+    token *curr = &args->data[i];
+    g_append_back(&context->output_buffer, curr->token->key.cstring, curr->token->key.size);
+    g_append_back(&context->output_buffer, " ", 1);
+    sprint_object(&context->output_buffer, &curr->token->value);
+    g_append_back(&context->output_buffer, " ", 1);
+  }
+
+}
+
 void define_object([[maybe_unused]] env *context, const token_array *args) {
   if (4 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for set call.\n");
-    goto cleanup_and_exit;
+    return;
   }
   Object *into = &args->data[1].token->value;
   if (NONE != into->ty) {
     _key *str = &args->data[1].token->key;
     fprintf(stderr, "[SKIPPED] Writing to existing type \"%.*s\" not supported.\n", (int)str->size, str->cstring);
-    goto cleanup_and_exit;
+    return;
   }
 
   Object *read_type = &args->data[2].token->value;
   if (READER != read_type->ty) {
     fprintf(stderr, "[SKIPPED] Invalid type.\n");
-    goto cleanup_and_exit;
+    return;
   }
   r_macro read_macro = read_type->reader;
   *into = read_macro(&(const token_array){
@@ -37,13 +54,6 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
       .capacity = 0,
       .size = args->size -
               3}); // read in remaining args as either function or vector
-
-cleanup_and_exit:
-  for (size_t i = 0; i < args->size; i++) {
-    token *curr = &args->data[i];
-    if (NONE == curr->token->value.ty)
-      remove_node(curr->token);
-  } // clean up newly-hashed nodes
 }
 
 Object read_vector(const token_array *args) {

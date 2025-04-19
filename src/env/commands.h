@@ -23,6 +23,11 @@ void reset_env(env *context, const token_array *args);
  */
 void print_env(env *context, [[maybe_unused]] const token_array *args);
 
+/*
+ *  PRINTS LIST OF DESIRED TOKENS.
+ */
+void print_tok(env *context, const token_array *args);
+
 //void open_file(env *context, vList *args);
 
 /**
