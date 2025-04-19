@@ -24,7 +24,8 @@ mString m_from_copy(mString mstr) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  strncpy(copy.cstring, mstr.cstring, copy.size + 1);
+  strncpy(copy.cstring, mstr.cstring, copy.size);
+  copy.cstring[copy.size] = '\0';
   return copy;
 }
 
