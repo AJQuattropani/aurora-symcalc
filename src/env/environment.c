@@ -3,6 +3,7 @@
 void default_map(Map *map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
+  cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT});
   //cinsert(map, "open", (_value){.mContext = open_file, .ty = CONTEXT});
   cinsert(map, "+", (_value){ .bOperation = vb_add, .ty = BOPER});
   cinsert(map, "-", (_value){ .bOperation = vb_sub, .ty = BOPER});
@@ -20,6 +21,8 @@ void default_map(Map *map) {
   cinsert(map, "\\arcsin", (_value){.uOperation = vu_asin, .ty = UOPER});
   cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER});
   cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER});
+  cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT});
+  cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER});
 }
 
 inline void init_env(env *env) {
