@@ -16,3 +16,4 @@ Object as_uopliteral(u_opliteral opr);
 
 void free_uopliteral(u_opliteral *opr);
 
+void free_reader(r_macro *mac);

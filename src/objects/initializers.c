@@ -18,4 +18,4 @@ Object as_uopliteral(u_opliteral opr) {
 
 void free_uopliteral([[maybe_unused]] u_opliteral *opr) { opr = NULL; }
 
-
+void free_reader([[maybe_unused]] r_macro *mac) { mac = NULL; }

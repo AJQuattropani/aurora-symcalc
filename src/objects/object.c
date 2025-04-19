@@ -17,6 +17,9 @@ void free_object(Object *o) {
   case FUNC:
     free_fobject(&o->fObject);
     break;
+  case READER:
+    free_reader(&o->reader);
+    break;
   case NONE:
     break;
   }
