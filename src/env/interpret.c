@@ -40,7 +40,7 @@ token_array tokenize(Map* map, const vList *vlist) {
       if (0 > curr.priority) goto catch_paren_error;
       continue;
     }
-    curr.token = acquire_value(map, (mString){vlist->data[i].ref,vlist->data[i].len});
+    curr.token = acquire_pair(map, (mString){vlist->data[i].ref,vlist->data[i].len});
     push_token_back(&tokens, &curr);
   }
   if (0 != curr.priority) {
