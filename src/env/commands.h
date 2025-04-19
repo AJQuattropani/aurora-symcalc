@@ -11,4 +11,6 @@ void exit_env(env *context, vList *args);
 
 void reset_env(env *context, vList *args);
 
-void open_file(env *context, vList *args);
+//void open_file(env *context, vList *args);
+
+
