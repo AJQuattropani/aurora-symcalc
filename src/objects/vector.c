@@ -5,7 +5,7 @@ Object as_vdliteral(vd_literal *value) {
 }
 
 void free_vdliteral(vd_literal *lit) {
-  if (NULL == lit->data) {
+  if (NULL != lit->data) {
     free(lit->data);
   }
   lit->size = 0;
