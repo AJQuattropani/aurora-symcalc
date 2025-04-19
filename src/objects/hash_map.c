@@ -38,11 +38,6 @@ _value *acquire_value(Map *map, _key key) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  //(**node_addr).value.ty = NONE;
-  //(**node_addr).key = m_from_copy(key);
-  //(**node_addr).hash_val = index;
-  //(**node_addr).prev = prev_node;
-  //(**node_addr).next = NULL;
   **node_addr = (_mnode) {
     .value.ty = NONE, .key = m_from_copy(key), .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
   return &(**node_addr).value;
@@ -67,11 +62,6 @@ _mnode *acquire_pair(Map *map, _key key) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  //(**node_addr).value.ty = NONE;
-  //(**node_addr).key = m_from_copy(key);
-  //(**node_addr).hash_val = index;
-  //(**node_addr).prev = prev_node;
-  //(**node_addr).next = NULL;
   **node_addr = (_mnode) {
     .value.ty = NONE, .key = m_from_copy(key), .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
   return &(**node_addr);
@@ -147,14 +137,30 @@ void delete_pair(Map *map, _key key) {
 }
 
 void remove_node(_mnode *node) {
-  *(node->upstr) = node->next; // change last reference to next always
   if (NULL != node->prev) {
     node->prev->next = node->next; // this may be redundant
   }
   if (NULL != node->next) {
     node->next->prev = node->prev;
+    node->next->upstr = node->upstr;
   }
+  *(node->upstr) = node->next; // change last reference to next always
   mn_destroy(node);
+}
+
+void update_map(Map *map) {
+  for (size_t i = 0; i < STATIC_MAP_SIZE; i++) { 
+    _mnode **upstr = &(*map)[i]; // bucket
+    while (NULL != *upstr) {
+      _mnode *rm = *upstr;
+      if (NONE == rm->value.ty) {
+        //printf("[Cleanup] Removing node belonging to \"%s\" at %p.\n", (*upstr)->key.cstring, (void*)*upstr);
+        remove_node(rm);
+        continue;
+      }
+      upstr = &((*upstr)->next);
+    }
+  }
 }
 
 void empty_map(Map *map) {
@@ -198,5 +204,7 @@ void mn_destroy(_mnode *node) {
   free_object(&node->value);
   free(node); // free node
 }
+
+
 
 

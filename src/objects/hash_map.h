@@ -60,6 +60,4 @@ size_t hash_key(const _key *key);
 
 void mn_destroy(_mnode *node);
 
-
-
-
+void update_map(Map *map);
