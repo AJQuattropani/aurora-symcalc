@@ -42,19 +42,19 @@ gString g_from_capacity(size_t capacity) {
   return gstr;
 }
 
-void g_deletestr(gString *gstr) {
+__attribute__((always_inline)) inline void g_deletestr(gString *gstr) {
   gstr->size = 0;
   gstr->capacity = 0;
   free(gstr->cstring);
   gstr->cstring = NULL;
 }
 
-void g_empty(gString *gstr) {
+__attribute__((always_inline)) inline void g_empty(gString *gstr) {
   memset(gstr->cstring, 0, gstr->size * sizeof(char));
   gstr->size = 0;
 }
 
-void g_append_back(gString *gstr, const char *appendix, size_t len) {
+__attribute__((always_inline)) inline void g_append_back(gString *gstr, const char *appendix, size_t len) {
   size_t new_size = gstr->size + len;
   if (new_size >= gstr->capacity) { // trigger reallocation
     size_t new_cap =
@@ -73,7 +73,7 @@ void g_append_back(gString *gstr, const char *appendix, size_t len) {
   gstr->size = new_size;
 }
 
-void g_append_back_c(gString *gstr, const char *appendix) {
+__attribute__((always_inline)) inline void g_append_back_c(gString *gstr, const char *appendix) {
   size_t len = strlen(appendix);
   size_t new_size = gstr->size + len;
   if (new_size >= gstr->capacity) { // trigger reallocation
