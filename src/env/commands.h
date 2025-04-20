@@ -1,6 +1,7 @@
 #pragma once
 
 #include "environment.h"
+#include "script_stack.h"
 #include "../objects/hash_map.h"
 #include "../objects/token_list.h"
 
@@ -40,6 +41,17 @@ void print_tok(env *context, const token_array *args);
 void define_object(env *context, const token_array *args);
 
 /**
+ * Command for adding new files to the stack.
+ */
+void open_files(env *context, const token_array *args);
+
+/**
 * Instructs to read remaining tokens as a vector.
 */
 Object read_vector(const token_array *args);
+
+
+
+
+
+

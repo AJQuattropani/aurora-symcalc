@@ -56,6 +56,19 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
               3}); // read in remaining args as either function or vector
 }
 
+void open_files(env *context, const token_array *args) {
+  if (1 > args->size) {
+    fprintf(stderr, "[SKIPPED] Insufficient arguments for open call.\n");
+    return;
+  }
+  for (size_t i = args->size - 1; i > 0; i--) {
+    token *node = &args->data[i];
+    if (0 == open_file(&context->script_stack, node->token->key.cstring)) {
+      context->status = CALL;
+    }
+  }
+}
+
 Object read_vector(const token_array *args) {
   vd_literal vector = alloc_vdliteral(args->size);
   for (size_t i = 0; i < args->size; i++) {
@@ -70,5 +83,3 @@ Object read_vector(const token_array *args) {
   return as_vdliteral(&vector);
 }
 
-// void open_file(env *context, [[maybe_unused]] vList *args) {
-// }
