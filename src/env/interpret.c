@@ -21,8 +21,10 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
     if (')' == *ep || '(' == *ep) {
       v_push_cstr(vlist, ep, 1);
     }
+    if ('\n' == *ep) {
+      *ep = '\0';
+    }
   }
-  sp[read-1] = '\0';
 
   return read;
 }
