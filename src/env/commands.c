@@ -87,3 +87,12 @@ Object read_vector(const token_array *args) {
   return as_vdliteral(&vector);
 }
 
+Object read_function(const token_array *args) {
+  //f_object function = alloc_fobject(args->size);
+  //potential performance boost from upfront allocation of all memory used by the function
+  //f_object function = build_fobject(args->size);
+  f_object function;
+
+
+  return as_fobject(&function);
+}

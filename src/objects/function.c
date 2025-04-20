@@ -42,4 +42,9 @@ void free_fnode_recurse(f_node *node) {
 
 __attribute__((always_inline)) inline void
 sprint_function([[maybe_unused]] gString *inp,
-                [[maybe_unused]] const f_object *fun) {}
+                [[maybe_unused]] const f_object *fun) {
+
+ // space to implement function-to-string conversion
+
+
+}

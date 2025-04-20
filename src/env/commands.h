@@ -54,7 +54,9 @@ void open_files(env *context, const token_array *args);
 */
 Object read_vector(const token_array *args);
 
-
-
+/*
+* Instructs to read remaining tokens as a function.
+*/
+Object read_function(const token_array *args);
 
 

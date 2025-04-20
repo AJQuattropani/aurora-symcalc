@@ -25,6 +25,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER});
   cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER});
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER});
+  cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER});
 }
 
 __attribute__((always_inline)) static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {

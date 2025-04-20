@@ -5,7 +5,6 @@
 #include "vector.h"
 #include "initializers.h"
 
-// TODO implement reader
 f_object build_fobject();
 
 f_node *new_fnode();
