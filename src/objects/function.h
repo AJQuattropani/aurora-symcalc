@@ -15,3 +15,7 @@ Object as_fobject(f_object *fun);
 void free_fobject(f_object *fun);
 
 void free_fnode_recurse(f_node *node);
+
+void sprint_function(gString *inp, const f_object *fun);
+
+

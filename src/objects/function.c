@@ -23,19 +23,23 @@ void free_fnode_recurse(f_node *node) {
     return;
   free_vdliteral(&node->output);
   switch (node->ty) {
-    case BINARY:
-      free_bopliteral(&node->bf.op);
-      free_fnode_recurse(node->bf.left);
-      free_fnode_recurse(node->bf.right);
-      break;
-    case UNARY:
-      free_uopliteral(&node->uf.op);
-      free_fnode_recurse(node->uf.in);
-      break;
-    case CONSTANT:
-      break;
-    case IDENTITY:
-      break;
+  case BINARY:
+    free_bopliteral(&node->bf.op);
+    free_fnode_recurse(node->bf.left);
+    free_fnode_recurse(node->bf.right);
+    break;
+  case UNARY:
+    free_uopliteral(&node->uf.op);
+    free_fnode_recurse(node->uf.in);
+    break;
+  case CONSTANT:
+    break;
+  case IDENTITY:
+    break;
   }
   free(node);
 }
+
+__attribute__((always_inline)) inline void
+sprint_function([[maybe_unused]] gString *inp,
+                [[maybe_unused]] const f_object *fun) {}

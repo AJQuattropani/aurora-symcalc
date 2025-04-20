@@ -3,7 +3,7 @@
 void sprint_object(gString *gstr, const Object *o) {
   switch (o->ty) {
   case VECTOR:
-    sprint_vector(gstr, o->vLiteral);
+    sprint_vector(gstr, &o->vLiteral);
     break;
   case CONTEXT:
     g_append_back_c(gstr, "CONTEXT");
@@ -15,9 +15,9 @@ void sprint_object(gString *gstr, const Object *o) {
     g_append_back_c(gstr, "UNARYOPR");
     break;
   case FUNC:
+    sprint_function(gstr, &o->fObject);
     g_append_back_c(gstr, "todofunc");
     break;
-    //sprint_function(gstr, o->fObject);
   case READER: 
     g_append_back_c(gstr, "READER");
     break;

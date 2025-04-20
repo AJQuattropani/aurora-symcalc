@@ -11,4 +11,4 @@ void free_vdliteral(vd_literal *lit);
 
 vd_literal alloc_vdliteral(size_t n);
 
-void sprint_vector(gString *inp, vd_literal value);
+void sprint_vector(gString *inp, const vd_literal *value);
