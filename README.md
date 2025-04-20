@@ -43,10 +43,18 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 | exit    | Closes the program.                   |
 | return  | Closes current scope.                 |
 | reset   | Resets environment variables          |
-| set     | Define a value: [types:VECTOR] [data] |
+| set     | Define a value: [types] [data]        |
 | open    | Read and execute a .ask               |
 | peak    | Prints the value of symbols by name.  |
 | printenv| Prints all environment variables.     |
+| [funct] | Represents function as a string.      |
+|         | [data] evaluates function *todo*      |
+
+Types:
+- Vectors: buffers for storing numerical values
+- Functions: program representation of maps of vectors to vectors
+
+To test or experiment with interplay of elements in the program, or perform unit tests, new test files can be generated in `./test/`. CMake will generate a separate output executable for each file in this directory.
 
 
 Additional documentation will come as features are added.
