@@ -66,7 +66,7 @@ struct function_object;
 typedef struct function_object f_object;
 struct function_object {
   f_node* root;
-  size_t argcnt;
+  unsigned short argcnt;
 };
 
 enum opr_t {
@@ -76,30 +76,6 @@ enum opr_t {
   IDENTITY
 };
 typedef enum opr_t opr_t;
-
-struct function_node {
-  union {
-    struct {
-      b_opliteral op;
-      f_node* left;
-      f_node* right;
-    } bf;
-    struct {
-      u_opliteral op;
-      f_node* in;
-    } uf;
-    //struct { // none needed for constant
-    //} cf;
-    // identity: index of input args
-    struct {
-      size_t index;
-    } xf;
-  };
-  // storage buffer for output of operation
-  // for constant, this is a static vector
-  vd_literal output;
-  opr_t ty;
-};
 
 struct object {
   union {
