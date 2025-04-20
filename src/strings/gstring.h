@@ -29,8 +29,6 @@ void g_deletestr(gString *gstr);
 
 void g_empty(gString *gstr);
 
-void g_append_back(gString *string, const char *appendix, size_t len);
+void g_append_back(gString *gstr, const char *appendix, size_t len);
 
-
-
-
+void g_append_back_c(gString *gstr, const char *appendix);

@@ -73,3 +73,23 @@ void g_append_back(gString *gstr, const char *appendix, size_t len) {
   gstr->size = new_size;
 }
 
+void g_append_back_c(gString *gstr, const char *appendix) {
+  size_t len = strlen(appendix);
+  size_t new_size = gstr->size + len;
+  if (new_size >= gstr->capacity) { // trigger reallocation
+    size_t new_cap =
+      2 * (gstr->capacity + len);
+    char *temp = (char *)realloc(gstr->cstring, (new_cap+1) * sizeof(char));
+    // make a buffer double the size of the new capacity
+    if (NULL == temp) {
+      fprintf(stderr, "realloc failed in %s\n", __func__);
+      exit(1);
+    }
+    gstr->cstring = temp;
+    gstr->capacity = new_cap;
+  }
+
+  strncpy(gstr->cstring + gstr->size, appendix, len + 1); // copy in appdx to end of string
+  gstr->size = new_size;
+}
+

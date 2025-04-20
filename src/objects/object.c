@@ -6,23 +6,23 @@ void sprint_object(gString *gstr, const Object *o) {
     sprint_vector(gstr, o->vLiteral);
     break;
   case CONTEXT:
-    g_append_back(gstr, "CONTEXT", 9);
+    g_append_back_c(gstr, "CONTEXT");
     break;
   case BOPER:
-    g_append_back(gstr, "BINARYOPR", 9);
+    g_append_back_c(gstr, "BINARYOPR");
     break;
   case UOPER:
-    g_append_back(gstr, "UNARYOPR", 8);
+    g_append_back_c(gstr, "UNARYOPR");
     break;
   case FUNC:
-    g_append_back(gstr, "todofunc", 8);
+    g_append_back_c(gstr, "todofunc");
     break;
     //sprint_function(gstr, o->fObject);
   case READER: 
-    g_append_back(gstr, "READER", 6);
+    g_append_back_c(gstr, "READER");
     break;
   case NONE:
-    g_append_back(gstr, "NONE", 4);
+    g_append_back_c(gstr, "NONE");
     break;
   }
 }

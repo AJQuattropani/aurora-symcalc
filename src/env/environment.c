@@ -63,9 +63,23 @@ void runtime() {
       if (NULL == arr.data || 0 >= arr.size) continue;
       
       Object *obj = &arr.data[0].token->value;
-      if (CONTEXT == obj->ty) {
-        mf_context mc = obj->mContext;
-        mc(&env, &arr);
+      switch (obj->ty) {
+        case CONTEXT: {
+        if (CONTEXT == obj->ty) {
+          mf_context mc = obj->mContext;
+          mc(&env, &arr);
+          }
+        }
+        break;
+        case VECTOR: {
+          
+
+        }
+        break;
+        case NONE: {
+          g_append_back_c(&env.output_buffer, "Unknown token.");
+        }
+        default: break;
       }
 
       printf("%s\n", env.output_buffer.cstring);
