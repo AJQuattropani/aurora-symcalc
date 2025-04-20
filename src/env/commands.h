@@ -15,6 +15,12 @@
 void exit_env(env *context, const token_array *args);
 
 /*
+* FLAGS ENVIRONMENT TO RETURN.
+*/
+void return_env(env *context, const token_array *args);
+
+
+/*
 * FLAGS ENVIRONMENT TO RESET.
 */
 void reset_env(env *context, const token_array *args);
@@ -29,9 +35,7 @@ void print_env(env *context, [[maybe_unused]] const token_array *args);
  */
 void print_tok(env *context, const token_array *args);
 
-//void open_file(env *context, vList *args);
-
-/**
+/*
 * Makes a new object.
 * arg 0 : set
 * arg 1 : name
@@ -40,16 +44,15 @@ void print_tok(env *context, const token_array *args);
 */
 void define_object(env *context, const token_array *args);
 
-/**
+/*
  * Command for adding new files to the stack.
  */
 void open_files(env *context, const token_array *args);
 
-/**
+/*
 * Instructs to read remaining tokens as a vector.
 */
 Object read_vector(const token_array *args);
-
 
 
 

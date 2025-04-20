@@ -4,6 +4,10 @@ void exit_env(env *context, [[maybe_unused]] const token_array *args) {
   context->status = EXIT;
 }
 
+void return_env(env *context, [[maybe_unused]] const token_array *args) {
+  context->status = RETURN;
+}
+
 void reset_env(env *context, [[maybe_unused]] const token_array *args) {
   empty_map(context->map);
   default_map(context->map);

@@ -7,7 +7,7 @@ void default_map(Map map) {
   cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT});
   cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT});
   cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT});
-  // cinsert(map, "open", (_value){.mContext = open_file, .ty = CONTEXT});
+  cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER});
   cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER});
   cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER});
