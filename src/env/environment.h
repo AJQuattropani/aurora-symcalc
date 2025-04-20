@@ -10,24 +10,28 @@
 #include "commands.h"
 #include "operators.h"
 #include "interpret.h"
+#include "script_stack.h"
+
 
 enum env_status {
   OK,
+  CALL,
+  RETURN,
   EXIT
 };
 typedef enum env_status env_status;
 
 struct environment {
   Map map;
-  FILE* current_file;
+  sc_stack script_stack;
   env_status status;
   gString output_buffer;
 };
 
+
 void default_map(Map map);
 
-void init_env(env *env);
-
+void init_env(env *env, int argc, char *argv[]);
+void runtime(env *env);
 void free_env(env *env);
 
-void runtime();
