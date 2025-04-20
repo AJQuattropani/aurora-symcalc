@@ -41,10 +41,12 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 | Command |       Description                     |
 |:-------:|:-------------------------------------:|
 | exit    | Closes the program.                   |
-| reset   | Resets context to default.            |
+| return  | Closes current scope.                 |
+| reset   | Resets environment variables          |
 | set     | Define a value: [types:VECTOR] [data] |
 | open    | Read and execute a .ask               |
 | peak    | Prints the value of symbols by name.  |
+| printenv| Prints all environment variables.     |
 
 
 Additional documentation will come as features are added.
