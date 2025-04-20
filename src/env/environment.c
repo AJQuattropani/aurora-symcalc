@@ -1,6 +1,6 @@
 #include "environment.h"
 
-void default_map(Map *map) {
+void default_map(Map map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
   cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT});
@@ -27,14 +27,14 @@ void default_map(Map *map) {
 }
 
 void init_env(env *env) {
-  default_map(&env->map);
+  default_map(env->map);
   env->current_file = stdin;
   env->status = OK;
   env->output_buffer = g_from_capacity(256);
 }
 
 void free_env(env *env) {
-  empty_map(&env->map);
+  empty_map(env->map);
   if (stdin != env->current_file && stdout != env->current_file) {
     fclose(env->current_file);
   }
@@ -59,7 +59,7 @@ void runtime() {
       //  g_append_back(&env.output_buffer, " | ", 3);
       //}
 
-      token_array arr = tokenize(&env.map, &vlist);
+      token_array arr = tokenize(env.map, &vlist);
       if (NULL == arr.data || 0 >= arr.size) continue;
       
       Object *obj = &arr.data[0].token->value;
@@ -81,7 +81,7 @@ void runtime() {
         exit(1);
       }
       
-      update_map(&env.map);
+      update_map(env.map);
       g_empty(&env.output_buffer);
     }
     v_free(&vlist);

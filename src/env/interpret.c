@@ -27,7 +27,7 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   return read;
 }
 
-token_array tokenize(Map* map, const vList *vlist) {
+token_array tokenize(Map map, const vList *vlist) {
   token_array tokens = new_token_array(vlist->size);
   token curr = {NULL, 0};
   for (size_t i = 0; i < vlist->size; i++) {

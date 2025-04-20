@@ -2,7 +2,7 @@
 #include "../src/env/operators.h"
 #include "../src/objects/vector.h"
 
-void test_default_map(Map *map) {
+void test_default_map(Map map) {
   printf("Building map.\n");
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER});
   cinsert(map, "-", (_value){ .bOperation = vb_sub, .ty = BOPER});
@@ -24,14 +24,14 @@ void test_default_map(Map *map) {
 
 int main(void) {
   Map map;
-  test_default_map(&map);
+  test_default_map(map);
   
   printf("C1\n");
   
   mString add = m_from_cstr("+"); 
   mString mult = {"*", 1};
 
-  print_map(&map);
+  print_map(map);
 
   vd_literal l = alloc_vdliteral(10);
   vd_literal r = alloc_vdliteral(10);
@@ -44,8 +44,8 @@ int main(void) {
     r.data[i] = 9-i;
   }
   
-  const Object *obj = lookup_value_const(&map, add);
-  const Object *obj2 = lookup_value_const(&map, mult);
+  const Object *obj = lookup_value_const(map, add);
+  const Object *obj2 = lookup_value_const(map, mult);
   if (obj == NULL || obj2 == NULL) {
     printf("SEARCH FAILED.\n");
     goto cleanup;
@@ -64,7 +64,7 @@ int main(void) {
     printf("%lf = %lf * %lf\n", o2.data[i], l.data[i], r.data[i]);
   }
 cleanup:
-  empty_map(&map);
+  empty_map(map);
   free_vdliteral(&l);
   free_vdliteral(&r);
   free_vdliteral(&o);

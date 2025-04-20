@@ -1,17 +1,17 @@
 #include "hash_map.h"
 
-_value *lookup_value(const Map *map, _key key) {
+_value *lookup_value(Map map, _key key) {
   size_t index = hash_key(&key);
-  for (_mnode *node = (*map)[index]; node != NULL; node = node->next) {
+  for (_mnode *node = map[index]; node != NULL; node = node->next) {
     if (m_same(&node->key, &key))
       return &node->value;
   }
   return NULL;
 }
 
-const _value *lookup_value_const(const Map *map, const _key key) {
+const _value *lookup_value_const(Map map, const _key key) {
   size_t index = hash_key(&key);
-  for (const _mnode *node = (*map)[index]; node != NULL; node = node->next) {
+  for (const _mnode *node = map[index]; node != NULL; node = node->next) {
     if (m_same(&node->key, &key)) {
       return &node->value;
     }
@@ -19,12 +19,12 @@ const _value *lookup_value_const(const Map *map, const _key key) {
   return NULL;
 }
 
-_value *acquire_value(Map *map, _key key) {
+_value *acquire_value(Map map, _key key) {
   size_t index = hash_key(&key);
   _mnode **node_addr;
   _mnode *prev_node = NULL;
-  _mnode **upstr = &(*map)[index];
-  for (node_addr = &(*map)[index]; *node_addr != NULL;
+  _mnode **upstr = &map[index];
+  for (node_addr = &map[index]; *node_addr != NULL;
        node_addr = &(*node_addr)->next) {
     prev_node = *node_addr;
     upstr = &(prev_node->next);
@@ -43,12 +43,12 @@ _value *acquire_value(Map *map, _key key) {
   return &(**node_addr).value;
 }
 
-_mnode *acquire_pair(Map *map, _key key) {
+_mnode *acquire_pair(Map map, _key key) {
   size_t index = hash_key(&key);
   _mnode **node_addr;
   _mnode *prev_node = NULL;
-  _mnode **upstr = &(*map)[index];
-  for (node_addr = &(*map)[index]; *node_addr != NULL;
+  _mnode **upstr = &map[index];
+  for (node_addr = &map[index]; *node_addr != NULL;
        node_addr = &(*node_addr)->next) {
     prev_node = *node_addr;
     upstr = &(prev_node->next);
@@ -68,13 +68,13 @@ _mnode *acquire_pair(Map *map, _key key) {
 }
 
 
-void cinsert(Map *map, const char* ckey, _value value) {
+void cinsert(Map map, const char* ckey, _value value) {
   mString key = m_from_cstr(ckey);
   size_t index = hash_key(&key);
   _mnode *prev_node = NULL;
-  _mnode **upstr = &(*map)[index];
+  _mnode **upstr = &map[index];
   _mnode **node_addr;
-  for (node_addr = &(*map)[index]; *node_addr != NULL;
+  for (node_addr = &map[index]; *node_addr != NULL;
        node_addr = &prev_node->next) {
     prev_node = *node_addr;
     upstr = &(prev_node->next);
@@ -93,12 +93,12 @@ void cinsert(Map *map, const char* ckey, _value value) {
       .key = key, .value = value, .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
 }
 
-void insert(Map *map, _key key, _value value) {
+void insert(Map map, _key key, _value value) {
   size_t index = hash_key(&key);
   _mnode *prev_node = NULL;
-  _mnode **upstr = &(*map)[index];
+  _mnode **upstr = &map[index];
   _mnode **node_addr;
-  for (node_addr = &(*map)[index]; *node_addr != NULL;
+  for (node_addr = &map[index]; *node_addr != NULL;
        node_addr = &prev_node->next) {
     prev_node = *node_addr;
     upstr = &(prev_node->next);
@@ -117,11 +117,11 @@ void insert(Map *map, _key key, _value value) {
       .key = m_from_copy(key), .value = value, .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
 }
 
-void delete_pair(Map *map, _key key) {
+void delete_pair(Map map, _key key) {
   size_t index = hash_key(&key);
   _mnode **node_addr;
   _mnode **next_addr;
-  for (node_addr = &(*map)[index]; *node_addr != NULL; node_addr = next_addr) {
+  for (node_addr = &map[index]; *node_addr != NULL; node_addr = next_addr) {
     _mnode *node = *node_addr;
     next_addr = &(**node_addr).next;
     if (0 != m_same(&node->key, &key)) {
@@ -148,9 +148,9 @@ void remove_node(_mnode *node) {
   mn_destroy(node);
 }
 
-void update_map(Map *map) {
+void update_map(Map map) {
   for (size_t i = 0; i < STATIC_MAP_SIZE; i++) { 
-    _mnode **upstr = &(*map)[i]; // bucket
+    _mnode **upstr = &map[i]; // bucket
     while (NULL != *upstr) {
       _mnode *rm = *upstr;
       if (NONE == rm->value.ty) {
@@ -163,23 +163,23 @@ void update_map(Map *map) {
   }
 }
 
-void empty_map(Map *map) {
+void empty_map(Map map) {
   for (size_t bkt = 0; bkt < STATIC_MAP_SIZE; bkt++) {
     _mnode *next = NULL;
-    for (_mnode *curr = (*map)[bkt]; curr != NULL; curr = next) {
+    for (_mnode *curr = map[bkt]; curr != NULL; curr = next) {
       next = curr->next;
       mn_destroy(curr);
     }
-    (*map)[bkt] = NULL;
+    map[bkt] = NULL;
   }
 }
 
-void print_map(Map *map) {
+void print_map(Map map) {
   for (size_t bkt = 0; bkt < STATIC_MAP_SIZE; bkt++) {
-    if (NULL == (*map)[bkt])
+    if (NULL == map[bkt])
       continue;
     printf("Bucket %ld: ", bkt);
-    for (_mnode *curr = (*map)[bkt]; curr != NULL; curr = curr->next) {
+    for (_mnode *curr = map[bkt]; curr != NULL; curr = curr->next) {
       //printf("(%.*s, %d), ", (int)curr->key.size, curr->key.cstring,
       //       curr->value.ty); // may have to change val printing
 

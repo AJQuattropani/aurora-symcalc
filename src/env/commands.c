@@ -5,13 +5,13 @@ void exit_env(env *context, [[maybe_unused]] const token_array *args) {
 }
 
 void reset_env(env *context, [[maybe_unused]] const token_array *args) {
-  empty_map(&context->map);
-  default_map(&context->map);
+  empty_map(context->map);
+  default_map(context->map);
   context->status = OK;
 }
 
 void print_env(env *context, [[maybe_unused]] const token_array *args) {
-  print_map(&context->map);
+  print_map(context->map);
 }
 
 void print_tok(env *context, const token_array *args) {

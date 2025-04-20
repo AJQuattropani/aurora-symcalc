@@ -24,7 +24,7 @@ struct environment {
   gString output_buffer;
 };
 
-void default_map(Map *map);
+void default_map(Map map);
 
 void init_env(env *env);
 

@@ -36,28 +36,28 @@ struct map_node {
 // typedef struct map Map;
 typedef _mnode *Map[STATIC_MAP_SIZE];
 
-_value *lookup_value(const Map *map, _key key);
+_value *lookup_value(Map map, _key key);
 
-const _value *lookup_value_const(const Map *map, _key key);
+const _value *lookup_value_const(Map map, _key key);
 
-_value *acquire_value(Map *map, _key key);
+_value *acquire_value(Map map, _key key);
 
-_mnode *acquire_pair(Map *map, _key key);
+_mnode *acquire_pair(Map map, _key key);
 
-void cinsert(Map *map, const char* ckey, _value value);
+void cinsert(Map map, const char* ckey, _value value);
 
-void insert(Map *map, _key key, _value value);
+void insert(Map map, _key key, _value value);
 
-void delete_pair(Map *map, _key key);
+void delete_pair(Map map, _key key);
 
 void remove_node(_mnode *node);
 
-void empty_map(Map *map);
+void empty_map(Map map);
 
-void print_map(Map *map);
+void print_map(Map map);
 
 size_t hash_key(const _key *key);
 
 void mn_destroy(_mnode *node);
 
-void update_map(Map *map);
+void update_map(Map map);
