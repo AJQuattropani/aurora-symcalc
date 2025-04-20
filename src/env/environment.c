@@ -1,6 +1,6 @@
 #include "environment.h"
 
-void default_map(Map map) {
+__attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
   cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT});
@@ -27,7 +27,7 @@ void default_map(Map map) {
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER});
 }
 
-static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {
+__attribute__((always_inline)) static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {
   push_file(stack, stdin);
   for (size_t i = argc - 1; i > 0; i--) {
     if (0 != open_file(stack, argv[i])) {
@@ -37,14 +37,14 @@ static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {
   }
 }
 
-void init_env(env *env, int argc, char *argv[]) {
+__attribute__((always_inline)) inline void init_env(env *env, int argc, char *argv[]) {
   init_stack(&env->script_stack, argc, argv);
   default_map(env->map);
   env->status = OK;
   env->output_buffer = g_from_capacity(256);
 }
 
-void free_env(env *env) {
+__attribute__((always_inline)) inline void free_env(env *env) {
   destroy_stack(&env->script_stack);
   empty_map(env->map);
   g_deletestr(&env->output_buffer);
@@ -52,7 +52,7 @@ void free_env(env *env) {
 
 #define OUTPUT_BUFFER_SIZE(x) x * 3
 
-void runtime(env *env) {
+__attribute__((always_inline)) inline void runtime(env *env) {
   mString mstr;
   vList vlist = v_from_capacity(10);
   FILE *current_file;
@@ -60,14 +60,12 @@ void runtime(env *env) {
     while (0 <= v_get_line(&vlist, &mstr, current_file)) {
       if (stdin != current_file) {
         g_append_back_c(&env->output_buffer, mstr.cstring);
-        g_append_back_c(&env->output_buffer, " \n");
       }
 
       token_array arr = tokenize(env->map, &vlist);
 
       if (NULL == arr.data || 0 >= arr.size) {
         destroy_token_array(&arr);
-        update_map(env->map);
         g_empty(&env->output_buffer);
         continue;
       }
@@ -93,13 +91,13 @@ void runtime(env *env) {
       printf("%s\n", env->output_buffer.cstring);
       
       destroy_token_array(&arr);
-      update_map(env->map);
       g_empty(&env->output_buffer);
 
       if (OK != env->status) {
         break;
       }
     }
+    update_map(env->map);
     
     if (RETURN == env->status) {
       env->status = OK;

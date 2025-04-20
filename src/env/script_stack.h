@@ -17,14 +17,14 @@ struct script_stack {
 * Checks if the file is not a std file.
 * return: 0 if true, false otherwise
 */
-static inline int closeable(FILE *fptr) {
+__attribute__((always_inline)) static inline int closeable(FILE *fptr) {
   return (stdin == fptr) || (stdout == fptr) || (stderr == fptr);
 }
 
 /*
 * Gets the current file. returns NULL if stack is empty.
 */
-static inline FILE *get_current_file(sc_stack *stack) {
+__attribute__((always_inline)) static inline FILE *get_current_file(sc_stack *stack) {
   if (stack->count <= 0) return NULL;
   return stack->open_files[stack->count - 1];
 }
@@ -33,7 +33,7 @@ static inline FILE *get_current_file(sc_stack *stack) {
 * Pushes an in-use file to the top of the stack.
 * THIS IS FOR STD FILESTREAMS ONLY
 */
-static inline int push_file(sc_stack *stack, FILE *fptr) {
+__attribute__((always_inline)) static inline int push_file(sc_stack *stack, FILE *fptr) {
   if (MAX_FILES <= stack->count) {
     fprintf(stderr, "[Skipped] File open to prevent stack overflow.");
     return 1;
@@ -47,7 +47,7 @@ static inline int push_file(sc_stack *stack, FILE *fptr) {
 * Opens a file and pushes it to the top of the stack.
 * return: 1 on failure, 0 on success
 */
-static inline int open_file(sc_stack *stack, const char *file_name) {
+__attribute__((always_inline)) static inline int open_file(sc_stack *stack, const char *file_name) {
   if (MAX_FILES <= stack->count) {
     fprintf(stderr, "[Skipped] File open to prevent stack overflow.");
     return 1;
@@ -69,7 +69,7 @@ static inline int open_file(sc_stack *stack, const char *file_name) {
 * Closes current file and decrements stack pointer.
 * return: 1 on empty stack, 0 on success
 */
-static inline int pop_file(sc_stack* stack) {
+__attribute__((always_inline)) static inline int pop_file(sc_stack* stack) {
   int curr = stack->count - 1;
   if (curr < 0) {
     return 1;
@@ -87,7 +87,7 @@ static inline int pop_file(sc_stack* stack) {
 /*
 * Closes all files until none are left.
 */
-static inline void destroy_stack(sc_stack* stack) {
+__attribute__((always_inline)) static inline void destroy_stack(sc_stack* stack) {
   while (0 == pop_file(stack)); 
 }
 
