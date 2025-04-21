@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <limits.h>
 #include "../strings/vstring.h"
 
 /*
@@ -28,11 +29,13 @@ typedef struct object Object;
  */
 enum object_type {
   NONE = 0,
+  TEMP,
+  SYNTAX_RIGHT,
   VECTOR,
+  FUNC,
   BOPER,
   UOPER,
   CONTEXT,
-  FUNC,
   READER,
 };
 typedef enum object_type obj_t;
@@ -85,8 +88,10 @@ struct object {
     u_opliteral uOperation;
     f_object fObject;
     r_macro reader;
+    long long int other;
   };
   obj_t ty;
+  unsigned short priority;
 };
 
 
