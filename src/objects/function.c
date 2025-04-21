@@ -30,6 +30,7 @@ void free_fnode_recurse(f_node *node) {
     free_fnode_recurse(node->uf.in);
     break;
   case CONSTANT:
+    m_deletestr(&node->name);
     break;
   case IDENTITY:
     break;
