@@ -34,17 +34,17 @@ __attribute__((always_inline)) inline void sprint_vector(gString *inp, const vd_
     g_append_back_c(inp, "NULL");
     return;
   }
-  g_append_back_c(inp, "< ");
+  g_append_back_c(inp, "[");
   for (size_t i = 0; i < value->size; i++) {
     const size_t buff_size = 17;
     char buff[buff_size];
-    int len = snprintf(buff, buff_size - 1, "%lf ", value->data[i]);
+    int len = snprintf(buff, buff_size - 1, "%lf,", value->data[i]);
     if (0 > len) {
       fprintf(stderr, "Unknown error occurred in snprintf for %s.\n", __func__);
       exit(1);
     }
     g_append_back(inp, buff, len);
   }
-  g_append_back_c(inp, ">");
+  g_append_back_c(inp, "]");
 }
 

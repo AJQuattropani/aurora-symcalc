@@ -89,7 +89,8 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
     return;
   }
   case CONSTANT: {
-    sprint_vector(inp, &fun->output);
+    g_append_back(inp, fun->name.cstring, fun->name.size);
+    //sprint_vector(inp, &fun->output);
     return;
   }
   case IDENTITY: {
