@@ -16,10 +16,15 @@ void sprint_object(gString *gstr, const Object *o) {
     break;
   case FUNC:
     sprint_function(gstr, &o->fObject);
-    g_append_back_c(gstr, "todofunc");
     break;
   case READER: 
     g_append_back_c(gstr, "READER");
+    break;
+  case TEMP:
+    g_append_back_c(gstr, "TEMP");
+    break;
+  case SYNTAX_RIGHT:
+    g_append_back_c(gstr, "->");
     break;
   case NONE:
     g_append_back_c(gstr, "NONE");
@@ -48,6 +53,8 @@ void free_object(Object *o) {
     free_reader(&o->reader);
     break;
   case NONE:
+    break;
+  default:
     break;
   }
   memset(o, 0, sizeof(Object));
