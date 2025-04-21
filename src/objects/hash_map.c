@@ -153,7 +153,7 @@ void update_map(Map map) {
     _mnode **upstr = &map[i]; // bucket
     while (NULL != *upstr) {
       _mnode *rm = *upstr;
-      if (NONE == rm->value.ty) {
+      if (TEMP == rm->value.ty || NONE == rm->value.ty) {
         //printf("[Cleanup] Removing node belonging to \"%s\" at %p.\n", (*upstr)->key.cstring, (void*)*upstr);
         remove_node(rm);
         continue;
