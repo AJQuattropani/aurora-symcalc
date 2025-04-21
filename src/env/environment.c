@@ -1,31 +1,32 @@
 #include "environment.h"
 
 __attribute__((always_inline)) inline void default_map(Map map) {
-  cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT});
-  cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT});
-  cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT});
-  cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT});
-  cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT});
-  cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT});
-  cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT});
-  cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER});
-  cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER});
-  cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER});
-  cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER});
-  cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER});
-  cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER});
-  cinsert(map, "\\sin", (_value){.uOperation = vu_sin, .ty = UOPER});
-  cinsert(map, "\\cos", (_value){.uOperation = vu_cos, .ty = UOPER});
-  cinsert(map, "\\tan", (_value){.uOperation = vu_tan, .ty = UOPER});
-  cinsert(map, "\\sec", (_value){.uOperation = vu_sec, .ty = UOPER});
-  cinsert(map, "\\csc", (_value){.uOperation = vu_csc, .ty = UOPER});
-  cinsert(map, "\\cot", (_value){.uOperation = vu_cot, .ty = UOPER});
-  cinsert(map, "\\log", (_value){.uOperation = vu_log, .ty = UOPER});
-  cinsert(map, "\\arcsin", (_value){.uOperation = vu_asin, .ty = UOPER});
-  cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER});
-  cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER});
-  cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER});
-  cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER});
+  cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT, .priority=0});
+  cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT, .priority=0});
+  cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT, .priority=0});
+  cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT, .priority=0});
+  cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT, .priority=0});
+  cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT, .priority=0});
+  cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT, .priority=0});
+  cinsert(map, "->", (_value){.mContext = NULL, .ty = SYNTAX_RIGHT, .priority=0});
+  cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
+  cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER, .priority = 1});
+  cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER, .priority = 2});
+  cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER, .priority = 2});
+  cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER, .priority = 3});
+  cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER, .priority = 3});
+  cinsert(map, "\\sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\sec", (_value){.uOperation = vu_sec, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\csc", (_value){.uOperation = vu_csc, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\cot", (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\log", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\arcsin", (_value){.uOperation = vu_asin, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER, .priority = 4});
+  cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
+  cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
+  cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
 }
 
 __attribute__((always_inline)) static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {
@@ -93,12 +94,12 @@ __attribute__((always_inline)) inline void runtime(env *env) {
       
       destroy_token_array(&arr);
       g_empty(&env->output_buffer);
+      update_map(env->map);
 
       if (OK != env->status) {
         break;
       }
     }
-    update_map(env->map);
     
     if (RETURN == env->status) {
       env->status = OK;
