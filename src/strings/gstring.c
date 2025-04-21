@@ -57,8 +57,7 @@ __attribute__((always_inline)) inline void g_empty(gString *gstr) {
 __attribute__((always_inline)) inline void g_append_back(gString *gstr, const char *appendix, size_t len) {
   size_t new_size = gstr->size + len;
   if (new_size >= gstr->capacity) { // trigger reallocation
-    size_t new_cap =
-      2 * (gstr->capacity + len);
+    size_t new_cap = 2 * new_size;
     char *temp = (char *)realloc(gstr->cstring, (new_cap+1) * sizeof(char));
     // make a buffer double the size of the new capacity
     if (NULL == temp) {
