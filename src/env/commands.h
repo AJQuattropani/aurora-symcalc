@@ -2,6 +2,8 @@
 
 #include "environment.h"
 #include "script_stack.h"
+
+#include "../objects/function.h"
 #include "../objects/hash_map.h"
 #include "../objects/token_list.h"
 
