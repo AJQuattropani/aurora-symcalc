@@ -1,7 +1,7 @@
 #include "vector.h"
 
 Object as_vdliteral(vd_literal *value) {
-  return (Object){.vLiteral = *value, .ty = VECTOR};
+  return (Object){.vLiteral = *value, .ty = VECTOR, .priority = SHRT_MAX};
 }
 
 void free_vdliteral(vd_literal *lit) {
@@ -11,7 +11,15 @@ void free_vdliteral(vd_literal *lit) {
   lit->size = 0;
 }
 
-vd_literal alloc_vdliteral(size_t n) {
+__attribute__((always_inline)) inline vd_literal copy_vdliteral(const vd_literal* other) {
+  vd_literal lit = alloc_vdliteral(other->size);
+  for (size_t i = 0; i < lit.size; i++) {
+    lit.data[i] = other->data[i];
+  }
+  return lit;
+}
+
+__attribute__((always_inline)) inline vd_literal alloc_vdliteral(size_t n) {
   vd_literal lit =
       (vd_literal){.data = (double *)calloc(n, sizeof(double)), .size = n};
   if (NULL == lit.data) {
