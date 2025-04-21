@@ -1,6 +1,6 @@
 #include "function.h"
 
-f_node *new_node() {
+f_node *new_fnode() {
   f_node *no = (f_node *)malloc(sizeof(f_node));
   if (NULL == no) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
@@ -10,13 +10,10 @@ f_node *new_node() {
 }
 
 Object as_fobject(f_object *fun) {
-  return (Object){.fObject = *fun, .ty = FUNC};
+  return (Object){.fObject = *fun, .ty = FUNC, .priority = SHRT_MAX};
 }
 
-void free_fobject(f_object *fun) {
-  free_fnode_recurse(fun->root);
-  free(fun);
-}
+void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
 
 void free_fnode_recurse(f_node *node) {
   if (NULL == node)
@@ -43,8 +40,69 @@ void free_fnode_recurse(f_node *node) {
 __attribute__((always_inline)) inline void
 sprint_function([[maybe_unused]] gString *inp,
                 [[maybe_unused]] const f_object *fun) {
+  // space to implement function-to-string conversion
+  g_append_back_c(inp, "(");
 
- // space to implement function-to-string conversion
+  if (0 < fun->argcnt) {
+    g_append_back_c(inp, "x");
+    unsigned short i = 0;
+    const int b_size = 7;
+    char numbuff[b_size];
+    int n;
+    while (1) {
+      n = snprintf(numbuff, b_size, "%d", i);
+      if (n >= b_size || 0 >= n) {
+        fprintf(stderr, "snprintf failed in %s", __func__);
+        exit(1);
+      }
+      printf("%*.s", b_size, numbuff);
+      g_append_back(inp, numbuff, n);
+      memset(numbuff, '\0', b_size);
+      if (++i >= fun->argcnt)
+        break;
+      g_append_back_c(inp, ",x");
+    }
+  }
+  g_append_back_c(inp, ")");
 
+  if (NULL == fun->root)
+    return;
+  g_append_back_c(inp, "=");
 
+  fnode_str_recurse(inp, fun->root);
+}
+
+void fnode_str_recurse(gString *inp, const f_node *fun) {
+  switch (fun->ty) {
+  case BINARY: {
+    fnode_str_recurse(inp, fun->bf.left);
+    g_append_back(inp, fun->name.cstring, fun->name.size);
+    fnode_str_recurse(inp, fun->bf.right);
+    return;
+  }
+  case UNARY: {
+    g_append_back(inp, fun->name.cstring, fun->name.size);
+    g_append_back_c(inp, "(");
+    fnode_str_recurse(inp, fun->uf.in);
+    g_append_back_c(inp, ")");
+    return;
+  }
+  case CONSTANT: {
+    sprint_vector(inp, &fun->output);
+    return;
+  }
+  case IDENTITY: {
+    g_append_back_c(inp, "x");
+    const int b_size = 7;
+    char numbuff[b_size];
+    int n;
+    n = snprintf(numbuff, b_size, "%d", fun->xf.index);
+    if (n >= b_size || 0 >= n) {
+      fprintf(stderr, "snprintf failed in %s", __func__);
+      exit(1);
+    }
+    g_append_back(inp, numbuff, n);
+    return;
+  }
+  }
 }
