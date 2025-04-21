@@ -7,6 +7,7 @@ int main(int argc, char *argv[]) {
     runtime(&env);
     free_env(&env);
   }
+  printf("Environment terminated.\n");
   return 0;
 }
 
