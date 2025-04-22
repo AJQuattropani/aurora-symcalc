@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <stdint.h>
 #include <limits.h>
 #include "../strings/vstring.h"
 
@@ -11,7 +12,6 @@
  */
 struct environment;
 typedef struct environment env;
-
 
 struct token;
 typedef struct token token;
@@ -47,9 +47,12 @@ typedef enum object_type obj_t;
  */
 struct vector_literal;
 typedef struct vector_literal vd_literal;
+typedef int64_t vector_size_t;
+#define MAX_SIZE INT64_MAX
+#define SCALAR INT64_MIN
 struct vector_literal {
   double* data;
-  size_t size;
+  vector_size_t size;
 };
 typedef void(*context_modifier)(env *context, const token_array *args);
 typedef context_modifier mf_context; // generic type for functions that modify the runtime environment
@@ -80,7 +83,8 @@ enum opr_t {
 };
 typedef enum opr_t opr_t;
 
-typedef unsigned short priority_t;
+typedef uint16_t priority_t;
+#define PRIORITY_MAX USHRT_MAX
 
 struct object {
   union {
@@ -90,7 +94,7 @@ struct object {
     u_opliteral uOperation;
     f_object fObject;
     r_macro reader;
-    long long int other;
+    int64_t other;
   };
   obj_t ty;
   priority_t priority;

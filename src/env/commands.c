@@ -99,7 +99,7 @@ Object read_function(const token_array *args) {
       return (Object){{{0}}, .ty = NONE};
     }
     args->data[argnum].token->value = (Object){
-        .ty = TEMP, .other = (long long int)argnum, .priority = USHRT_MAX};
+        .ty = TEMP, .other = (uint64_t)argnum, .priority = PRIORITY_MAX};
   }
 
   unsigned short offs = argnum + 1;

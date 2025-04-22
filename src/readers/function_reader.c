@@ -66,7 +66,7 @@ static f_node *least_significant_token_imp(const token_array *args) {
     return split_data.token->value.fObject.root;
   case VECTOR: {
     f_node *constant = new_fnode();
-    gString name = g_from_capacity(7*split_data.token->value.vLiteral.size);
+    gString name = g_from_capacity(10);
     sprint_vector(&name, &split_data.token->value.vLiteral);
     *constant =
         (f_node){.ty = CONSTANT,

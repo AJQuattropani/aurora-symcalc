@@ -10,7 +10,7 @@ f_node *new_fnode() {
 }
 
 Object as_fobject(f_object *fun) {
-  return (Object){.fObject = *fun, .ty = FUNC, .priority = USHRT_MAX};
+  return (Object){.fObject = *fun, .ty = FUNC, .priority = PRIORITY_MAX};
 }
 
 void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
