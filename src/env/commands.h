@@ -7,6 +7,8 @@
 #include "../objects/hash_map.h"
 #include "../objects/token_list.h"
 
+#include "../readers/function_reader.h"
+
 /*
  * Applicable functions for CONTEXT type
  */
