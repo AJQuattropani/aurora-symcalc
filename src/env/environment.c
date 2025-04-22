@@ -15,16 +15,16 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER, .priority = 2});
   cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER, .priority = 3});
   cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER, .priority = 3});
-  cinsert(map, "\\sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\sec", (_value){.uOperation = vu_sec, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\csc", (_value){.uOperation = vu_csc, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\cot", (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\log", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\arcsin", (_value){.uOperation = vu_asin, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\arccos", (_value){.uOperation = vu_acos, .ty = UOPER, .priority = 4});
-  cinsert(map, "\\arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
+  cinsert(map, "sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
+  cinsert(map, "cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
+  cinsert(map, "tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
+  cinsert(map, "sec", (_value){.uOperation = vu_sec, .ty = UOPER, .priority = 4});
+  cinsert(map, "csc", (_value){.uOperation = vu_csc, .ty = UOPER, .priority = 4});
+  cinsert(map, "cot", (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
+  cinsert(map, "log", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
+  cinsert(map, "arcsin", (_value){.uOperation = vu_asin, .ty = UOPER, .priority = 4});
+  cinsert(map, "arccos", (_value){.uOperation = vu_acos, .ty = UOPER, .priority = 4});
+  cinsert(map, "arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
 }
