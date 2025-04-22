@@ -43,6 +43,9 @@ token_array tokenize(Map map, const vList *vlist) {
       continue;
     }
     curr.token = acquire_pair(map, (mString){vlist->data[i].ref,vlist->data[i].len});
+    if (NONE == curr.token->value.ty) {
+      curr.token->value = read_scalar_imp(&curr);
+    }
     push_token_back(&tokens, &curr);
   }
   if (0 != curr.priority) {
