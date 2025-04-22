@@ -8,6 +8,7 @@
 #include "../objects/token_list.h"
 
 #include "../readers/function_reader.h"
+#include "../readers/vector_reader.h"
 
 /*
  * Applicable functions for CONTEXT type
@@ -52,15 +53,5 @@ void define_object(env *context, const token_array *args);
  * Command for adding new files to the stack.
  */
 void open_files(env *context, const token_array *args);
-
-/*
-* Instructs to read remaining tokens as a vector.
-*/
-Object read_vector(const token_array *args);
-
-/*
-* Instructs to read remaining tokens as a function.
-*/
-Object read_function(const token_array *args);
 
 

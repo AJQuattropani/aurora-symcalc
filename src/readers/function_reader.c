@@ -1,31 +1,18 @@
 #include "function_reader.h"
 
+static f_node *least_significant_token_recurse(const token_array *args);
+
 static f_node *least_significant_token_imp(const token_array *args) { 
   size_t sp = 0;
   token split_data = args->data[sp];
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
-    //fprintf(stdout, "Current %s \n", curr->token->key.cstring);
-
     if (curr->priority > split_data.priority) continue;
     if (curr->priority == split_data.priority) {
       if (curr->token->value.priority >= split_data.token->value.priority) continue;
     }
     sp = i;
     split_data = *curr;
-    //fprintf(stdout, "Passed.\n");
-    //if (curr->priority < split_data.priority) {
-    //  sp = i;
-    //  split_data = *curr;
-    //  fprintf(stdout, "Paren priority: new %s \n", curr->token->key.cstring);
-    //  continue;
-    //}
-    //if (curr->token->value.priority < split_data.token->value.priority) {
-    //  sp = i;
-    //  split_data = *curr;
-    //  fprintf(stdout, "Oper priority: new %s \n", curr->token->key.cstring);
-    //  continue;
-    //}
   }
   fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
 
@@ -110,4 +97,48 @@ __attribute__((always_inline)) inline f_node *least_significant_token_recurse(co
     return NULL;
   }
   return least_significant_token_imp(args);
+}
+
+Object read_function(const token_array *args) {
+  unsigned short argnum = 0;
+  for (; argnum < args->size; argnum++) {
+    if (SYNTAX_RIGHT == args->data[argnum].token->value.ty)
+      break;
+    if (NONE != args->data[argnum].token->value.ty) {
+      fprintf(stderr, "[ERROR] Function argument collision at %s\n",
+              args->data[argnum].token->key.cstring);
+      return (Object){{{0}}, .ty = NONE};
+    }
+    args->data[argnum].token->value = (Object){
+        .ty = TEMP, .other = (uint64_t)argnum, .priority = PRIORITY_MAX};
+  }
+
+  unsigned short offs = argnum + 1;
+  if (offs >= args->size) {
+    fprintf(stderr, "[ERROR] Please provide a function body.\n");
+    return (Object){{{0}}, .ty = NONE};
+  }
+
+  // prepass to avoid an obvious source of recursive deletion hell
+  for (size_t i = offs; i < args->size; i++) {
+    if (args->data[i].token->value.ty == UOPER ||
+        args->data[i].token->value.ty == BOPER ||
+        args->data[i].token->value.ty == TEMP ||
+        args->data[i].token->value.ty == FUNC ||
+        args->data[i].token->value.ty == VECTOR ||
+        args->data[i].token->value.ty == NONE)
+      continue;
+    fprintf(stderr, "[ERROR] Invalid token %s passed to %s.\n",
+            args->data[i].token->key.cstring, __func__);
+    return (Object){{{0}}, .ty = NONE};
+  }
+
+  f_node *root = least_significant_token_recurse(
+      &(token_array){.data = args->data + offs, .size = args->size - offs});
+  if (NULL == root) {
+    return (Object){{{0}}, .ty = NONE};
+  }
+
+  f_object function = {.root = root, .argcnt = argnum};
+  return as_fobject(&function);
 }
