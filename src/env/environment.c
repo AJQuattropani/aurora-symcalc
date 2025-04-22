@@ -15,7 +15,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER, .priority = 2});
   cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER, .priority = 3});
   cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER, .priority = 3});
-  cinsert(map, "--", (_value){.uOperation = vu_neg, .ty = UOPER, .priority = 4});
+  cinsert(map, "--", (_value){.uOperation = vu_neg, .ty = UOPER, .priority = 3});
   cinsert(map, "sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
   cinsert(map, "cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
   cinsert(map, "tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
@@ -65,7 +65,7 @@ __attribute__((always_inline)) inline void runtime(env *env) {
   while (NULL != (current_file = get_current_file(&env->script_stack))) {
     while (0 <= v_get_line(&vlist, &mstr, current_file)) {
       if (stdin != current_file) {
-        g_append_back_c(&env->output_buffer, mstr.cstring);
+        g_append_back(&env->output_buffer, mstr.cstring, mstr.size);
       }
 
       token_array arr = tokenize(env->map, &vlist);

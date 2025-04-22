@@ -12,7 +12,8 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   char *sp = buff->cstring;
   char *ep = NULL;
   size_t diff; 
-  while (NULL != (ep = strpbrk(sp, " \n()"))) {
+  while (NULL != (ep = strpbrk(sp, " \n()%"))) {
+    if ('%' == *ep) break;
     diff = ep - sp;
     if (0 < diff) {
       v_push_cstr(vlist, sp, diff);
