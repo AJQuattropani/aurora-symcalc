@@ -10,7 +10,7 @@ f_node *new_fnode() {
 }
 
 Object as_fobject(f_object *fun) {
-  return (Object){.fObject = *fun, .ty = FUNC, .priority = SHRT_MAX};
+  return (Object){.fObject = *fun, .ty = FUNC, .priority = USHRT_MAX};
 }
 
 void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
@@ -33,6 +33,7 @@ void free_fnode_recurse(f_node *node) {
     m_deletestr(&node->name);
     break;
   case IDENTITY:
+    m_deletestr(&node->name);
     break;
   }
   free(node);
@@ -76,9 +77,21 @@ sprint_function([[maybe_unused]] gString *inp,
 void fnode_str_recurse(gString *inp, const f_node *fun) {
   switch (fun->ty) {
   case BINARY: {
-    fnode_str_recurse(inp, fun->bf.left);
+    if (fun->priority < fun->bf.left->priority) { 
+      g_append_back_c(inp, "(");
+      fnode_str_recurse(inp, fun->bf.left);
+      g_append_back_c(inp, ")");
+    } else {
+      fnode_str_recurse(inp, fun->bf.left);
+    }
     g_append_back(inp, fun->name.cstring, fun->name.size);
-    fnode_str_recurse(inp, fun->bf.right);
+    if (fun->priority < fun->bf.right->priority) {
+      g_append_back_c(inp, "(");
+      fnode_str_recurse(inp, fun->bf.right);
+      g_append_back_c(inp, ")");
+    } else { 
+      fnode_str_recurse(inp, fun->bf.right);
+    }
     return;
   }
   case UNARY: {
@@ -90,21 +103,13 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
   }
   case CONSTANT: {
     g_append_back(inp, fun->name.cstring, fun->name.size);
-    //sprint_vector(inp, &fun->output);
     return;
   }
   case IDENTITY: {
-    g_append_back_c(inp, "x");
-    const int b_size = 7;
-    char numbuff[b_size];
-    int n;
-    n = snprintf(numbuff, b_size, "%d", fun->xf.index);
-    if (n >= b_size || 0 >= n) {
-      fprintf(stderr, "snprintf failed in %s", __func__);
-      exit(1);
-    }
-    g_append_back(inp, numbuff, n);
+    g_append_back(inp, fun->name.cstring, fun->name.size);
     return;
   }
   }
 }
+
+

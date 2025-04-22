@@ -24,6 +24,7 @@ struct function_node {
       unsigned short index;
     } xf;
   };
+  priority_t priority;
   opr_t ty;
   // storage buffer for output of operation
   // for constant, this is a static vector
@@ -36,4 +37,3 @@ void free_fobject(f_object *fun);
 void free_fnode_recurse(f_node *node);
 void sprint_function(gString *inp, const f_object *fun);
 void fnode_str_recurse(gString *inp, const f_node *fun);
-
