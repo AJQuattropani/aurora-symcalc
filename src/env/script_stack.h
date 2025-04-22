@@ -35,7 +35,7 @@ __attribute__((always_inline)) static inline FILE *get_current_file(sc_stack *st
 */
 __attribute__((always_inline)) static inline int push_file(sc_stack *stack, FILE *fptr) {
   if (MAX_FILES <= stack->count) {
-    fprintf(stderr, "[Skipped] File open to prevent stack overflow.");
+    fprintf(stderr, "[Skipped] File open to prevent stack overflow.\n");
     return 1;
   }
   stack->open_files[stack->count] = fptr; 
@@ -49,14 +49,14 @@ __attribute__((always_inline)) static inline int push_file(sc_stack *stack, FILE
 */
 __attribute__((always_inline)) static inline int open_file(sc_stack *stack, const char *file_name) {
   if (MAX_FILES <= stack->count) {
-    fprintf(stderr, "[Skipped] File open to prevent stack overflow.");
+    fprintf(stderr, "[Skipped] File open to prevent stack overflow.\n");
     return 1;
   }
 
   FILE *fptr;
   fptr = fopen(file_name, "r"); // read-only
   if (NULL == fptr) {
-    fprintf(stderr, "[Skipped] File %s could not be opened.", file_name);
+    fprintf(stderr, "[Skipped] File %s could not be opened.\n", file_name);
     return 1;
   }
   
