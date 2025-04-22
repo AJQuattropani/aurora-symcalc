@@ -26,7 +26,8 @@ static f_node *least_significant_token_imp(const token_array *args) {
     *uoper =
         (f_node){.name = split_data.token->key,
                  .ty = UNARY,
-                 .uf = {.op = split_data.token->value.uOperation, .in = in}};
+                 .uf = {.op = split_data.token->value.uOperation, .in = in},
+                 .priority = split_data.priority};
     return uoper;
   }
   case BOPER: {
@@ -81,7 +82,8 @@ static f_node *least_significant_token_imp(const token_array *args) {
           .xf.index = split_data.token->value.other, .priority = split_data.priority};
     return identity;
   }
-  default: {
+  default: 
+  {
     fprintf(stderr, "[FATAL] Invalid token %s passed to %s.\n",
             split_data.token->key.cstring, __func__);
     exit(1);
