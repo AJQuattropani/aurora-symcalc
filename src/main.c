@@ -1,21 +1,12 @@
+#include "env/environment.h"
 
-#include "environment/runtime.h"
-#include <unistd.h>
-
-int main(const int argc, const char *argv[]) {
-  /*if (argc > 1)
-    for (int argi = 1; argi < argc; argi++) {
-      char location[1024];
-      if (sscanf(argv[argi], "%1023s", location) == 0) {
-        fprintf(stderr, "Invalid argument.");
-        return -1;
-      }
-      read_file(location);
-    }
-
-  read_from_in();*/
-
-  run_command_environment();
-
+int main(const int argc, char *argv[]) {
+  {
+    env env;
+    init_env(&env, argc, argv);
+    runtime(&env);
+    free_env(&env);
+  }
+  printf("Environment terminated.\n");
   return 0;
 }
