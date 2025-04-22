@@ -112,4 +112,9 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
   }
 }
 
+void evaluate_function(const f_object *fun, const vd_literal *in) {
 
+
+
+
+}
