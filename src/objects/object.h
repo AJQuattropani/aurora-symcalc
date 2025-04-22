@@ -7,6 +7,8 @@
 #include "vector.h"
 #include "function.h"
 
+Object null_object();
+
 void sprint_object(gString *gstr, const Object *o);
 
 void free_object(Object *o);

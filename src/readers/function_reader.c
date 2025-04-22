@@ -107,7 +107,7 @@ Object read_function(const token_array *args) {
     if (NONE != args->data[argnum].token->value.ty) {
       fprintf(stderr, "[ERROR] Function argument collision at %s\n",
               args->data[argnum].token->key.cstring);
-      return (Object){{{0}}, .ty = NONE};
+      return null_object();
     }
     args->data[argnum].token->value = (Object){
         .ty = TEMP, .other = (uint64_t)argnum, .priority = PRIORITY_MAX};
@@ -116,7 +116,7 @@ Object read_function(const token_array *args) {
   unsigned short offs = argnum + 1;
   if (offs >= args->size) {
     fprintf(stderr, "[ERROR] Please provide a function body.\n");
-    return (Object){{{0}}, .ty = NONE};
+    return null_object();
   }
 
   // prepass to avoid an obvious source of recursive deletion hell
@@ -130,13 +130,13 @@ Object read_function(const token_array *args) {
       continue;
     fprintf(stderr, "[ERROR] Invalid token %s passed to %s.\n",
             args->data[i].token->key.cstring, __func__);
-    return (Object){{{0}}, .ty = NONE};
+    return null_object();
   }
 
   f_node *root = least_significant_token_recurse(
       &(token_array){.data = args->data + offs, .size = args->size - offs});
   if (NULL == root) {
-    return (Object){{{0}}, .ty = NONE};
+    return null_object();
   }
 
   f_object function = {.root = root, .argcnt = argnum};

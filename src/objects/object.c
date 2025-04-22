@@ -60,6 +60,6 @@ void free_object(Object *o) {
   memset(o, 0, sizeof(Object));
 }
 
-
-
-
+__attribute__((always_inline)) inline Object null_object() {
+  return (const Object){{{0}},.ty=NONE,.priority=0};
+}
