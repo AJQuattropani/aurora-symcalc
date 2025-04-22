@@ -1,0 +1,8 @@
+open ./scripts/erf.ask
+reset
+open ./scripts/supersin.ask
+reset
+open ./scripts/taylor.ask
+reset
+
+exit
