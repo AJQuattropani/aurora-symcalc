@@ -80,6 +80,8 @@ enum opr_t {
 };
 typedef enum opr_t opr_t;
 
+typedef unsigned short priority_t;
+
 struct object {
   union {
     vd_literal vLiteral;
@@ -91,7 +93,7 @@ struct object {
     long long int other;
   };
   obj_t ty;
-  unsigned short priority;
+  priority_t priority;
 };
 
 
