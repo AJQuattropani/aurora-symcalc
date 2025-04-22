@@ -1,7 +1,7 @@
 #include "vector.h"
 
 Object as_vdliteral(vd_literal *value) {
-  return (Object){.vLiteral = *value, .ty = VECTOR, .priority = SHRT_MAX};
+  return (Object){.vLiteral = *value, .ty = VECTOR, .priority = USHRT_MAX};
 }
 
 void free_vdliteral(vd_literal *lit) {
