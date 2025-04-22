@@ -77,6 +77,18 @@ int vb_log(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
+int vu_neg(vd_literal *o, const vd_literal *i) {
+  if (i->size != o->size) {
+    printf("this will need updating anyway.");
+    exit(3);
+  }
+  size_t size = i->size;
+  for (size_t j = 0; j < size; j++) {
+    o->data[j] = -1 * i->data[j];
+  }
+  return 0;
+}
+
 int vu_sin(vd_literal *o, const vd_literal *i) {
   if (i->size != o->size) {
     printf("mismatched inputs for %s, crashing.\n", __func__);

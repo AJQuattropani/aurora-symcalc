@@ -15,6 +15,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER, .priority = 2});
   cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER, .priority = 3});
   cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER, .priority = 3});
+  cinsert(map, "--", (_value){.uOperation = vu_neg, .ty = UOPER, .priority = 4});
   cinsert(map, "sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
   cinsert(map, "cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
   cinsert(map, "tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
@@ -27,8 +28,8 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
-  cinsert(map, "e", (_value)as_vdliteral_mv(make_scalar(M_E)));
-  cinsert(map, "pi", (_value)as_vdliteral_mv(make_scalar(M_PI)));
+  cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
+  cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }
 
 __attribute__((always_inline)) static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {

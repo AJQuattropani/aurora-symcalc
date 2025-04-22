@@ -18,6 +18,8 @@ int vb_pow(vd_literal *o, const vd_literal *l, const vd_literal *r);
 
 int vb_log(vd_literal *o, const vd_literal *l, const vd_literal *r);
 
+int vu_neg(vd_literal *o, const vd_literal *i);
+
 int vu_sin(vd_literal *o, const vd_literal *i);
 
 int vu_cos(vd_literal *o, const vd_literal *i);
