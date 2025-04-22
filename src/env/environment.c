@@ -28,6 +28,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
+  cinsert(map, "SCALAR", (_value){.reader = read_scalar, .ty = READER, .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }

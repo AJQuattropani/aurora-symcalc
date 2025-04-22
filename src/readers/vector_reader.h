@@ -9,6 +9,16 @@
 Object read_vector(const token_array *args);
 
 /*
+ * Instructs to read remaining token as a scalar.
+ */
+Object read_scalar(const token_array *args);
+
+/*
+ * Generic implementation of reading a scalar for use anywhere.
+ */
+Object read_scalar_imp(const token *arg);
+
+/*
 * Generic function for attempting to read double.
 * Returns 0 on success, 1 on failure.
 */
