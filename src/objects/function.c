@@ -9,16 +9,14 @@ f_node *new_fnode() {
   return no;
 }
 
-Object as_fobject(f_object *fun) {
-  return (Object){.fObject = *fun, .ty = FUNC, .priority = PRIORITY_MAX};
+
+void free_fobject(f_object *fun) { 
+  free_fnode_recurse(fun->root);
+  free_vdliteral(&fun->cache.bf.left);
+  free_vdliteral(&fun->cache.bf.right);
 }
 
-void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
-
 void free_fnode_recurse(f_node *node) {
-  if (NULL == node)
-    return;
-  free_vdliteral(&node->output);
   switch (node->ty) {
   case BINARY:
     free_bopliteral(&node->bf.op);
@@ -31,47 +29,16 @@ void free_fnode_recurse(f_node *node) {
     break;
   case CONSTANT:
     m_deletestr(&node->name);
+    free_vdliteral(&node->cf.output);
     break;
   case IDENTITY:
     m_deletestr(&node->name);
     break;
+  case SUBFUNC:
+    m_deletestr(&node->name);
+    break;
   }
   free(node);
-}
-
-__attribute__((always_inline)) inline void
-sprint_function([[maybe_unused]] gString *inp,
-                [[maybe_unused]] const f_object *fun) {
-  // space to implement function-to-string conversion
-  g_append_back_c(inp, "(");
-
-  if (0 < fun->argcnt) {
-    g_append_back_c(inp, "x");
-    unsigned short i = 0;
-    const int b_size = 7;
-    char numbuff[b_size];
-    int n;
-    while (1) {
-      n = snprintf(numbuff, b_size, "%d", i);
-      if (n >= b_size || 0 >= n) {
-        fprintf(stderr, "snprintf failed in %s", __func__);
-        exit(1);
-      }
-      printf("%*.s", b_size, numbuff);
-      g_append_back(inp, numbuff, n);
-      memset(numbuff, '\0', b_size);
-      if (++i >= fun->argcnt)
-        break;
-      g_append_back_c(inp, ",x");
-    }
-  }
-  g_append_back_c(inp, ")");
-
-  if (NULL == fun->root)
-    return;
-  g_append_back_c(inp, "=");
-
-  fnode_str_recurse(inp, fun->root);
 }
 
 void fnode_str_recurse(gString *inp, const f_node *fun) {
@@ -109,6 +76,46 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
     g_append_back(inp, fun->name.cstring, fun->name.size);
     return;
   }
+  case SUBFUNC:
+    g_append_back_c(inp, "(");
+    fnode_str_recurse(inp, fun->fn.fun->root);
+    g_append_back_c(inp, ")");
+    return;
   }
+}
+
+__attribute__((always_inline)) inline void
+sprint_function([[maybe_unused]] gString *inp,
+                [[maybe_unused]] const f_object *fun) {
+  // space to implement function-to-string conversion
+  g_append_back_c(inp, "(");
+
+  if (0 < fun->argcnt) {
+    g_append_back_c(inp, "x");
+    argcnt_t i = 0;
+    const int b_size = 7;
+    char numbuff[b_size];
+    int n;
+    while (1) {
+      n = snprintf(numbuff, b_size, "%d", i);
+      if (n >= b_size || 0 >= n) {
+        fprintf(stderr, "snprintf failed in %s", __func__);
+        exit(1);
+      }
+      printf("%*.s", b_size, numbuff);
+      g_append_back(inp, numbuff, n);
+      memset(numbuff, '\0', b_size);
+      if (++i >= fun->argcnt)
+        break;
+      g_append_back_c(inp, ",x");
+    }
+  }
+  g_append_back_c(inp, ")");
+
+  if (NULL == fun->root)
+    return;
+  g_append_back_c(inp, "=");
+
+  fnode_str_recurse(inp, fun->root);
 }
 

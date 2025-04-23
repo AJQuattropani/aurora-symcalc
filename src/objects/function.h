@@ -5,6 +5,15 @@
 #include "vector.h"
 #include "initializers.h"
 
+enum opr_t {
+  BINARY,
+  UNARY,
+  CONSTANT,
+  IDENTITY,
+  SUBFUNC,
+};
+typedef enum opr_t opr_t;
+
 struct function_node {
   mString name;
   union {
@@ -17,22 +26,23 @@ struct function_node {
       u_opliteral op;
       f_node* in;
     } uf;
-    //struct { // none needed for constant
-    //} cf;
+    struct { // none needed for constant
+      vd_literal output;
+    } cf;
     // identity: index of input args
     struct {
-      unsigned short index;
+      argcnt_t index;
     } xf;
+    struct {
+      f_object *fun;
+    } fn;
   };
   priority_t priority;
   opr_t ty;
-  // storage buffer for output of operation
-  // for constant, this is a static vector
-  vd_literal output;
+  vd_literal *out;
 };
 
 f_node *new_fnode();
-Object as_fobject(f_object *fun);
 void free_fobject(f_object *fun);
 void free_fnode_recurse(f_node *node);
 void sprint_function(gString *inp, const f_object *fun);
