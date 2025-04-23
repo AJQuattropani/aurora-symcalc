@@ -6,6 +6,7 @@
 
 #include <math.h>
 
+
 int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r);
 
 int vb_sub(vd_literal *o, const vd_literal *l, const vd_literal *r);
@@ -17,6 +18,8 @@ int vb_div(vd_literal *o, const vd_literal *l, const vd_literal *r);
 int vb_pow(vd_literal *o, const vd_literal *l, const vd_literal *r);
 
 int vb_log(vd_literal *o, const vd_literal *l, const vd_literal *r);
+
+int vu_set(vd_literal *o, const vd_literal *i);
 
 int vu_neg(vd_literal *o, const vd_literal *i);
 
