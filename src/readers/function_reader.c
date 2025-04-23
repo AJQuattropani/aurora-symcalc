@@ -144,3 +144,59 @@ Object read_function(const token_array *args) {
   f_object function = {.root = root, .argcnt = argnum};
   return as_fobject(&function);
 }
+
+
+void function_command(env *context, const token_array *args) {
+  f_object *fun = &args->data[0].token->value.fObject;
+  if (1 == args->size) {
+    sprint_function(&context->output_buffer, fun);
+    return;
+  }
+  
+  if (fun->argcnt == args->size - 1) {
+    vd_literal* inp_args = (vd_literal*)malloc(sizeof(vd_literal) * fun->argcnt);
+    for (size_t i = 0; i < args->size - 1; i++) {
+      Object *o = &args->data[i+1].token->value;
+      if (1 != o->priority) {
+        fprintf(stderr, "[ERROR] Arguments are poorly formatted.\n");
+        return;
+      }
+      switch (o->ty) {
+      case VECTOR:
+        inp_args[i-1] = o->vLiteral;
+        break;
+      case FUNC:
+        fprintf(stderr, "[ERROR] Invalid argument provided.\n");
+        return; // todo implement function composition
+      default:
+        fprintf(stderr, "[ERROR] Invalid argument provided.\n");
+        return;
+      }
+    }
+    evaluate_function_imp(fun->root, inp_args); 
+    free(inp_args);
+  }
+
+}
+
+void evaluate_function_imp(f_node *fun, const vd_literal *in) {
+  switch(fun->ty) {
+  case BINARY:
+    evaluate_function_imp(fun->bf.left, in);
+    evaluate_function_imp(fun->bf.right, in);
+    fun->bf.op(&fun->output, &fun->bf.left->output, &fun->bf.right->output);
+    return;
+  case UNARY:
+    evaluate_function_imp(fun->uf.in, in);
+    fun->uf.op(&fun->output, &fun->uf.in->output);
+    return;
+  case CONSTANT:
+    return;
+  case IDENTITY: // optimize this.
+    free_vdliteral(&fun->output);
+    fun->output = copy_vdliteral(&in[fun->xf.index]);
+    return;
+  }
+}
+
+
