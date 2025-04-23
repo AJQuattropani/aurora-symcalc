@@ -24,12 +24,14 @@ void free_vdliteral(vd_literal *lit) {
 __attribute__((always_inline)) inline vd_literal copy_vdliteral(const vd_literal* other) {
   vd_literal lit = alloc_vdliteral(other->size);
   if (SCALAR == lit.size) {
-    *lit.data = *other->data;
+    *(lit.data) = *other->data;
+    lit.size = other->size; 
     return lit;
   }
   for (vector_size_t i = 0; i < lit.size; i++) {
     lit.data[i] = other->data[i];
   }
+  lit.size = other->size; 
   return lit;
 }
 
