@@ -48,7 +48,7 @@ __attribute__((always_inline)) inline void sprint_vector(gString *inp, const vd_
   if (SCALAR == value->size) {
     const size_t buff_size = 17;
     char buff[buff_size];
-    int len = snprintf(buff, buff_size - 1, "%lf,", value->data[0]);
+    int len = snprintf(buff, buff_size - 1, "%lf", value->data[0]);
     if (0 > len) {
       fprintf(stderr, "Unknown error occurred in snprintf for %s.\n", __func__);
       exit(1);
