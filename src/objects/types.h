@@ -63,25 +63,31 @@ typedef binary_operation_literal b_opliteral; // generic type for operations on 
 typedef int(*unary_operation_literal)(vd_literal *o, const vd_literal *i);
 typedef unary_operation_literal u_opliteral; // generic type for operations on one vector
 
-typedef Object(*reader_macro)(const token_array *args);
+typedef void(*reader_macro)(Object *obj, const token_array *args);
 typedef reader_macro r_macro;
 
 struct function_node;
 typedef struct function_node f_node;
 struct function_object;
 typedef struct function_object f_object;
+
+typedef unsigned short argcnt_t; 
+
 struct function_object {
   f_node* root;
-  unsigned short argcnt;
+  argcnt_t argcnt;
+  union {
+    struct {
+      vd_literal left;
+      vd_literal right;
+    } bf;
+    struct {
+      vd_literal in;
+    } uf;
+    vd_literal out;
+  } cache;
 };
 
-enum opr_t {
-  BINARY,
-  UNARY,
-  CONSTANT,
-  IDENTITY
-};
-typedef enum opr_t opr_t;
 
 typedef uint16_t priority_t;
 #define PRIORITY_MAX USHRT_MAX

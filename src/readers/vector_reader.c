@@ -13,12 +13,15 @@ Object read_scalar_imp(const token *arg) {
   return as_vdliteral(&obj);
 }
 
-Object read_scalar(const token_array *args) {
-  if (args->size == 1) return read_scalar_imp(&args->data[0]);
-  return null_object();
+void read_scalar(Object *o, const token_array *args) {
+  if (args->size == 1) {
+    *o = read_scalar_imp(&args->data[0]);
+    return;
+  }
+  *o = null_object();
 }
 
-Object read_vector(const token_array *args) {
+void read_vector(Object *o, const token_array *args) {
   vd_literal vector = alloc_vdliteral(args->size);
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
@@ -29,6 +32,6 @@ Object read_vector(const token_array *args) {
       continue;
     }
   }
-  return as_vdliteral(&vector);
+  *o = as_vdliteral(&vector);
 }
 

@@ -54,7 +54,7 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
     return;
   }
   r_macro read_macro = read_type->reader;
-  *into = read_macro(&(const token_array){
+  read_macro(into, &(const token_array){
       .data = args->data + 3,
       .capacity = 0,
       .size = args->size -

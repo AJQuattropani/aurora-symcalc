@@ -6,12 +6,12 @@
 /*
 * Instructs to read remaining tokens as a vector.
 */
-Object read_vector(const token_array *args);
+void read_vector(Object *o, const token_array *args);
 
 /*
  * Instructs to read remaining token as a scalar.
  */
-Object read_scalar(const token_array *args);
+void read_scalar(Object *o, const token_array *args);
 
 /*
  * Generic implementation of reading a scalar for use anywhere.
