@@ -84,6 +84,9 @@ __attribute__((always_inline)) inline void runtime(env *env) {
           mc(env, &arr);
         }
       } break;
+      case FUNC: {
+          function_command(env, &arr);
+      } break;
       case VECTOR: {
         sprint_object(&env->output_buffer, obj);
       } break;
