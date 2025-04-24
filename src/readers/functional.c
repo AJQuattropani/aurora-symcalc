@@ -24,6 +24,7 @@ void function_command(env *context, const token_array *args) {
         inp_args[i] = o->vLiteral;
         break;
       case FUNC:
+          //TODO IMPLEMENT FUNCTION COMPOSITION
         fprintf(stderr, "[ERROR] Invalid argument provided.\n");
         goto cleanup; // todo implement function composition
       default:
@@ -70,10 +71,6 @@ void evaluate_function_imp(f_node *fun, vd_literal* out, const vd_literal *in) {
     evaluate_function_imp(fun->uf.in, out, in);
     fun->uf.op(&out[fun->depth_index], &out[fun->depth_index]);
     return;
-  case SUBFUNC:
-    evaluate_function_imp(fun->fn.fun->root, out, in); // output of f already rooted 
-      // to output of function
-    return;
   case IDENTITY: // optimize this.
     vu_set(&out[fun->depth_index], &in[fun->xf.index]);
     return;
@@ -81,6 +78,18 @@ void evaluate_function_imp(f_node *fun, vd_literal* out, const vd_literal *in) {
     vu_set(&out[fun->depth_index], &fun->cf.output);
     return;
   }
+}
+
+
+void simplify_command(env *context, const token_array *args) {
+
+
+}
+
+
+void simplify_imp(f_node *fun) {
+
+
 }
 
 
