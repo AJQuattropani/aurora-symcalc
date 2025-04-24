@@ -64,10 +64,10 @@ __attribute__((always_inline)) inline void runtime(env *env) {
   FILE *current_file;
   while (NULL != (current_file = get_current_file(&env->script_stack))) {
     while (0 <= v_get_line(&vlist, &mstr, current_file)) {
-      if (stdin != current_file) {
-        g_append_back(&env->output_buffer, mstr.cstring, mstr.size);
+      if (stdout != current_file) {
+        g_append_back_c(&env->output_buffer, mstr.cstring);
+        g_append_back_c(&env->output_buffer, ": ");
       }
-
       token_array arr = tokenize(env->map, &vlist);
 
       if (NULL == arr.data || 0 >= arr.size) {
@@ -79,25 +79,28 @@ __attribute__((always_inline)) inline void runtime(env *env) {
       Object *obj = &arr.data[0].token->value;
       switch (obj->ty) {
       case CONTEXT: {
-        if (CONTEXT == obj->ty) {
-          mf_context mc = obj->mContext;
-          mc(env, &arr);
-        }
-      } break;
+        mf_context mc = obj->mContext;
+        mc(env, &arr);
+        break;
+      } 
       case FUNC: {
           function_command(env, &arr);
-      } break;
+          break;
+      }
       case VECTOR: {
         sprint_object(&env->output_buffer, obj);
-      } break;
-      case NONE: {
-        g_append_back_c(&env->output_buffer, "Unknown token.");
-      }
-      default:
         break;
       }
+      case NONE: {
+        g_append_back_c(&env->output_buffer, "Unknown token.");
+        break;
+      }
+      default: {
+        break;
+        }
+      }
 
-      printf("%s\n", env->output_buffer.cstring);
+      fprintf(stdout, "> %s\n", env->output_buffer.cstring);
       
       destroy_token_array(&arr);
       g_empty(&env->output_buffer);

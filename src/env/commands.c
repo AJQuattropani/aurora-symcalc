@@ -24,13 +24,12 @@ void print_tok(env *context, const token_array *args) {
     return;
   }
 
-  g_append_back_c(&context->output_buffer, "Peak: ");
   for (size_t i = 1; i < args->size; i++) {
     token *curr = &args->data[i];
     g_append_back_c(&context->output_buffer, curr->token->key.cstring);
     g_append_back_c(&context->output_buffer, " ");
     sprint_object(&context->output_buffer, &curr->token->value);
-    g_append_back_c(&context->output_buffer, " ");
+    g_append_back_c(&context->output_buffer, ",");
   }
 }
 
