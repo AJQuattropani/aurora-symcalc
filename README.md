@@ -38,21 +38,22 @@ Aurora Scientific Calculator is a script environment. Open program via the termi
 Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
 
 [TODO add list of currently implemented commands]
-| Command |       Description                     |
-|:-------:|:-------------------------------------:|
-| exit    | Closes the program.                   |
-| return  | Closes current scope.                 |
-| reset   | Resets environment variables          |
-| set     | Define a value: [types] [data]        |
-| open    | Read and execute a .ask               |
-| peak    | Prints the value of symbols by name.  |
-| printenv| Prints all environment variables.     |
-| [funct] | Represents function as a string.      |
-|         | [data] evaluates function *todo*      |
+| Command | Arguments                     |  Description                                    |
+|:-------:|:-----------------------------:|:-----------------------------------------------:|
+| exit    | none                          |Closes the program.                              |
+| return  | none                          |Closes current file scope.                       |
+| reset   | none                          |Resets environment variables                     |
+| set     | name TYPE vars...             |Define a vector/scalar.                          |
+|         | name FUNC(args) definition... |Define a function.                               |
+| open    | filepath                      |Read and execute a .ask                          |
+| peak    | names...                      |Prints the value of symbols by name.             |
+| printenv| none                          |Prints all environment variables.                |
+| [funct] | none                          |Represents function as a string.                 |
+|         | (args...)                     |Evaluate with the given scalar/vector arguments. |
 
-Types:
-- Vectors: buffers for storing numerical values
-- Functions: program representation of maps of vectors to vectors
+Types of Variables:
+- VECTOR: buffers for storing numerical values (SCALAR is a special type of vector with no size)
+- FUNC: program representation of maps of vectors to vectors
 
 To test or experiment with interplay of elements in the program, or perform unit tests, new test files can be generated in `./test/`. CMake will generate a separate output executable for each file in this directory.
 
