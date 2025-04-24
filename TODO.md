@@ -9,7 +9,7 @@
 7. Add new commands like linspace to make vector allocation easier.
 8. BUG: remove ability to define function circularly (f (x) -> f)
 9. BUG: add safety check when function is vector-valued so it only accepts the same dimension of vector
-
+10. Add implicit multiplication.
 
 
 
