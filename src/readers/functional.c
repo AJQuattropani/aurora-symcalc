@@ -19,7 +19,7 @@ void function_command(env *context, const token_array *args) {
       switch (o->ty) {
       case VECTOR:
         if (inp_size != o->vLiteral.size) {
-          fprintf(stderr, "[ERROR] Inputs are not uniformly sized.\n");
+          //fprintf(stderr, "[ERROR] Inputs are not uniformly sized.\n");
         }
         inp_args[i] = o->vLiteral;
         break;
@@ -31,42 +31,54 @@ void function_command(env *context, const token_array *args) {
         goto cleanup;
       }
     }
-    free_vdliteral(&fun->cache.bf.left);
-    free_vdliteral(&fun->cache.bf.right);
-    fun->cache.bf.left = alloc_vdliteral(inp_size);
-    fun->cache.bf.right = alloc_vdliteral(inp_size);
-    evaluate_function_imp(fun->root, inp_args); 
-  cleanup:
+    // hybrid buffer allocates all memory for vectors and literals
+    vd_literal *out = (vd_literal*)malloc(sizeof(vd_literal) * fun->depth);
+    if (NULL == out) {
+      fprintf(stderr, "[ERROR] malloc failed in %s", __func__);
+      exit(1);
+    }
+    for (size_t i = 0; i < fun->depth; i++) {
+      out[i] = alloc_vdliteral(inp_size);
+    }
+
+    evaluate_function_imp(fun->root, out, inp_args); 
+
     g_append_back(&context->output_buffer, args->data[0].token->key.cstring, args->data[0].token->key.size);
-    g_append_back_c(&context->output_buffer, "=");
-    sprint_vector(&context->output_buffer, &fun->cache.out);
+    g_append_back_c(&context->output_buffer, " = ");
+    sprint_vector(&context->output_buffer, &out[0]);
+
+    for (size_t i = 0; i < fun->depth; i++) {
+      free_vdliteral(&out[i]);
+    }
+    free(out);
+  cleanup:
     free(inp_args);
     return;
   }
 
 }
 
-void evaluate_function_imp(f_node *fun, const vd_literal *in) {
+
+void evaluate_function_imp(f_node *fun, vd_literal* out, const vd_literal *in) {
   switch(fun->ty) {
   case BINARY:
-    evaluate_function_imp(fun->bf.left, in);
-    evaluate_function_imp(fun->bf.right, in);
-    fun->bf.op(fun->out, fun->bf.left->out, fun->bf.right->out);
+    evaluate_function_imp(fun->bf.left, out, in);
+    evaluate_function_imp(fun->bf.right, out, in);
+    fun->bf.op(&out[fun->depth_index], &out[fun->depth_index], &out[fun->depth_index+1]);
     return;
   case UNARY:
-    evaluate_function_imp(fun->uf.in, in);
-    fun->uf.op(fun->out, fun->uf.in->out);
+    evaluate_function_imp(fun->uf.in, out, in);
+    fun->uf.op(&out[fun->depth_index], &out[fun->depth_index]);
     return;
   case SUBFUNC:
-    evaluate_function_imp(fun->fn.fun->root, in); // output of f already rooted 
-    vu_set(fun->out, &fun->fn.fun->cache.out);
+    evaluate_function_imp(fun->fn.fun->root, out, in); // output of f already rooted 
       // to output of function
     return;
   case IDENTITY: // optimize this.
-    vu_set(fun->out, &in[fun->xf.index]);
+    vu_set(&out[fun->depth_index], &in[fun->xf.index]);
     return;
   case CONSTANT:
-    vu_set(fun->out, &fun->cf.output);
+    vu_set(&out[fun->depth_index], &fun->cf.output);
     return;
   }
 }
