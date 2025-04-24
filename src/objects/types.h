@@ -72,11 +72,12 @@ struct function_object;
 typedef struct function_object f_object;
 
 typedef unsigned short argcnt_t; 
+typedef unsigned short depth_t;
 
 struct function_object {
   f_node* root;
   argcnt_t argcnt;
-  unsigned short depth;
+  depth_t depth;
 };
 
 
