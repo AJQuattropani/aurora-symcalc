@@ -25,6 +25,12 @@ void read_vector(Object *o, const token_array *args) {
   vd_literal vector = alloc_vdliteral(args->size);
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
+    if (VECTOR == curr->token->value.ty) {
+      if (SCALAR == curr->token->value.vLiteral.size) {
+        vector.data[i] = curr->token->value.vLiteral.data[0];
+        continue;
+      }
+    }
     if (try_read_double(&vector.data[i], &curr->token->key)) {
       fprintf(stderr,
               "[SKIPPED] Non-double definition provided for input %ld.\n", i);
