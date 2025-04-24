@@ -76,16 +76,7 @@ typedef unsigned short argcnt_t;
 struct function_object {
   f_node* root;
   argcnt_t argcnt;
-  union {
-    struct {
-      vd_literal left;
-      vd_literal right;
-    } bf;
-    struct {
-      vd_literal in;
-    } uf;
-    vd_literal out;
-  } cache;
+  unsigned short depth;
 };
 
 

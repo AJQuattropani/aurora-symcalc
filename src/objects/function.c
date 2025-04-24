@@ -12,8 +12,6 @@ f_node *new_fnode() {
 
 void free_fobject(f_object *fun) { 
   free_fnode_recurse(fun->root);
-  free_vdliteral(&fun->cache.bf.left);
-  free_vdliteral(&fun->cache.bf.right);
 }
 
 void free_fnode_recurse(f_node *node) {
@@ -102,7 +100,6 @@ sprint_function([[maybe_unused]] gString *inp,
         fprintf(stderr, "snprintf failed in %s", __func__);
         exit(1);
       }
-      printf("%*.s", b_size, numbuff);
       g_append_back(inp, numbuff, n);
       memset(numbuff, '\0', b_size);
       if (++i >= fun->argcnt)

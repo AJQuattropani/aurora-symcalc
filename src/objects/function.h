@@ -37,9 +37,9 @@ struct function_node {
       f_object *fun;
     } fn;
   };
+  unsigned short depth_index;
   priority_t priority;
   opr_t ty;
-  vd_literal *out;
 };
 
 f_node *new_fnode();
