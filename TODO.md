@@ -7,5 +7,7 @@
 5. Add support for special scalars in vectors.
 6. Resolve incompatibility issue when a scalar in inputted to a function.
 7. Make ',' a valid delimiter for parsing tokens.
+8. Remove exit command when invalid token is passed to function reader.
+9. Add new commands like linspace to make vector allocation easier.
 
 
