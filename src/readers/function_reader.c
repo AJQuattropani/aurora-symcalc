@@ -1,8 +1,14 @@
 #include "function_reader.h"
 
-static f_node *least_significant_token_recurse(const token_array *args, f_object *head);
+static __attribute__((always_inline)) inline void update_depth_max(unsigned short depth, unsigned short *depth_max) {
+  *depth_max = (depth ^ ((depth ^ *depth_max) & -(depth < *depth_max))) + 1;
+}
 
-static f_node *least_significant_token_imp(const token_array *args, f_object *head) { 
+static f_node *least_significant_token_recurse(const token_array *args, unsigned short depth, unsigned short *depth_max);
+
+static f_node *least_significant_token_imp(const token_array *args, unsigned short depth, unsigned short *depth_max) { 
+  update_depth_max(depth, depth_max);
+
   size_t sp = 0;
   token split_data = args->data[sp];
   for (size_t i = 0; i < args->size; i++) {
@@ -14,37 +20,34 @@ static f_node *least_significant_token_imp(const token_array *args, f_object *he
     sp = i;
     split_data = *curr;
   }
-  fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
+  //fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
 
   switch (split_data.token->value.ty) {
   case UOPER: {
     f_node *in = least_significant_token_recurse(&(token_array){
-        .data = args->data + sp + 1, .size = (args->size - sp - 1)}, head);
+        .data = args->data + sp + 1, .size = (args->size - sp - 1)}, depth, depth_max);
     if (NULL == in)
       return NULL;
-    in->out = &head->cache.uf.in;
     f_node *uoper = new_fnode();
     *uoper =
         (f_node){.name = split_data.token->key,
                  .ty = UNARY,
                  .uf = {.op = split_data.token->value.uOperation, .in = in},
                  .priority = split_data.priority,
-                 .out = &head->cache.out};
+                 .depth_index = depth};
     return uoper;
   }
   case BOPER: {
     f_node *left = least_significant_token_recurse(
-        &(token_array){.data = args->data, .size = sp}, head);
+        &(token_array){.data = args->data, .size = sp}, depth, depth_max);
     if (NULL == left)
       return NULL;
     f_node *right = least_significant_token_recurse(&(token_array){
-        .data = (args->data + sp + 1), .size = (args->size - sp - 1)}, head);
+        .data = (args->data + sp + 1), .size = (args->size - sp - 1)}, depth + 1, depth_max);
     if (NULL == right) {
       free_fnode_recurse(left);
       return NULL;
     }
-    left->out = &head->cache.bf.left;
-    right->out = &head->cache.bf.right;
     f_node *boper = new_fnode();
     *boper = (f_node){.name = split_data.token->key,
                       .ty = BINARY,
@@ -52,7 +55,7 @@ static f_node *least_significant_token_imp(const token_array *args, f_object *he
                              .left = left,
                              .right = right},
                       .priority = split_data.priority,
-                      .out = &head->cache.out};
+                      .depth_index = depth};
     return boper;
   }
   case FUNC:
@@ -66,7 +69,7 @@ static f_node *least_significant_token_imp(const token_array *args, f_object *he
                  .name = {.cstring = name.cstring, .size=name.size},
                  .cf = {.output = copy_vdliteral(&split_data.token->value.vLiteral)},
                  .priority = split_data.priority,
-                 .out = &head->cache.out}; // in case function is just vector point to out
+                 .depth_index = depth}; // in case function is just vector point to out
     return constant;
   }
   case TEMP: {
@@ -86,7 +89,7 @@ static f_node *least_significant_token_imp(const token_array *args, f_object *he
     *identity =
         (f_node){.ty = IDENTITY, .name = {.cstring=name.cstring, .size=name.size},
           .xf.index = split_data.token->value.other, .priority = split_data.priority,
-          .out = &head->cache.out};
+          .depth_index = depth};
     return identity;
   }
   default: 
@@ -98,14 +101,15 @@ static f_node *least_significant_token_imp(const token_array *args, f_object *he
   } 
 }
 
-__attribute__((always_inline)) inline f_node *least_significant_token_recurse(const token_array *args, f_object *head) {
+__attribute__((always_inline)) inline f_node *least_significant_token_recurse(const token_array *args, unsigned short depth,
+                                                                              unsigned short *depth_max) {
   if (args->size <= 0) {
     fprintf(stderr,
             "[ERROR] Recursive call in %s failed to reach a base case.\n",
             __func__);
     return NULL;
   }
-  return least_significant_token_imp(args, head);
+  return least_significant_token_imp(args, depth, depth_max);
 }
 
 void read_function(Object* obj, const token_array *args) {
@@ -146,18 +150,16 @@ void read_function(Object* obj, const token_array *args) {
   }
   
   *obj = (Object){.fObject = {.root = NULL, .argcnt = argnum, 
-    .cache.bf = {}}, .ty = FUNC, .priority = PRIORITY_MAX};
+    .depth = 0}, .ty = FUNC, .priority = PRIORITY_MAX};
   
   f_node *root = least_significant_token_recurse(
-      &(token_array){.data = args->data + offs, .size = args->size - offs}, &obj->fObject);
+      &(token_array){.data = args->data + offs, .size = args->size - offs}, 0, &obj->fObject.depth);
   if (NULL == root) {
     *obj = null_object();
     return;
   }
 
   obj->fObject.root = root;
-  obj->fObject.cache.bf.left = alloc_vdliteral(4); 
-  obj->fObject.cache.bf.right = alloc_vdliteral(4);
 }
 
 
