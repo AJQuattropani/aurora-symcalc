@@ -1,4 +1,4 @@
 set erf FUNC(x) -> e ^ (-- x ^ 2)
 peak erf
-set x VECTOR 0
-* set y erf(x)
+set x VECTOR 0 1 2 3 4 5 6
+erf(x)

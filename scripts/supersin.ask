@@ -1,0 +1,12 @@
+set supersin FUNC(x y) -> sin(x * y)
+
+set x0 VECTOR 3.142 6.284 1.0 -3.142
+set y0 VECTOR 1 2 3 4
+set z0 SCALAR -1
+
+peak x0 y0 z0
+
+peak supersin
+
+supersin(x0 y0)
+supersin(x0 z0)
