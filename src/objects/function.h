@@ -10,7 +10,6 @@ enum opr_t {
   UNARY,
   CONSTANT,
   IDENTITY,
-  SUBFUNC,
 };
 typedef enum opr_t opr_t;
 
@@ -33,11 +32,8 @@ struct function_node {
     struct {
       argcnt_t index;
     } xf;
-    struct {
-      f_object *fun;
-    } fn;
   };
-  unsigned short depth_index;
+  depth_t depth_index;
   priority_t priority;
   opr_t ty;
 };

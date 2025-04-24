@@ -9,10 +9,7 @@ f_node *new_fnode() {
   return no;
 }
 
-
-void free_fobject(f_object *fun) { 
-  free_fnode_recurse(fun->root);
-}
+void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
 
 void free_fnode_recurse(f_node *node) {
   switch (node->ty) {
@@ -32,9 +29,6 @@ void free_fnode_recurse(f_node *node) {
   case IDENTITY:
     m_deletestr(&node->name);
     break;
-  case SUBFUNC:
-    m_deletestr(&node->name);
-    break;
   }
   free(node);
 }
@@ -42,7 +36,7 @@ void free_fnode_recurse(f_node *node) {
 void fnode_str_recurse(gString *inp, const f_node *fun) {
   switch (fun->ty) {
   case BINARY: {
-    if (fun->priority < fun->bf.left->priority) { 
+    if (fun->priority < fun->bf.left->priority) {
       g_append_back_c(inp, "(");
       fnode_str_recurse(inp, fun->bf.left);
       g_append_back_c(inp, ")");
@@ -54,7 +48,7 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
       g_append_back_c(inp, "(");
       fnode_str_recurse(inp, fun->bf.right);
       g_append_back_c(inp, ")");
-    } else { 
+    } else {
       fnode_str_recurse(inp, fun->bf.right);
     }
     return;
@@ -74,11 +68,6 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
     g_append_back(inp, fun->name.cstring, fun->name.size);
     return;
   }
-  case SUBFUNC:
-    g_append_back_c(inp, "(");
-    fnode_str_recurse(inp, fun->fn.fun->root);
-    g_append_back_c(inp, ")");
-    return;
   }
 }
 
@@ -115,4 +104,3 @@ sprint_function([[maybe_unused]] gString *inp,
 
   fnode_str_recurse(inp, fun->root);
 }
-
