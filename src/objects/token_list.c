@@ -11,6 +11,7 @@ token_array new_token_array(size_t capacity) {
   }
   return arr;
 }
+
 void empty_token_array(token_array *arr) {
   memset(arr->data, 0, arr->capacity * sizeof(token));
   arr->size = 0;

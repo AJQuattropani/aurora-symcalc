@@ -3,6 +3,7 @@
 __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT, .priority=0});
   cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT, .priority=0});
+  cinsert(map, "delete", (_value){.mContext = delete_object, .ty = CONTEXT, .priority=0});
   cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT, .priority=0});
   cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT, .priority=0});
   cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT, .priority=0});

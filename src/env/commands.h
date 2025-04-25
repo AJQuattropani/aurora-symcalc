@@ -51,6 +51,13 @@ void print_tok(env *context, const token_array *args);
 void define_object(env *context, const token_array *args);
 
 /*
+ * Deletes the token.
+ * arg 0: delete
+ * arg 1: name
+ */
+void delete_object(env *context, const token_array *args);
+
+/*
  * Command for adding new files to the stack.
  */
 void open_files(env *context, const token_array *args);

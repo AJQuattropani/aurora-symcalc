@@ -60,6 +60,40 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
               3}); // read in remaining args as either function or vector
 }
 
+void delete_object(env *context, const token_array *args) {
+  static _mnode empty = {.value={.ty=NONE}};
+  if (2 > args->size) {
+    fprintf(stderr, "[SKIPPED] No variables listed.\n");
+  }
+  for (size_t i = 1; i < args->size; i++) {
+    for (size_t j = i+1; j < args->size; j++) {
+      if (args->data[i].token == args->data[j].token) {
+        args->data[j].token = &empty;
+      }
+    }
+  }
+
+  for (size_t i = 1; i < args->size; i++) {
+    _mnode* fig = args->data[i].token;
+    obj_t ty = fig->value.ty;
+    switch (ty) {
+    case NONE: 
+    case TEMP:
+    case SYNTAX_RIGHT: 
+    case CONTEXT:
+    case READER:
+    case BOPER:
+    case UOPER:
+      g_append_back_c(&context->output_buffer, "\n| [SKIPPED] Token is not a deletable type.");
+      continue;
+    case VECTOR:
+    case FUNC:
+      g_append_back_c(&context->output_buffer, "\n| Token removed.");
+      remove_node(fig);
+    }
+  }
+}
+
 void open_files(env *context, const token_array *args) {
   if (1 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for open call.\n");
