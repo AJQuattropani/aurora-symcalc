@@ -16,6 +16,10 @@ mString m_from_cstr(const char *cstr) {
   return mstr;
 }
 
+__attribute__((always_inline)) inline mString m_wrapper(char *cstr) {
+  return (const mString){.cstring=cstr,.size=strlen(cstr)};
+}
+
 mString m_from_copy(mString mstr) {
   mString copy = (mString)
     {.cstring = (char *)malloc(sizeof(char) * (mstr.size + 1)), 
@@ -40,13 +44,13 @@ mString m_from_size(size_t strlen) {
   return mstr;
 }
 
-void m_deletestr(mString *mstr) {
+__attribute__((always_inline)) inline void m_deletestr(mString *mstr) {
   free(mstr->cstring);
   mstr->cstring = NULL;
   mstr->size = 0;
 }
 
-int m_same(const mString *str1, const mString *str2) {
+__attribute__((always_inline)) inline int m_same(const mString *str1, const mString *str2) {
   if (str1->size != str2->size) {
     return 0;
   }

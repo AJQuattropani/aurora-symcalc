@@ -18,6 +18,8 @@ struct immutable_string {
 
 mString m_from_cstr(const char *cstr);
 
+mString m_wrapper(char *cstr);
+
 mString m_from_size(size_t strlen);
 
 mString m_from_copy(mString mstr);
