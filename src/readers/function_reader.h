@@ -9,4 +9,3 @@
 */
 void read_function(Object *obj, const token_array *args);
 
-

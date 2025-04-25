@@ -7,21 +7,27 @@ void function_command(env *context, const token_array *args) {
     return;
   }
   
- vector_size_t inp_size = args->data[1].token->value.vLiteral.size; 
-  if (fun->argcnt == args->size - 1) {
-    vd_literal* inp_args = (vd_literal*)malloc(sizeof(vd_literal) * fun->argcnt);
-    for (size_t i = 0; i < fun->argcnt; i++) {
+ //vector_size_t inp_size = args->data[1].token->value.vLiteral.size; 
+ vector_size_t inp_size = fun->attr.out_size; 
+  if (fun->attr.argcnt == args->size - 1) {
+    vd_literal* inp_args = (vd_literal*)malloc(sizeof(vd_literal) * fun->attr.argcnt);
+    for (size_t i = 0; i < fun->attr.argcnt; i++) {
       Object *o = &args->data[i+1].token->value;
-      //if (1 != args->data[i].priority) {
-      //  fprintf(stderr, "[ERROR] Arguments are poorly formatted.\n");
-      //  goto cleanup;
-      //}
+      if (0 > args->data[i].priority) {
+        fprintf(stderr, "[ERROR] Arguments are poorly formatted.\n");
+        goto cleanup;
+      }
       switch (o->ty) {
       case VECTOR:
-        if (inp_size != o->vLiteral.size) {
-          //fprintf(stderr, "[ERROR] Inputs are not uniformly sized.\n");
+        if (inp_size != o->vLiteral.size 
+            && SCALAR != o->vLiteral.size 
+            && SCALAR != inp_size) {
+          fprintf(stderr, "[ERROR] Inputs are not uniformly sized with output.\n");
+          goto cleanup;
         }
+
         inp_args[i] = o->vLiteral;
+        inp_size = o->vLiteral.size;
         break;
       case FUNC:
           //TODO IMPLEMENT FUNCTION COMPOSITION
@@ -33,12 +39,12 @@ void function_command(env *context, const token_array *args) {
       }
     }
     // hybrid buffer allocates all memory for vectors and literals
-    vd_literal *out = (vd_literal*)malloc(sizeof(vd_literal) * fun->depth);
+    vd_literal *out = (vd_literal*)malloc(sizeof(vd_literal) * fun->attr.depth);
     if (NULL == out) {
       fprintf(stderr, "[ERROR] malloc failed in %s", __func__);
       exit(1);
     }
-    for (size_t i = 0; i < fun->depth; i++) {
+    for (size_t i = 0; i < fun->attr.depth; i++) {
       out[i] = alloc_vdliteral(inp_size);
     }
 
@@ -48,7 +54,7 @@ void function_command(env *context, const token_array *args) {
     g_append_back_c(&context->output_buffer, " = ");
     sprint_vector(&context->output_buffer, &out[0]);
 
-    for (size_t i = 0; i < fun->depth; i++) {
+    for (size_t i = 0; i < fun->attr.depth; i++) {
       free_vdliteral(&out[i]);
     }
     free(out);
