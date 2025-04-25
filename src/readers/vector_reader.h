@@ -9,6 +9,16 @@
 void read_vector(Object *o, const token_array *args);
 
 /*
+* Instructs to read remaining tokens as arguments for defining a linear space.
+*/
+void read_linspace(Object *o, const token_array *args);
+
+/*
+* Instructs to read remaining tokens as arguments for defining a counting space.
+*/
+void read_countspace(Object *o, const token_array *args);
+
+/*
  * Instructs to read remaining token as a scalar.
  */
 void read_scalar(Object *o, const token_array *args);

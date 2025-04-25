@@ -41,3 +41,79 @@ void read_vector(Object *o, const token_array *args) {
   *o = as_vdliteral(&vector);
 }
 
+void read_linspace(Object *o, const token_array *args) {
+  if (args->size > 3) goto argument_size_error;
+  double bounds[3] = {NAN,NAN,NAN};
+  unsigned long long int partitions;
+  for (unsigned char i = 0; i < args->size; i++) {
+    const Object *const restrict val = &args->data[i].token->value;
+    if (VECTOR != val->ty) goto argument_size_error;
+    if (SCALAR != val->vLiteral.size) goto argument_size_error;
+    bounds[i] = val->vLiteral.data[0];
+  }
+  if (isnan(bounds[1]) || isnan(bounds[0])) {
+    goto argument_size_error;
+  }
+  if (isnan(bounds[2]) || bounds[2] <= 0) {
+    partitions = 100;
+  } else {
+    partitions = (unsigned long int)floor(bounds[2]);
+    if (partitions != bounds[2]) {
+      fprintf(stderr, "[WARN] Decimal value cast to lowest integer.\n");
+    }
+    if (0 == partitions) goto argument_size_error;
+  }
+  double a = bounds[0];
+  double b = bounds[1];
+  double dx = (b - a) / (partitions);
+  //fprintf(stdout, "Creating a linspace from %lf to %lf with %lld partitions.\n", a, b, partitions);
+
+  vd_literal linspace = alloc_vdliteral(partitions + 1);
+  for (vector_size_t i = 0; i < linspace.size; i++) {
+    linspace.data[i] = a + dx * i;
+  }
+  *o = as_vdliteral(&linspace);
+  return;
+argument_size_error:
+  fprintf(stderr, "[SKIPPED] Insufficient arguments provided for %s\n", __func__);
+  *o = null_object();
+  return; 
+}
+
+void read_countspace(Object *o, const token_array *args) {
+  if (args->size > 3) goto argument_size_error;
+  double bounds[3] = {NAN,NAN,NAN};
+  double dx;
+  for (unsigned char i = 0; i < args->size; i++) {
+    const Object *const restrict val = &args->data[i].token->value;
+    if (VECTOR != val->ty) goto argument_size_error;
+    if (SCALAR != val->vLiteral.size) goto argument_size_error;
+    bounds[i] = val->vLiteral.data[0];
+  }
+  if (isnan(bounds[1]) || isnan(bounds[0])) {
+    goto argument_size_error;
+  }
+  if (isnan(bounds[2])) {
+    dx = 1;
+  } else {
+    dx = (bounds[2]);
+    //if (0 >= dx) goto argument_size_error;
+  }
+  double a = bounds[0];
+  double b = bounds[1];
+  double diff = b - a;
+  vector_size_t partitions = diff / dx;
+  if (partitions <= 0) goto argument_size_error;
+
+  vd_literal linspace = alloc_vdliteral(partitions + 1);
+  for (vector_size_t i = 0; i < linspace.size; i++) {
+    linspace.data[i] = a + dx * i;
+  }
+  *o = as_vdliteral(&linspace);
+  return;
+argument_size_error:
+  fprintf(stderr, "[SKIPPED] Insufficient arguments provided for %s\n", __func__);
+  *o = null_object();
+  return; 
+}
+
