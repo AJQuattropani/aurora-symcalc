@@ -77,7 +77,7 @@ sprint_function([[maybe_unused]] gString *inp,
   // space to implement function-to-string conversion
   g_append_back_c(inp, "(");
 
-  if (0 < fun->argcnt) {
+  if (0 < fun->attr.argcnt) {
     g_append_back_c(inp, "x");
     argcnt_t i = 0;
     const int b_size = 7;
@@ -91,7 +91,7 @@ sprint_function([[maybe_unused]] gString *inp,
       }
       g_append_back(inp, numbuff, n);
       memset(numbuff, '\0', b_size);
-      if (++i >= fun->argcnt)
+      if (++i >= fun->attr.argcnt)
         break;
       g_append_back_c(inp, ",x");
     }

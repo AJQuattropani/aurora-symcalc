@@ -74,10 +74,17 @@ typedef struct function_object f_object;
 typedef unsigned short argcnt_t; 
 typedef unsigned short depth_t;
 
-struct function_object {
-  f_node* root;
+struct function_attributes;
+typedef struct function_attributes f_attribs;
+struct function_attributes {
   argcnt_t argcnt;
   depth_t depth;
+  vector_size_t out_size;
+};
+
+struct function_object {
+  f_node* root;
+  f_attribs attr;
 };
 
 
