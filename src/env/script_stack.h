@@ -48,6 +48,15 @@ __attribute__((always_inline)) static inline int push_file(sc_stack *stack, FILE
 * return: 1 on failure, 0 on success
 */
 __attribute__((always_inline)) static inline int open_file(sc_stack *stack, const char *file_name) {
+  const char *dot = strrchr(file_name, '.');
+  if (NULL == dot) {
+    fprintf(stderr, "[Skipped] Please provide a file extension.\n");
+    return 1;
+  }
+  if (strcmp(dot + 1, "ask")) {
+    fprintf(stderr, "[Skipped] Specified file requires a .ask file extension.\n");
+    return 1;
+  }
   if (MAX_FILES <= stack->count) {
     fprintf(stderr, "[Skipped] File open to prevent stack overflow.\n");
     return 1;
