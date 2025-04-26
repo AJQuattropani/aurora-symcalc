@@ -38,22 +38,32 @@ Aurora Scientific Calculator is a script environment. Open program via the termi
 Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
 
 [TODO add list of currently implemented commands]
-| Command | Arguments                     |  Description                                    |
-|:-------:|:-----------------------------:|:-----------------------------------------------:|
-| exit    | none                          |Closes the program.                              |
-| return  | none                          |Closes current file scope.                       |
-| reset   | none                          |Resets environment variables                     |
-| set     | name TYPE vars...             |Define a vector/scalar.                          |
-|         | name FUNC(args) definition... |Define a function.                               |
-| open    | filepath                      |Read and execute a .ask                          |
-| peak    | names...                      |Prints the value of symbols by name.             |
-| printenv| none                          |Prints all environment variables.                |
-| [funct] | none                          |Represents function as a string.                 |
-|         | (args...)                     |Evaluate with the given scalar/vector arguments. |
+| Command    | Arguments                     |  Description                                                            |
+|:-----------|:------------------------------|:------------------------------------------------------------------------|
+| exit       | none                          |Closes the program.                                                      |
+| return     | none                          |Closes current file scope.                                               |
+| reset      | none                          |Resets environment variables                                             |
+| set        | name VECTOR vars...           |Define a vector.                                                         |
+|            | name SCALAR value             |Define a scalar.                                                         |
+|            | name LINSPACE a, b, n         |Define a vector of n equal partitions between [a,b].                     |
+|            | name COUNT a, b, dx           |Define a vector by counting by dx from a to b.                           |
+|            | name FUNC(args) definition... |Define a function.                                                       |
+|            | name PACK [function]          |Copy the function into a packed buffer.                                  |
+|            | name = [function]             |Copy a function.                                                         |
+|            | name = [function] (inputs...) |Evaluate the function and set variable to output.                        |
+| delete     | names...                      |Flags the symbols for deletion.                                          |
+| open       | "filepath"                    |Read and execute a .ask.                                                 |
+| peak       | names...                      |Prints the value of the symbols from a list of names.                    |
+| printenv   | none                          |Prints all environment variables.                                        |
+| [function] | none                          |Prints function as string representation.                                |
+|            | (input...)                    |Evaluate with the given scalar/vector arguments, print output to console.|
+| [vector]   | none                          |Prints the value of the vector.                                          |
+| [other]    | none                          |prints the value of the token, if it exists.                             |
 
 Types of Variables:
 - VECTOR: buffers for storing numerical values (SCALAR is a special type of vector with no size)
-- FUNC: program representation of maps of vectors to vectors
+- FUNC: program representation of ordered mappings of vectors to vectors
+- PFUNC: memory-packed version of function
 
 To test or experiment with interplay of elements in the program, or perform unit tests, new test files can be generated in `./test/`. CMake will generate a separate output executable for each file in this directory.
 
