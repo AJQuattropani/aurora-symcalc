@@ -38,7 +38,7 @@ static f_node *least_significant_token_imp(const token_array *args,
       return NULL;
     f_node *uoper = new_fnode();
     *uoper =
-        (f_node){.name = split_data.token->key,
+        (f_node){.name = m_from_copy(split_data.token->key),
                  .ty = UNARY,
                  .uf = {.op = split_data.token->value.uOperation, .in = in},
                  .priority = split_data.priority,
@@ -59,7 +59,7 @@ static f_node *least_significant_token_imp(const token_array *args,
       return NULL;
     }
     f_node *boper = new_fnode();
-    *boper = (f_node){.name = split_data.token->key,
+    *boper = (f_node){.name = m_from_copy(split_data.token->key),
                       .ty = BINARY,
                       .bf = {.op = split_data.token->value.bOperation,
                              .left = left,

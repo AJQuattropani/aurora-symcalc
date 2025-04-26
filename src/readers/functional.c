@@ -21,7 +21,9 @@ void read_eval(Object *obj, const token_array *args) {
     case VECTOR:
       *obj = out;
       return;
-    case FUNC: // TODO implement generic function copy
+    case FUNC:
+      *obj = (Object){.ty=FUNC, .fObject=copy_fobject(fun)};
+      return;
     default:
     fprintf(stderr, "Unhandled type passed to %s.\n", __func__);
     exit(3);

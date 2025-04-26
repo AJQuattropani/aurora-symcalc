@@ -32,7 +32,6 @@ struct iden_f {
   argcnt_t index;
 };
 
-
 struct function_node {
   mString name;
   depth_t depth_index;
@@ -46,6 +45,9 @@ struct function_node {
     struct iden_f xf; // identity: index of input args
   };
 };
+
+f_object copy_fobject(const f_object *other);
+f_node *copy_fnode_recurse(const f_node *other);
 
 f_node *new_fnode();
 void free_fobject(f_object *fun);
