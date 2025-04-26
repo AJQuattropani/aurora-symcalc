@@ -17,6 +17,9 @@ void sprint_object(gString *gstr, const Object *o) {
   case FUNC:
     sprint_function(gstr, &o->fObject);
     break;
+  case PFUNC:
+    sprint_function(gstr, o->pObject.fObj);
+    break;
   case READER: 
     g_append_back_c(gstr, "READER");
     break;
@@ -32,32 +35,35 @@ void sprint_object(gString *gstr, const Object *o) {
   }
 }
 
-void free_object(Object *o) {
-  switch (o->ty) {
+void free_object(Object *obj) {
+  switch (obj->ty) {
   case VECTOR:
-    free_vdliteral(&o->vLiteral);
+    free_vdliteral(&obj->vLiteral);
     break;
   case CONTEXT:
-    free_mfcontext(&o->mContext);
+    free_mfcontext(&obj->mContext);
     break;
   case BOPER:
-    free_bopliteral(&o->bOperation);
+    free_bopliteral(&obj->bOperation);
     break;
   case UOPER:
-    free_uopliteral(&o->uOperation);
+    free_uopliteral(&obj->uOperation);
     break;
   case FUNC:
-    free_fobject(&o->fObject);
+    free_fobject(&obj->fObject);
+    break;
+  case PFUNC:
+    free_pobject(&obj->pObject);
     break;
   case READER:
-    free_reader(&o->reader);
+    free_reader(&obj->reader);
     break;
   case NONE:
     break;
   default:
     break;
   }
-  memset(o, 0, sizeof(Object));
+  memset(obj, 0, sizeof(Object));
 }
 
 __attribute__((always_inline)) inline Object null_object() {

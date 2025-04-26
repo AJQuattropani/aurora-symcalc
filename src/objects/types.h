@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <limits.h>
+#include <time.h>
 #include "../strings/vstring.h"
+
+typedef uint8_t BYTE;
 
 /*
  * Forward definition of the structure in which
@@ -33,6 +36,7 @@ enum object_type {
   SYNTAX_RIGHT,
   VECTOR,
   FUNC,
+  PFUNC,
   BOPER,
   UOPER,
   CONTEXT,
@@ -70,6 +74,8 @@ struct function_node;
 typedef struct function_node f_node;
 struct function_object;
 typedef struct function_object f_object;
+struct packed_function_object;
+typedef struct packed_function_object pf_object;
 
 typedef unsigned short argcnt_t; 
 typedef unsigned short depth_t;
@@ -83,10 +89,17 @@ struct function_attributes {
 };
 
 struct function_object {
-  f_node* root;
+  f_node *root;
   f_attribs attr;
 };
 
+
+struct packed_function_object {
+  union {
+    f_object *fObj;
+    BYTE* buff;
+  };
+};
 
 typedef uint16_t priority_t;
 #define PRIORITY_MAX USHRT_MAX
@@ -98,6 +111,7 @@ struct object {
     b_opliteral bOperation;
     u_opliteral uOperation;
     f_object fObject;
+    pf_object pObject;
     r_macro reader;
     int64_t other;
   };

@@ -77,19 +77,21 @@ void delete_object(env *context, const token_array *args) {
     _mnode* fig = args->data[i].token;
     obj_t ty = fig->value.ty;
     switch (ty) {
-    case NONE: 
-    case TEMP:
-    case SYNTAX_RIGHT: 
-    case CONTEXT:
-    case READER:
-    case BOPER:
+    case NONE: __attribute__((fallthrough));
+    case TEMP: __attribute__((fallthrough));
+    case SYNTAX_RIGHT: __attribute__((fallthrough));
+    case CONTEXT: __attribute__((fallthrough));
+    case READER: __attribute__((fallthrough));
+    case BOPER: __attribute__((fallthrough));
     case UOPER:
       g_append_back_c(&context->output_buffer, "\n| [SKIPPED] Token is not a deletable type.");
       continue;
-    case VECTOR:
-    case FUNC:
+    case VECTOR: __attribute__((fallthrough));
+    case FUNC: __attribute__((fallthrough));
+    case PFUNC: 
       g_append_back_c(&context->output_buffer, "\n| Token removed.");
       remove_node(fig);
+      continue;
     }
   }
 }

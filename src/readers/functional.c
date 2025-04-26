@@ -1,7 +1,6 @@
 #include "functional.h"
 
-void function_command(env *context, const token_array *args) {
-  f_object *fun = &args->data[0].token->value.fObject;
+void function_command(env *context, f_object *fun, const token_array *args) {
   if (1 == args->size) {
     sprint_function(&context->output_buffer, fun);
     return;
@@ -58,11 +57,11 @@ void function_command(env *context, const token_array *args) {
       free_vdliteral(&out[i]);
     }
     free(out);
+
   cleanup:
     free(inp_args);
     return;
   }
-
 }
 
 

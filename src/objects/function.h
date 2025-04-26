@@ -13,29 +13,38 @@ enum opr_t {
 };
 typedef enum opr_t opr_t;
 
+struct binary_f {
+  b_opliteral op;
+  f_node *left;
+  f_node *right;
+};
+
+struct unary_f {
+  u_opliteral op;
+  f_node *in;
+};
+
+struct const_f {
+  vd_literal output;
+};
+
+struct iden_f {
+  argcnt_t index;
+};
+
+
 struct function_node {
   mString name;
-  union {
-    struct {
-      b_opliteral op;
-      f_node* left;
-      f_node* right;
-    } bf;
-    struct {
-      u_opliteral op;
-      f_node* in;
-    } uf;
-    struct { // none needed for constant
-      vd_literal output;
-    } cf;
-    // identity: index of input args
-    struct {
-      argcnt_t index;
-    } xf;
-  };
   depth_t depth_index;
   priority_t priority;
   opr_t ty;
+  union {
+    void* __align_data;
+    struct binary_f bf;
+    struct unary_f uf;
+    struct const_f cf; // none needed for constant
+    struct iden_f xf; // identity: index of input args
+  };
 };
 
 f_node *new_fnode();

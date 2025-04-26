@@ -7,7 +7,7 @@
 /*
 * Handles various command types associated with function token.
 */
-void function_command(env *context, const token_array *args);
+void function_command(env *context, f_object *fun, const token_array *args);
 
 
 /*

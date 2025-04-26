@@ -33,6 +33,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "COUNT", (_value){.reader = read_countspace, .ty = READER, .priority = 0});
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
   cinsert(map, "SCALAR", (_value){.reader = read_scalar, .ty = READER, .priority = 0});
+  cinsert(map, "PACK", (_value){.reader = read_copy_packed, .ty = READER, .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }
@@ -87,9 +88,15 @@ __attribute__((always_inline)) inline void runtime(env *env) {
         mc(env, &arr);
         break;
       } 
+      case PFUNC: {
+        f_object *fun = arr.data[0].token->value.pObject.fObj;
+        function_command(env, fun, &arr);
+        break;
+      }
       case FUNC: {
-          function_command(env, &arr);
-          break;
+        f_object *fun = &arr.data[0].token->value.fObject;
+        function_command(env, fun, &arr);
+        break;
       }
       case VECTOR: {
         sprint_object(&env->output_buffer, obj);

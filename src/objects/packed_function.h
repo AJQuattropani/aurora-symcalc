@@ -1,21 +1,8 @@
 #pragma once
 
 #include "function.h"
+#include "function_stack.h"
 
-typedef uint8_t byte;
-typedef struct {
-  size_t byte_ptr;
-  size_t size;
-  byte* buffer;
-} stack_arena;
+pf_object make_packed_copy(f_object *object);
 
-stack_arena new_stack_arena(size_t num_bytes);
-
-void free_stack_arena(stack_arena *arena);
-
-byte *salloc(stack_arena *arr, size_t num_bytes);
-
-
-
-
-
+void free_pobject(pf_object *object);

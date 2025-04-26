@@ -155,6 +155,7 @@ void read_function(Object *obj, const token_array *args) {
         case SYNTAX_RIGHT: break;
         case TEMP: continue;
         case FUNC: continue;
+        case PFUNC: continue;
         case BOPER: continue;
         case CONTEXT: continue;
         case UOPER: continue;
@@ -189,4 +190,21 @@ void read_function(Object *obj, const token_array *args) {
 
   obj->fObject.root = root;
 }
+
+void read_copy_packed(Object *obj, const token_array *args) {
+  if (1 != args->size) {
+    fprintf(stderr, "[ERROR] Please provide only one function to pack.\n");
+    *obj = null_object();
+    return;
+  }
+  if (FUNC != args->data[0].token->value.ty) {
+    *obj = null_object();
+    return;
+  }
+  Object* function = &args->data[0].token->value;
+  *obj = (Object){.pObject = make_packed_copy(&function->fObject), .ty = PFUNC, .priority = PRIORITY_MAX};
+}
+
+
+
 

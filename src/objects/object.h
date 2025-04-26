@@ -6,6 +6,7 @@
 #include "initializers.h"
 #include "vector.h"
 #include "function.h"
+#include "packed_function.h"
 
 Object null_object();
 
