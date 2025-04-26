@@ -37,6 +37,9 @@ void sprint_object(gString *gstr, const Object *o) {
 
 void free_object(Object *obj) {
   switch (obj->ty) {
+  case SYNTAX_EQUALS:
+    free_reader(&obj->reader);
+    break;
   case VECTOR:
     free_vdliteral(&obj->vLiteral);
     break;

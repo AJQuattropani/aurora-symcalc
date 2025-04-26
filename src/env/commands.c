@@ -49,8 +49,8 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
   }
 
   Object *read_type = &args->data[2].token->value;
-  if (READER != read_type->ty) {
-    fprintf(stderr, "[SKIPPED] Invalid type.\n");
+  if (READER != read_type->ty && SYNTAX_EQUALS != read_type->ty) {
+    fprintf(stderr, "[SKIPPED] Invalid type %s.\n", args->data[2].token->key.cstring);
     return;
   }
   r_macro read_macro = read_type->reader;

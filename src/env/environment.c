@@ -9,7 +9,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT, .priority=0});
   cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT, .priority=0});
   cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "=", (_value){.mContext = NULL, .ty = SYNTAX_EQUALS, .priority=0});
+  cinsert(map, "=", (_value){.reader = read_eval, .ty = SYNTAX_EQUALS, .priority=0});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
   cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER, .priority = 1});
   cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER, .priority = 2});
