@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+#include "gstring.h"
 
 struct view_string;
 typedef struct view_string vString;
@@ -28,3 +28,5 @@ void v_push_cstr(vList *list, char *ref, size_t len);
 void v_empty(vList *list);
 
 void v_free(vList *list);
+
+void print_views(gString *gstr, const vList *list);
