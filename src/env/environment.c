@@ -9,7 +9,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT, .priority=0});
   cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT, .priority=0});
   cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "->", (_value){.mContext = NULL, .ty = SYNTAX_RIGHT, .priority=0});
+  cinsert(map, "=", (_value){.mContext = NULL, .ty = SYNTAX_EQUALS, .priority=0});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
   cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER, .priority = 1});
   cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER, .priority = 2});
@@ -70,9 +70,13 @@ __attribute__((always_inline)) inline void runtime(env *env) {
   while (NULL != (current_file = get_current_file(&env->script_stack))) {
     while (0 <= v_get_line(&vlist, &mstr, current_file)) {
       if (stdout != current_file) {
+        g_append_back_c(&env->output_buffer, "\033[0;32m");
         g_append_back_c(&env->output_buffer, mstr.cstring);
-        g_append_back_c(&env->output_buffer, ": ");
+        g_append_back_c(&env->output_buffer, " ");
+        g_append_back_c(&env->output_buffer, "\033[0m");
       }
+      //sprint_views(&env->output_buffer, &vlist);
+
       token_array arr = tokenize(env->map, &vlist);
 
       if (NULL == arr.data || 0 >= arr.size) {
@@ -89,20 +93,24 @@ __attribute__((always_inline)) inline void runtime(env *env) {
         break;
       } 
       case PFUNC: {
+        g_append_back_c(&env->output_buffer, "\n\t");
         f_object *fun = arr.data[0].token->value.pObject.fObj;
         function_command(env, fun, &arr);
         break;
       }
       case FUNC: {
+        g_append_back_c(&env->output_buffer, "\n\t");
         f_object *fun = &arr.data[0].token->value.fObject;
         function_command(env, fun, &arr);
         break;
       }
       case VECTOR: {
+        g_append_back_c(&env->output_buffer, "\n\t");
         sprint_object(&env->output_buffer, obj);
         break;
       }
       case NONE: {
+        g_append_back_c(&env->output_buffer, "\n\t");
         g_append_back_c(&env->output_buffer, "Unknown token.");
         break;
       }
