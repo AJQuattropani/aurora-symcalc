@@ -50,7 +50,7 @@ __attribute__((always_inline)) inline void sprint_vector(gString *inp, const vd_
   if (SCALAR == value->size) {
     const size_t buff_size = 48;
     char buff[buff_size];
-    int len = snprintf(buff, buff_size - 3, "%E", value->data[0]);
+    int len = snprintf(buff, buff_size - 3, "%g", value->data[0]);
     if (0 > len || (size_t)len > buff_size) {
       fprintf(stderr, "Unknown error occurred in snprintf for %s. len %d, %s\n", __func__, len, buff);
       exit(1);
@@ -62,7 +62,7 @@ __attribute__((always_inline)) inline void sprint_vector(gString *inp, const vd_
   for (vector_size_t i = 0; i < value->size; i++) {
     const size_t buff_size = 48;
     char buff[buff_size];
-    int len = snprintf(buff, buff_size - 3, "%E,", value->data[i]);
+    int len = snprintf(buff, buff_size - 3, "%g,", value->data[i]);
     if (0 > len || (size_t)len > buff_size) {
       fprintf(stderr, "Unknown error occurred in snprintf for %s. len: %d, %s\n", __func__, len, buff);
       exit(1);
