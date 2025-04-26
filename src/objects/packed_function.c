@@ -8,22 +8,22 @@ void count_bytes(size_t *counter, f_node *node) {
   switch(node->ty) {
     case BINARY:
       *counter += sizeof(struct binary_f);
-      fprintf(stdout, "Request: counter %ld\n", *counter);
+      //fprintf(stdout, "Request: counter %ld\n", *counter);
       count_bytes(counter, node->bf.left);
       count_bytes(counter, node->bf.right);
     return;
     case UNARY:
       *counter += sizeof(struct unary_f);
-      fprintf(stdout, "Request: counter %ld\n", *counter);
+      //fprintf(stdout, "Request: counter %ld\n", *counter);
       count_bytes(counter, node->uf.in);
     return;
     case CONSTANT:
       *counter += sizeof(struct const_f);
-      fprintf(stdout, "Request: counter %ld\n", *counter);
+      //fprintf(stdout, "Request: counter %ld\n", *counter);
     return;
     case IDENTITY:
       *counter += sizeof(struct iden_f);
-      fprintf(stdout, "Request: counter %ld\n", *counter);
+      //fprintf(stdout, "Request: counter %ld\n", *counter);
     return;
   }
 }
@@ -67,7 +67,7 @@ pf_object make_packed_copy(f_object *fobj) {
   num_bytes += sizeof(f_object);
 
   count_bytes(&num_bytes, fobj->root);
-  fprintf(stdout, "%ld bytes counted.\n", num_bytes);
+  //fprintf(stdout, "%ld bytes counted.\n", num_bytes);
   stack function_stack = new_stack(num_bytes);
   f_object *function_head = (f_object*)s_alloc(&function_stack, sizeof(f_object));
   function_head->attr = fobj->attr;
