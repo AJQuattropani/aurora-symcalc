@@ -52,7 +52,7 @@ vString v_view(char *ref) {
   return (vString){.ref = ref, .len = strlen(ref)};
 }
 
-__attribute__((always_inline)) inline void print_views(gString *gstr, const vList *list) {
+__attribute__((always_inline)) inline void sprint_views(gString *gstr, const vList *list) {
   for (size_t i = 0; i < list->size; i++) {
     g_append_back_c(gstr, " [");
     g_append_back(gstr, list->data[i].ref, list->data[i].len);

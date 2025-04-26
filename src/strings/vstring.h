@@ -29,4 +29,4 @@ void v_empty(vList *list);
 
 void v_free(vList *list);
 
-void print_views(gString *gstr, const vList *list);
+void sprint_views(gString *gstr, const vList *list);
