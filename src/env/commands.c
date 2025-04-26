@@ -19,6 +19,7 @@ void print_env(env *context, [[maybe_unused]] const token_array *args) {
 }
 
 void print_tok(env *context, const token_array *args) {
+  g_append_back_c(&context->output_buffer, "\n\t");
   if (2 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for print call.\n");
     return;
@@ -79,7 +80,7 @@ void delete_object(env *context, const token_array *args) {
     switch (ty) {
     case NONE: __attribute__((fallthrough));
     case TEMP: __attribute__((fallthrough));
-    case SYNTAX_RIGHT: __attribute__((fallthrough));
+    case SYNTAX_EQUALS: __attribute__((fallthrough));
     case CONTEXT: __attribute__((fallthrough));
     case READER: __attribute__((fallthrough));
     case BOPER: __attribute__((fallthrough));
