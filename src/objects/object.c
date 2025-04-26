@@ -26,7 +26,7 @@ void sprint_object(gString *gstr, const Object *o) {
   case TEMP:
     g_append_back_c(gstr, "TEMP");
     break;
-  case SYNTAX_RIGHT:
+  case SYNTAX_EQUALS:
     g_append_back_c(gstr, "->");
     break;
   case NONE:

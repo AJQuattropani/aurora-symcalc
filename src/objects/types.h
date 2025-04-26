@@ -33,7 +33,7 @@ typedef struct object Object;
 enum object_type {
   NONE = 0,
   TEMP,
-  SYNTAX_RIGHT,
+  SYNTAX_EQUALS,
   VECTOR,
   FUNC,
   PFUNC,
