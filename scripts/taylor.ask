@@ -1,8 +1,8 @@
-set y FUNC(x) -> e ^ x
+set y FUNC(x) = e ^ x
 
-set f FUNC(x) -> 1 + x + x ^ 2 / 2 + x ^ 3 / 6
+set f FUNC(x) = 1 + x + x ^ 2 / 2 + x ^ 3 / 6
 
-set x VECTOR -1.0 -0.8 -0.6 -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
+set x VECTOR -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
 
 peak y
 y(x)

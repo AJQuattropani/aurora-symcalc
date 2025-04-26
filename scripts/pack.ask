@@ -1,0 +1,11 @@
+set f FUNC(x)=x-e^x + (x * sin(x))
+peak f
+set g PACK f
+peak g
+
+set x LINSPACE 0,1000,10000
+
+f(x)
+
+g(x)
+
