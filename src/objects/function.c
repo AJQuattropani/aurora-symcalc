@@ -9,16 +9,53 @@ f_node *new_fnode() {
   return no;
 }
 
-void free_fobject(f_object *fun) { free_fnode_recurse(fun->root); }
+f_object copy_fobject(const f_object *other) {
+  f_object copy = *other;
+  copy.root = copy_fnode_recurse(other->root);
+  return copy;
+}
+
+f_node *copy_fnode_recurse(const f_node *ref) {
+  f_node *dup = new_fnode();
+  switch(ref->ty) {
+    case BINARY:
+      dup->bf.op = ref->bf.op;
+      dup->bf.left = copy_fnode_recurse(ref->bf.left);
+      dup->bf.right = copy_fnode_recurse(ref->bf.right);
+    break;
+    case UNARY:
+      dup->uf.op = ref->uf.op;
+      dup->uf.in = copy_fnode_recurse(ref->uf.in);
+    break;
+    case CONSTANT:
+      dup->cf.output = copy_vdliteral(&ref->cf.output);
+    break;
+    case IDENTITY:
+      dup->xf.index = ref->xf.index;
+    break;
+  }
+  dup->ty = ref->ty;
+  dup->priority = ref->priority;
+  dup->depth_index = ref->depth_index;
+  dup->name = m_from_copy(ref->name);
+  return dup;
+}
+
+void free_fobject(f_object *fun) { 
+  free_fnode_recurse(fun->root);
+  *fun = (f_object){0};
+}
 
 void free_fnode_recurse(f_node *node) {
   switch (node->ty) {
   case BINARY:
+    m_deletestr(&node->name);
     free_bopliteral(&node->bf.op);
     free_fnode_recurse(node->bf.left);
     free_fnode_recurse(node->bf.right);
     break;
   case UNARY:
+    m_deletestr(&node->name);
     free_uopliteral(&node->uf.op);
     free_fnode_recurse(node->uf.in);
     break;
@@ -104,3 +141,4 @@ sprint_function([[maybe_unused]] gString *inp,
 
   fnode_str_recurse(inp, fun->root);
 }
+

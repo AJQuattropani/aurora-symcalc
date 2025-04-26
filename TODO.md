@@ -1,6 +1,6 @@
 # What TODO:
 
-1. Implement basic function manipulation: copying, algorithm for constructing simplification, partial differentation.
+1. Implement basic function manipulation: algorithm for simplification, partial differentation.
 2. Add implicit multiplication.
 3. Implement File IO.
 4. Implement graphing.
