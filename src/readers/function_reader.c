@@ -26,7 +26,7 @@ static f_node *least_significant_token_imp(const token_array *args,
     sp = i;
     split_data = *curr;
   }
-  fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
+  //fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
 
   switch (split_data.token->value.ty) {
   case UOPER: {
@@ -125,7 +125,7 @@ void read_function(Object *obj, const token_array *args) {
   argcnt_t argnum = 0;
 
   for (; argnum < args->size; argnum++) {
-    if (SYNTAX_RIGHT == args->data[argnum].token->value.ty)
+    if (SYNTAX_EQUALS == args->data[argnum].token->value.ty)
       break;
     if (NONE != args->data[argnum].token->value.ty) {
       fprintf(stderr, "[ERROR] Function argument collision at %s\n",
@@ -152,7 +152,7 @@ void read_function(Object *obj, const token_array *args) {
       switch(ty) {
         case NONE: break;
         case READER: break;
-        case SYNTAX_RIGHT: break;
+        case SYNTAX_EQUALS: break;
         case TEMP: continue;
         case FUNC: continue;
         case PFUNC: continue;
