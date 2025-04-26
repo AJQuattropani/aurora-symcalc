@@ -12,18 +12,51 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   char *sp = buff->cstring;
   char *ep = NULL;
   size_t diff; 
-  while (NULL != (ep = strpbrk(sp, " ,\n()%"))) {
+  while (NULL != (ep = strpbrk(sp, "=^_*/-+() ,%\n\""))) {
     if ('%' == *ep) break;
     diff = ep - sp;
     if (0 < diff) {
       v_push_cstr(vlist, sp, diff);
     }
     sp = ep + 1;
-    if (')' == *ep || '(' == *ep) {
+    switch (*ep) { // check what the last character is.
+      case '\"':
+        {
+          if (NULL == (ep = strpbrk(sp, "\""))) {
+            fprintf(stderr, "[SKIPPED] Incomplete string.\n");
+            v_empty(vlist);
+            return read;
+          }
+          if (0 == (diff = ep - sp)) {
+            fprintf(stderr, "[SKIPPED] Empty string.\n");
+            v_empty(vlist);
+            return read;
+          }
+          v_push_cstr(vlist, sp, diff);
+          sp = ep + 1;
+        }
+        break;
+      case ',': __attribute__((fallthrough));
+      case '%': __attribute__((fallthrough));
+      case ' ': 
+        break;
+      case '-':
+        if ('-' == *(ep + 1) || '>' == *(ep + 1)) {
+          v_push_cstr(vlist, ep, 2);
+          sp++;
+          break;
+        }
+        char num = *(ep + 1) - 0x30;
+        if (num >= 0 && num <= 9) {
+          break;
+        }
+        v_push_cstr(vlist, ep, 1);
+      break;
+      case '\n': *ep = '\0';
+      break;
+      default:
       v_push_cstr(vlist, ep, 1);
-    }
-    if ('\n' == *ep) {
-      *ep = '\0';
+      break;
     }
   }
 
