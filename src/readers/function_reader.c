@@ -5,11 +5,11 @@ update_depth_max(depth_t depth, depth_t *depth_max) {
   *depth_max = (depth ^ ((depth ^ *depth_max) & -(depth < *depth_max))) + 1;
 }
 
-static f_node *least_significant_token_recurse(const token_array *args,
+static f_node *least_significant_token_recurse(token_array *args,
                                                depth_t depth,
                                                f_attribs *attr);
 
-static f_node *least_significant_token_imp(const token_array *args,
+static f_node *least_significant_token_imp(token_array *args,
                                            depth_t depth, f_attribs *attr) {
   update_depth_max(depth, &attr->depth);
 
@@ -50,6 +50,7 @@ static f_node *least_significant_token_imp(const token_array *args,
                              .right = right},
                       .priority = split_data.priority,
                       .depth_index = depth};
+    args->data[sp].token = NULL;
     return boper;
   }
   case UOPER: {
@@ -66,33 +67,7 @@ static f_node *least_significant_token_imp(const token_array *args,
                  .uf = {.op = split_data.token->value.uOperation, .in = in},
                  .priority = split_data.priority,
                  .depth_index = depth};
-    if (sp > 0) {
-      f_node *implicit_l = least_significant_token_recurse(
-        &(token_array){.data = args->data, .size = sp},
-        depth, attr);
-      if (NULL == in) {
-        free_fnode_recurse(uoper);
-        return NULL;
-      }
-      switch (implicit_l->ty) {
-        case IDENTITY:
-        case CONSTANT: {
-          f_node *implicit_mul = new_fnode();
-          *implicit_mul = (f_node){
-            .name = m_from_cstr("*"),
-            .ty = BINARY,
-            .bf = {.op = vb_mul, .left = implicit_l, .right = uoper},
-            .priority = split_data.priority,
-            .depth_index = depth
-            };
-          return implicit_mul;
-          }
-        default:
-        free_fnode_recurse(implicit_l);
-        free_fnode_recurse(uoper);
-        return NULL;
-      }
-    }
+    args->data[sp].token = NULL;
     return uoper;
   }
   case VECTOR: {
@@ -106,35 +81,7 @@ static f_node *least_significant_token_imp(const token_array *args,
         .cf = {.output = copy_vdliteral(&split_data.token->value.vLiteral)},
         .priority = split_data.priority,
         .depth_index = depth}; // in case function is just vector point to out
-    
-    if (args->size > 1) {
-      f_node *right = least_significant_token_recurse(
-          &(token_array){.data = (args->data + sp + 1), .size = (args->size - sp - 1)}, depth + 1, attr);
-      if (right == NULL) {
-          free_fnode_recurse(constant);
-          return NULL;
-      }
-      switch (right->ty) {
-        case IDENTITY:
-        case CONSTANT: {
-          f_node *implicit_mul = new_fnode();
-          *implicit_mul = (f_node){
-            .name = m_from_cstr("*"),
-            .ty = BINARY,
-            .bf = {.op = vb_mul, .left = constant, .right = right},
-            .priority = split_data.priority,
-            .depth_index = depth
-            };
-          return implicit_mul;
-        }
-        break;
-        default:
-        free_fnode_recurse(constant);
-        free_fnode_recurse(right);
-        return NULL;
-      }
-    }
-
+    args->data[sp].token = NULL;
     return constant;
   }
   case TEMP: {
@@ -156,33 +103,7 @@ static f_node *least_significant_token_imp(const token_array *args,
                          .xf.index = split_data.token->value.other,
                          .priority = split_data.priority,
                          .depth_index = depth};
-    if (args->size > 1) {
-      f_node *right = least_significant_token_recurse(
-          &(token_array){.data = (args->data + sp + 1), .size = (args->size - sp - 1)}, depth + 1, attr);
-      if (right == NULL) {
-          free_fnode_recurse(identity);
-          return NULL;
-      }
-      switch (right->ty) {
-        case IDENTITY:
-        case CONSTANT: {
-          f_node *implicit_mul = new_fnode();
-          *implicit_mul = (f_node){
-            .name = m_from_cstr("*"),
-            .ty = BINARY,
-            .bf = {.op = vb_mul, .left = identity, .right = right},
-            .priority = split_data.priority,
-            .depth_index = depth
-            };
-          return implicit_mul;
-        }
-        break;
-        default:
-        free_fnode_recurse(identity);
-        free_fnode_recurse(right);
-        return NULL;
-      }
-    }
+    args->data[sp].token = NULL;
     return identity;
   }
   default: {
@@ -194,7 +115,7 @@ static f_node *least_significant_token_imp(const token_array *args,
 }
 
 __attribute__((always_inline)) inline f_node *
-least_significant_token_recurse(const token_array *args, depth_t depth,
+least_significant_token_recurse(token_array *args, depth_t depth,
                                 f_attribs *attr) {
   if (args->size <= 0) {
     fprintf(stderr,
@@ -205,7 +126,7 @@ least_significant_token_recurse(const token_array *args, depth_t depth,
   return least_significant_token_imp(args, depth, attr);
 }
 
-void read_function(Object *obj, const token_array *args) {
+void read_function(Object *obj, token_array *args) {
   argcnt_t argnum = 0;
 
   for (; argnum < args->size; argnum++) {
@@ -271,11 +192,19 @@ void read_function(Object *obj, const token_array *args) {
     *obj = null_object();
     return;
   }
+  for (size_t i = offs; i < args->size; i++) {
+    if (args->data[i].token != NULL) {
+      fprintf(stderr, "[ERROR] Function parse did not consume all tokens.\n");
+      free_fnode_recurse(root);
+      *obj = null_object();
+      return;
+    }
+  }
 
   obj->fObject.root = root;
 }
 
-void read_copy_packed(Object *obj, const token_array *args) {
+void read_copy_packed(Object *obj, token_array *args) {
   if (1 != args->size) {
     fprintf(stderr, "[ERROR] Please provide only one function to pack.\n");
     *obj = null_object();
