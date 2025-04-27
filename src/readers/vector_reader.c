@@ -13,7 +13,7 @@ Object read_scalar_imp(const token *arg) {
   return as_vdliteral(&obj);
 }
 
-void read_scalar(Object *o, const token_array *args) {
+void read_scalar(Object *o, token_array *args) {
   if (args->size == 1) {
     *o = read_scalar_imp(&args->data[0]);
     return;
@@ -21,7 +21,7 @@ void read_scalar(Object *o, const token_array *args) {
   *o = null_object();
 }
 
-void read_vector(Object *o, const token_array *args) {
+void read_vector(Object *o, token_array *args) {
   vd_literal vector = alloc_vdliteral(args->size);
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
@@ -41,7 +41,7 @@ void read_vector(Object *o, const token_array *args) {
   *o = as_vdliteral(&vector);
 }
 
-void read_linspace(Object *o, const token_array *args) {
+void read_linspace(Object *o, token_array *args) {
   if (args->size > 3) goto argument_size_error;
   double bounds[3] = {NAN,NAN,NAN};
   unsigned long long int partitions;
@@ -80,7 +80,7 @@ argument_size_error:
   return; 
 }
 
-void read_countspace(Object *o, const token_array *args) {
+void read_countspace(Object *o, token_array *args) {
   if (args->size > 3) goto argument_size_error;
   double bounds[3] = {NAN,NAN,NAN};
   double dx;

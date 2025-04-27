@@ -1,6 +1,6 @@
 #include "functional.h"
 
-void read_eval(Object *obj, const token_array *args) {
+void read_eval(Object *obj, token_array *args) {
   Object *func_obj = &args->data[0].token->value;
   f_object *fun;
   switch (func_obj->ty) {
