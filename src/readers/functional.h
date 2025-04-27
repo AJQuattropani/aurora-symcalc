@@ -5,7 +5,7 @@
 /*
  * Writes output of function into object buffer.
  */
-void read_eval(Object *obj, const token_array *args);
+void read_eval(Object *obj, token_array *args);
 
 /*
  * Returns a function if its just the first token. Returns evaluation provided arguments.

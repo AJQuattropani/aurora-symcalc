@@ -6,22 +6,22 @@
 /*
 * Instructs to read remaining tokens as a vector.
 */
-void read_vector(Object *o, const token_array *args);
+void read_vector(Object *o, token_array *args);
 
 /*
 * Instructs to read remaining tokens as arguments for defining a linear space.
 */
-void read_linspace(Object *o, const token_array *args);
+void read_linspace(Object *o, token_array *args);
 
 /*
 * Instructs to read remaining tokens as arguments for defining a counting space.
 */
-void read_countspace(Object *o, const token_array *args);
+void read_countspace(Object *o, token_array *args);
 
 /*
  * Instructs to read remaining token as a scalar.
  */
-void read_scalar(Object *o, const token_array *args);
+void read_scalar(Object *o, token_array *args);
 
 /*
  * Generic implementation of reading a scalar for use anywhere.

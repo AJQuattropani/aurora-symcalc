@@ -67,7 +67,7 @@ typedef binary_operation_literal b_opliteral; // generic type for operations on 
 typedef int(*unary_operation_literal)(vd_literal *o, const vd_literal *i);
 typedef unary_operation_literal u_opliteral; // generic type for operations on one vector
 
-typedef void(*reader_macro)(Object *obj, const token_array *args);
+typedef void(*reader_macro)(Object *obj, token_array *args);
 typedef reader_macro r_macro;
 
 struct function_node;
