@@ -49,6 +49,7 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 |            | name COUNT a, b, dx           |Define a vector by counting by dx from a to b.                           |
 |            | name FUNC(args) definition... |Define a function.                                                       |
 |            | name PACK [function]          |Copy the function into a packed buffer.                                  |
+|            | name REDUCE [function]        |Copy the function with redundancies removed.                             |
 |            | name = [function]             |Copy a function.                                                         |
 |            | name = [function] (inputs...) |Evaluate the function and set variable to output.                        |
 | delete     | names...                      |Flags the symbols for deletion.                                          |
