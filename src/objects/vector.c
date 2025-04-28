@@ -21,7 +21,7 @@ void free_vdliteral(vd_literal *lit) {
   lit->size = 0;
 }
 
-__attribute__((always_inline)) inline vd_literal copy_vdliteral(const vd_literal* other) {
+vd_literal copy_vdliteral(const vd_literal* other) {
   vd_literal lit = alloc_vdliteral(other->size);
   if (SCALAR == lit.size) {
     *(lit.data) = *other->data;
@@ -35,7 +35,7 @@ __attribute__((always_inline)) inline vd_literal copy_vdliteral(const vd_literal
   return lit;
 }
 
-__attribute__((always_inline)) inline vd_literal alloc_vdliteral(vector_size_t n) {
+vd_literal alloc_vdliteral(vector_size_t n) {
   vector_size_t size = (SCALAR == n) * 1 + (SCALAR != n) * n;
   vd_literal lit =
       (vd_literal){.data = (double *)calloc(size, sizeof(double)), .size = n};
@@ -46,7 +46,7 @@ __attribute__((always_inline)) inline vd_literal alloc_vdliteral(vector_size_t n
   return lit;
 }
 
-__attribute__((always_inline)) inline void sprint_vector(gString *inp, const vd_literal *value) {
+void sprint_vector(gString *inp, const vd_literal *value) {
   if (SCALAR == value->size) {
     const size_t buff_size = 48;
     char buff[buff_size];

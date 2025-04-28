@@ -6,6 +6,8 @@
 
 #include <math.h>
 
+int is_num(const vd_literal *check, double val, double tol);
+
 
 int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r);
 
