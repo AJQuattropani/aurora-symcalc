@@ -240,11 +240,12 @@ static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
                     &write_buff[func->depth_index + 1]);
         return NULL;
       case NOTHING: // right not consteval?
-        switch (resolve_simplification(func->name.cstring[0],
+        switch (*simp = resolve_simplification(func->name.cstring[0],
                                        &write_buff[func->depth_index])) {
         // will fail if so ever a binary function is introduced that is not one
         // char
-        case NOTHING:
+        case NOTHING: {
+          fprintf(stderr, "NOTHING R:\n");
           left = new_fnode();
           gString name = g_from_capacity(10);
           sprint_vector(&name, &write_buff[func->depth_index]);
@@ -257,29 +258,38 @@ static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
           out = new_fnode();
           out->bf.left = left;
           out->bf.right = right;
+          fprintf(stderr, "NOTHING R:\n");
+          *simp = NOTHING;
+          }
           break;
-        case CONSTEVAL:
+        case CONSTEVAL: {
+          fprintf(stderr, "CONSTEVAL:\n");
           func->bf.op(&write_buff[func->depth_index],
                       &write_buff[func->depth_index],
                       &write_buff[func->depth_index + 1]);
           free_fnode_recurse(right);
+          *simp = CONSTEVAL;
           return NULL;
-        case REMOVE:
+          }
+        case REMOVE: {
+          fprintf(stderr, "REMOVE:\n");
           *simp = NOTHING;
           return right; // left has no effect
         }
+        }
         break;
       case REMOVE:
-        exit(5);
+      exit(5);
       }
-      break;
     }
+    break;
     case NOTHING: {
       switch (rsimp) {
       case CONSTEVAL: // left not consteval?
-        switch (resolve_simplification(func->name.cstring[0],
+        switch (*simp = resolve_simplification(func->name.cstring[0],
                                        &write_buff[func->depth_index + 1])) {
-        case NOTHING:
+        case NOTHING: {
+          fprintf(stderr, "NOTHING L:\n");
           right = new_fnode();
           gString name = g_from_capacity(10);
           sprint_vector(&name, &write_buff[func->depth_index + 1]);
@@ -292,19 +302,26 @@ static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
           out = new_fnode();
           out->bf.right = right;
           out->bf.left = left;
+          fprintf(stderr, "NOTHING L:\n");
+          *simp = NOTHING;
+          }
           break;
-        case CONSTEVAL:
+        case CONSTEVAL: {
           fprintf(stderr, "CONSTEVAL:\n");
           func->bf.op(&write_buff[func->depth_index],
                       &write_buff[func->depth_index],
                       &write_buff[func->depth_index + 1]);
           free_fnode_recurse(left);
+          *simp = CONSTEVAL;
           return NULL;
-        case REMOVE:
+          }
+        case REMOVE: {
+          fprintf(stderr, "REMOVE:\n");
           *simp = NOTHING;
           return left; // right has no effect
-        }
-        break;
+          }
+      }
+      break;
       case NOTHING: // neither consteval? return copy
         out = new_fnode();
         out->bf.op = func->bf.op;
@@ -351,6 +368,7 @@ static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
     break;
   }
   }
+  fprintf(stderr, "Copy\n");
   out->ty = func->ty;
   out->priority = func->priority;
   out->depth_index = func->depth_index;
