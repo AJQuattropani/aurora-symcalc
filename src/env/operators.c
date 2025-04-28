@@ -1,8 +1,23 @@
 #include "operators.h"
 
+
 __attribute__((always_inline)) inline vector_size_t flag_scalar(vector_size_t i) {
   return SCALAR != i;
 }
+
+int is_num(const vd_literal *check, double val, double tol) {
+  vector_size_t sc_check = flag_scalar(check->size);
+  vector_size_t size = (check->size - 1) * (sc_check) + 1;
+  for (vector_size_t j = 0; j < size; j++) {
+    if (fabs(check->data[j] - val) <= tol) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
+
 
 int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   vector_size_t sc_out = flag_scalar(o->size);
