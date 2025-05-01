@@ -1,7 +1,7 @@
 #pragma once
 
 #include "function.h"
-#include "function_stack.h"
+#include "alloc_stack.h"
 
 pf_object make_packed_copy(f_object *object);
 

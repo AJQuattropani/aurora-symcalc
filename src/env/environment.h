@@ -5,6 +5,8 @@
 #include "../objects/types.h"
 #include "../objects/hash_map.h"
 
+#include "../internal/simplify.h"
+
 #include "../strings/gstring.h"
 
 #include "commands.h"
