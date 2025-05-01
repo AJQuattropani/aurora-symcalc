@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../objects/function.h"
-#include "../objects/function_stack.h"
+#include "../objects/alloc_stack.h"
 #include "../objects/token_list.h"
 #include "../objects/packed_function.h"
 #include "../env/commands.h"
