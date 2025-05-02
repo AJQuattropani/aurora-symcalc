@@ -25,6 +25,6 @@ typedef struct {
   vd_literal *data;
 } vector_list;
 
-vector_list alloc_vdlist(vector_size_t size, vector_size_t ncomponents);
+vector_list alloc_vdlist(size_t size, vector_size_t ncomponents);
 
 void free_vdlist(vector_list *list);

@@ -72,7 +72,8 @@ void sprint_vector(gString *inp, const vd_literal *value) {
   g_append_back_c(inp, "]");
 }
 
-vector_list alloc_vdlist(vector_size_t size, vector_size_t ncomponents) {
+vector_list alloc_vdlist(size_t size, vector_size_t ncomponents) {
+  ncomponents = 1 * (SCALAR == ncomponents) + ncomponents * (SCALAR != ncomponents);
   stack block = new_stack(sizeof(double) * ncomponents * size);
   vd_literal *data = (vd_literal *)malloc(sizeof(vd_literal) * size);
   if (NULL == data) {

@@ -47,6 +47,7 @@ void free_fobject(f_object *fun) {
 }
 
 void free_fnode_recurse(f_node *node) {
+  if (NULL == node) return;
   switch (node->ty) {
   case BINARY:
     m_deletestr(&node->name);

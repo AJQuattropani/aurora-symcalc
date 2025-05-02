@@ -1,5 +1,28 @@
 #include "simplify.h"
 
+/*f_object simplify_imp(f_object *fun) {
+  vector_list out_cache = alloc_vdlist(fun->attr.depth, fun->attr.out_size);
+  simplification_t simp;
+  f_node *root = fnode_copysimplify_recurse(fun->root, &simp, out_cache.data);
+
+  if (NULL == root) {
+    gString name = g_from_capacity(10);
+    sprint_vector(&name, &out_cache.data[0]);
+    root = new_fnode();
+    *root = (f_node){.ty = CONSTANT,
+                      .cf.output =
+                          copy_vdliteral(&out_cache.data[0]),
+                      .depth_index = 0,
+                      .priority = 0,
+                      .name = {.cstring = name.cstring, .size = name.size}};
+  }
+
+  free_vdlist(&out_cache);
+
+  return (f_object){.root = root, .attr = fun->attr};
+}*/
+
+/*
 typedef enum Simplification {
   NOTHING,
   CONSTEVAL,
@@ -225,24 +248,4 @@ static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
   return out;
 }
 
-f_object simplify_imp(f_object *fun) {
-  vector_list out_cache = alloc_vdlist(fun->attr.depth, fun->attr.out_size);
-  simplification_t simp;
-  f_node *root = fnode_copysimplify_recurse(fun->root, &simp, out_cache.data);
-
-  if (NULL == root) {
-    gString name = g_from_capacity(10);
-    sprint_vector(&name, &out_cache.data[0]);
-    root = new_fnode();
-    *root = (f_node){.ty = CONSTANT,
-                      .cf.output =
-                          copy_vdliteral(&out_cache.data[0]),
-                      .depth_index = 0,
-                      .priority = 0,
-                      .name = {.cstring = name.cstring, .size = name.size}};
-  }
-
-  free_vdlist(&out_cache);
-
-  return (f_object){.root = root, .attr = fun->attr};
-}
+*/

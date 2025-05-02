@@ -34,7 +34,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
   cinsert(map, "SCALAR", (_value){.reader = read_scalar, .ty = READER, .priority = 0});
   cinsert(map, "PACK", (_value){.reader = read_copy_packed, .ty = READER, .priority = 0});
-  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER, .priority = 0});
+//  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER, .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }
