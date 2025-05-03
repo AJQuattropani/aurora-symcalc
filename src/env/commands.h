@@ -4,6 +4,7 @@
 #include "script_stack.h"
 
 #include "../objects/function.h"
+
 #include "../internal/hash_map.h"
 #include "../internal/token_list.h"
 

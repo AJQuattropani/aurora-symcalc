@@ -4,6 +4,7 @@
 
 #include "../internal/hash_map.h"
 #include "../internal/types.h"
+#include "../internal/differentiate.h"
 
 #include "../internal/simplify.h"
 

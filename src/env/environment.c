@@ -25,15 +25,13 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(map, "cot", (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
   cinsert(map, "log", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
   cinsert(map, "ln", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
-  cinsert(map, "arcsin", (_value){.uOperation = vu_asin, .ty = UOPER, .priority = 4});
-  cinsert(map, "arccos", (_value){.uOperation = vu_acos, .ty = UOPER, .priority = 4});
-  cinsert(map, "arctan", (_value){.uOperation = vu_atan, .ty = UOPER, .priority = 4});
   cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
   cinsert(map, "LINSPACE", (_value){.reader = read_linspace, .ty = READER, .priority = 0});
   cinsert(map, "COUNT", (_value){.reader = read_countspace, .ty = READER, .priority = 0});
   cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
   cinsert(map, "SCALAR", (_value){.reader = read_scalar, .ty = READER, .priority = 0});
   cinsert(map, "PACK", (_value){.reader = read_copy_packed, .ty = READER, .priority = 0});
+  cinsert(map, "GRAD", (_value){.reader = differentiate_command, .ty = READER, .priority = 0});
 //  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER, .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
