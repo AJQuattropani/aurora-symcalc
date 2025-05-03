@@ -10,7 +10,7 @@
 #include "../strings/gstring.h"
 
 #include "commands.h"
-#include "operators.h"
+#include "../internal/operators.h"
 #include "interpret.h"
 #include "script_stack.h"
 
