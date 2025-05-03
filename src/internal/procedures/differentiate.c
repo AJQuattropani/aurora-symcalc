@@ -1,5 +1,22 @@
 #include "differentiate.h"
 
+void differentiation_cleanup(f_node *curr, depth_t depth, f_attribs *attr) {
+  update_depth_max(depth, &attr->depth);
+  switch(curr->ty) {
+  case BINARY:
+    differentiation_cleanup(curr->bf.left, depth, attr);
+    differentiation_cleanup(curr->bf.right, depth + 1, attr);
+    break;
+  case UNARY:
+    differentiation_cleanup(curr->uf.in, depth, attr);
+    break;
+  case CONSTANT:
+  case IDENTITY:
+    break;
+  }
+  curr->depth_index = depth;
+}
+
 f_node *differentiate_node(const f_node *in, vector_size_t argidx,
                            f_attribs *attr) {
   switch (in->ty) {
@@ -21,6 +38,7 @@ int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
   if (argidx >= in->attr.argcnt)
     return 1;
   out->root = differentiate_node(in->root, argidx, &out->attr);
+  differentiation_cleanup(out->root, 0, &out->attr);
   return 0;
 }
 
@@ -418,6 +436,7 @@ void differentiate_command(Object *obj, token_array *args) {
     fprintf(stderr, "[ERROR] Differentiation failed.\n");
     *obj = null_object();
   }
+
   *obj = (Object){.fObject = out, .ty = FUNC};
   return;
 }
