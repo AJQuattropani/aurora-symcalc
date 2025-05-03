@@ -38,6 +38,8 @@ int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
   if (argidx >= in->attr.argcnt)
     return 1;
   out->root = differentiate_node(in->root, argidx, &out->attr);
+  out->attr.argcnt = in->attr.argcnt;
+  out->attr.out_size = in->attr.out_size;
   differentiation_cleanup(out->root, 0, &out->attr);
   return 0;
 }
