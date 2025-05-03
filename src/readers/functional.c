@@ -80,7 +80,7 @@ Object function_eval(f_object *fun, const token_array *args) {
     //}
     //evaluate_function_imp(fun->root, out_cache, inp_args);
     evaluate_function_imp(fun->root, out_cache.data, inp_args);
-    output = (Object){.ty = VECTOR, .vLiteral = out_cache.data[0]};
+    output = (Object){.ty = VECTOR, .vLiteral = copy_vdliteral(&out_cache.data[0])};
     //for (size_t i = 1; i < fun->attr.depth; i++) {
     //  free_vdliteral(&out_cache[i]);
     //}
