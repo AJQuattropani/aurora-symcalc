@@ -4,7 +4,6 @@
 #include "../internal/token_list.h"
 #include "../internal/allocators/alloc_stack.h"
 #include "../objects/packed_function.h"
-#include "../env/commands.h"
 
 /*
 * Instructs to read remaining tokens as a function.

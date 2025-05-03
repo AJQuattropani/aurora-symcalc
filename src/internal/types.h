@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <limits.h>
 #include <time.h>
-#include "../strings/vstring.h"
+
+#include "./allocators/vstring.h"
 
 typedef uint8_t BYTE;
 

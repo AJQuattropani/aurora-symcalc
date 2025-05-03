@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "../strings/mstring.h"
+#include "./allocators/mstring.h"
 #include "../objects/object.h"
 
 typedef Object _value;

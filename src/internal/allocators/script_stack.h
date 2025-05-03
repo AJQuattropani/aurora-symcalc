@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../internal/types.h"
+#include "../types.h"
 
-#include "../strings/mstring.h"
+#include "mstring.h"
 
 #define MAX_FILES 16
 

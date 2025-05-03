@@ -9,11 +9,11 @@
 #include "../internal/procedures/simplify.h"
 #include "../internal/procedures/operators.h"
 
-#include "../strings/gstring.h"
+#include "../internal/allocators/gstring.h"
 
 #include "commands.h"
 #include "interpret.h"
-#include "script_stack.h"
+#include "../internal/allocators/script_stack.h"
 
 
 enum env_status {

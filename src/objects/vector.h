@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "../strings/gstring.h"
+#include "../internal/allocators/gstring.h"
 #include "../internal/types.h"
 #include "../internal/allocators/alloc_stack.h"
 

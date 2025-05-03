@@ -2,7 +2,7 @@
 
 #include "types.h"
 #include "hash_map.h"
-#include "../strings/mstring.h"
+#include "./allocators/mstring.h"
 
 struct token {
   _mnode* token;

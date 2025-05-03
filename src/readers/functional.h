@@ -1,6 +1,7 @@
 #pragma once
 
 #include "function_reader.h"
+#include "../env/environment.h"
 
 /*
  * Writes output of function into object buffer.
