@@ -37,10 +37,4 @@ int vu_csc(vd_literal *o, const vd_literal *i);
 
 int vu_cot(vd_literal *o, const vd_literal *i);
 
-int vu_asin(vd_literal *o, const vd_literal *i);
-
-int vu_acos(vd_literal *o, const vd_literal *i);
-
-int vu_atan(vd_literal *o, const vd_literal *i);
-
 int vu_log(vd_literal *o, const vd_literal *i);
