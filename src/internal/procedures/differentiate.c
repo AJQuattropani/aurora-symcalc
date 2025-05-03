@@ -11,7 +11,10 @@ f_node *differentiate_node(const f_node *in, vector_size_t argidx, f_attribs *at
   case IDENTITY:
     return diff_identity(in, argidx, attr);
   }
+  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n", __func__);
+  exit(1);
 }
+
 int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
   if (argidx >= in->attr.argcnt)
     return 1;
@@ -266,13 +269,13 @@ f_node *diff_un(const f_node *in, vector_size_t argidx, f_attribs *attr) {
   return fprime;
 }
 
-f_node *diff_cnst(const f_node *in, vector_size_t arg_num, f_attribs *attr) {
+f_node *diff_cnst([[maybe_unused]] const f_node *in, [[maybe_unused]]vector_size_t arg_num, [[maybe_unused]]f_attribs *attr) {
   f_node *zero = new_fnode();
   *zero = (f_node){.name = m_from_cstr("0"), .ty = CONSTANT, .cf = {.output = make_scalar(0.0)}};
   return zero;
 }
 
-f_node *diff_identity(const f_node *in, vector_size_t arg_num, f_attribs *attr) {
+f_node *diff_identity(const f_node *in, vector_size_t arg_num, [[maybe_unused]]f_attribs *attr) {
   if (arg_num == in->xf.index) {
     f_node *one = new_fnode();
     *one = (f_node){.name = m_from_cstr("1"), .ty = CONSTANT, .cf = {.output = make_scalar(1.0)}};
@@ -286,7 +289,7 @@ f_node *diff_identity(const f_node *in, vector_size_t arg_num, f_attribs *attr) 
 
 void differentiate_command(Object *obj, token_array *args) {
   if (2 != args->size) {
-    fprintf(stderr, "[ERROR] Please provide one function to simplify.\n");
+    fprintf(stderr, "[ERROR] Please provide one function and one index to a variable to simplify.\n");
     *obj = null_object();
     return;
   }
@@ -305,10 +308,29 @@ void differentiate_command(Object *obj, token_array *args) {
     *obj = null_object();
     return;
   }
+  Object *idx = &args->data[1].token->value;
   vector_size_t argidx;
+  switch (idx->ty) {
+  case VECTOR:
+    if (SCALAR == idx->vLiteral.size) {
+      argidx = (vector_size_t)idx->vLiteral.data[0];
+      if (argidx < inp_func->attr.argcnt) {
+        break;
+      }
+    } __attribute__((fallthrough));
+  default:
+    fprintf(stderr, "[ERROR] %s is not a valid index.\n",
+          args->data[1].token->key.cstring);
+    *obj = null_object();
+    return;
+  }
 
   f_object out;
   int success = differentiate(&out, inp_func, argidx);
+  if (!success) {
+    fprintf(stderr, "[ERROR] Differentiation failed.\n");
+    *obj = null_object();
+  }
   *obj = (Object){.fObject = out, .ty = FUNC};
   return;
 }
