@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../objects/function.h"
-#include "../readers/functional.h"
+#include "../../objects/function.h"
+#include "../../readers/functional.h"
 
 
 /*

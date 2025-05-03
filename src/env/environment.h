@@ -4,14 +4,14 @@
 
 #include "../internal/hash_map.h"
 #include "../internal/types.h"
-#include "../internal/differentiate.h"
 
-#include "../internal/simplify.h"
+#include "../internal/procedures/differentiate.h"
+#include "../internal/procedures/simplify.h"
+#include "../internal/procedures/operators.h"
 
 #include "../strings/gstring.h"
 
 #include "commands.h"
-#include "../internal/operators.h"
 #include "interpret.h"
 #include "script_stack.h"
 

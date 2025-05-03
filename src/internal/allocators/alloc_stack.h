@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "types.h"
+#include "../types.h"
 
 struct stack;
 typedef struct stack stack;

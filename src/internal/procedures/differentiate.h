@@ -3,8 +3,8 @@
 #include <assert.h>
 
 #include "operators.h"
-#include "token_list.h"
-#include "../objects/function.h"
+#include "../token_list.h"
+#include "../../objects/function.h"
 
 static __attribute__((always_inline)) inline void
 update_depth_max(depth_t depth, depth_t *depth_max) {

@@ -4,7 +4,7 @@
 
 #include "../strings/gstring.h"
 #include "../internal/types.h"
-#include "../internal/alloc_stack.h"
+#include "../internal/allocators/alloc_stack.h"
 
 Object as_vdliteral(vd_literal *value);
 

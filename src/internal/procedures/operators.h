@@ -1,8 +1,8 @@
 #pragma once
 
-#include "types.h"
-#include "../objects/initializers.h"
-#include "../objects/function.h"
+#include "../types.h"
+#include "../../objects/initializers.h"
+#include "../../objects/function.h"
 
 #include <math.h>
 
