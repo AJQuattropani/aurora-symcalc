@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../objects/types.h"
+#include "../internal/types.h"
 
 #include "../strings/mstring.h"
 

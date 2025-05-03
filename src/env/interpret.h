@@ -1,7 +1,7 @@
 #pragma once
 
 #include "environment.h"
-#include "../objects/token_list.h"
+#include "../internal/token_list.h"
 
 // 1. Get a line from the console
 // 2. Extract tokens in the form of a list

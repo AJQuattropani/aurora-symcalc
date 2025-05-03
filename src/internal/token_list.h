@@ -1,8 +1,8 @@
 #pragma once
 
 #include "types.h"
-#include "../strings/mstring.h"
 #include "hash_map.h"
+#include "../strings/mstring.h"
 
 struct token {
   _mnode* token;

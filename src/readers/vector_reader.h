@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../objects/vector.h"
-#include "../objects/token_list.h"
+#include "../internal/token_list.h"
 
 /*
 * Instructs to read remaining tokens as a vector.

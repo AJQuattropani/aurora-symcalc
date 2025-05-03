@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../objects/function.h"
-#include "../objects/alloc_stack.h"
-#include "../objects/token_list.h"
+#include "../internal/alloc_stack.h"
+#include "../internal/token_list.h"
 #include "../objects/packed_function.h"
 #include "../env/commands.h"
 

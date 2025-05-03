@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 #include "../strings/gstring.h"
-#include "alloc_stack.h"
-#include "types.h"
+#include "../internal/types.h"
+#include "../internal/alloc_stack.h"
 
 Object as_vdliteral(vd_literal *value);
 

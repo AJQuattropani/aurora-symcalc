@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../objects/types.h"
+#include "types.h"
 #include "../objects/initializers.h"
 #include "../objects/function.h"
 

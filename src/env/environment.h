@@ -2,8 +2,8 @@
 
 #include "unistd.h"
 
-#include "../objects/types.h"
-#include "../objects/hash_map.h"
+#include "../internal/hash_map.h"
+#include "../internal/types.h"
 
 #include "../internal/simplify.h"
 
