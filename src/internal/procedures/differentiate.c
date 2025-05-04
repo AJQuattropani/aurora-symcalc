@@ -35,7 +35,7 @@ f_node *differentiate_node(const f_node *in, vector_size_t argidx,
 }
 
 int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
-  if (argidx >= in->attr.argcnt)
+  if (argidx >= in->attr.argcnt || argidx < 0)
     return 1;
   out->root = differentiate_node(in->root, argidx, &out->attr);
   out->attr.argcnt = in->attr.argcnt;
@@ -434,7 +434,7 @@ void differentiate_command(Object *obj, token_array *args) {
 
   f_object out;
   int success = differentiate(&out, inp_func, argidx);
-  if (!success) {
+  if (success) {
     fprintf(stderr, "[ERROR] Differentiation failed.\n");
     *obj = null_object();
   }
