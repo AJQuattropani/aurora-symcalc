@@ -1,7 +1,7 @@
 #pragma once
 #include <string.h>
 
-#include "../strings/gstring.h"
+#include "../internal/allocators/gstring.h"
 
 #include "initializers.h"
 #include "vector.h"

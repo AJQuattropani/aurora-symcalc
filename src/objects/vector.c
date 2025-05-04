@@ -24,7 +24,7 @@ void free_vdliteral(vd_literal *lit) {
 vd_literal copy_vdliteral(const vd_literal* other) {
   vd_literal lit = alloc_vdliteral(other->size);
   if (SCALAR == lit.size) {
-    *(lit.data) = *other->data;
+    lit.data[0] = other->data[0];
     lit.size = other->size; 
     return lit;
   }
@@ -72,4 +72,24 @@ void sprint_vector(gString *inp, const vd_literal *value) {
   g_append_back_c(inp, "]");
 }
 
+vector_list alloc_vdlist(size_t size, vector_size_t ncomponents) {
+  vector_size_t components = 1 * (SCALAR == ncomponents) + ncomponents * (SCALAR != ncomponents);
+  stack block = new_stack(sizeof(double) * components * size);
+  vd_literal *data = (vd_literal *)malloc(sizeof(vd_literal) * size);
+  if (NULL == data) {
+    fprintf(stderr, "malloc failed in %s.\n", __func__);
+    exit(1);
+  }
+  for (size_t i = 0; i < size; i++) {
+    data[i] = (vd_literal){.data = (double *)s_alloc(&block, sizeof(double) * components),
+                           .size = ncomponents};
+  }
+  return (vector_list){.data = data, .size = size};
+}
+
+
+void free_vdlist(vector_list *list) {
+  free(list->data[0].data);
+  free(list->data);
+}
 

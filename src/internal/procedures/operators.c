@@ -165,37 +165,6 @@ int vu_cot(vd_literal *o, const vd_literal *i) {
   return 0;
 }
 
-
-int vu_asin(vd_literal *o, const vd_literal *i) {
-  vector_size_t sc_out = flag_scalar(o->size);
-  vector_size_t sc_left = flag_scalar(i->size);
-  vector_size_t size = (o->size - 1) * (sc_out) + 1;
-  for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = asin(i->data[sc_left * j]);
-  }
-  return 0;
-}
-
-int vu_acos(vd_literal *o, const vd_literal *i) {
-  vector_size_t sc_out = flag_scalar(o->size);
-  vector_size_t sc_left = flag_scalar(i->size);
-  vector_size_t size = (o->size - 1) * (sc_out) + 1;
-  for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = acos(i->data[sc_left * j]);
-  }
-  return 0;
-}
-
-int vu_atan(vd_literal *o, const vd_literal *i) {
-  vector_size_t sc_out = flag_scalar(o->size);
-  vector_size_t sc_left = flag_scalar(i->size);
-  vector_size_t size = (o->size - 1) * (sc_out) + 1;
-  for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = atan(i->data[sc_left * j]);
-  }
-  return 0;
-}
-
 int vu_log(vd_literal *o, const vd_literal *i) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(i->size);

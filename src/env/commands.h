@@ -1,11 +1,12 @@
 #pragma once
 
 #include "environment.h"
-#include "script_stack.h"
 
 #include "../objects/function.h"
-#include "../objects/hash_map.h"
-#include "../objects/token_list.h"
+
+#include "../internal/hash_map.h"
+#include "../internal/token_list.h"
+#include "../internal/allocators/script_stack.h"
 
 #include "../readers/vector_reader.h"
 #include "../readers/function_reader.h"

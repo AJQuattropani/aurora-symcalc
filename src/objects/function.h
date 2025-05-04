@@ -1,9 +1,9 @@
 #pragma once
 #include <stdio.h>
 
-#include "types.h"
 #include "vector.h"
 #include "initializers.h"
+#include "../internal/types.h"
 
 enum opr_t {
   BINARY,

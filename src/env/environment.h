@@ -2,15 +2,18 @@
 
 #include "unistd.h"
 
-#include "../objects/types.h"
-#include "../objects/hash_map.h"
+#include "../internal/hash_map.h"
+#include "../internal/types.h"
 
-#include "../strings/gstring.h"
+#include "../internal/procedures/differentiate.h"
+#include "../internal/procedures/simplify.h"
+#include "../internal/procedures/operators.h"
+
+#include "../internal/allocators/gstring.h"
 
 #include "commands.h"
-#include "operators.h"
 #include "interpret.h"
-#include "script_stack.h"
+#include "../internal/allocators/script_stack.h"
 
 
 enum env_status {

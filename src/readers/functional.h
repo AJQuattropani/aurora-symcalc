@@ -1,6 +1,7 @@
 #pragma once
 
 #include "function_reader.h"
+#include "../env/environment.h"
 
 /*
  * Writes output of function into object buffer.
@@ -27,7 +28,3 @@ void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in);
  */
 void simplify_command(Object *obj, token_array *args);
 
-/*
- * Implementation of simplication procedure.
- */
-f_object simplify_imp(f_object *fun);

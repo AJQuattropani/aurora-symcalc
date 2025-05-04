@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../objects/types.h"
-#include "../objects/initializers.h"
-#include "../objects/function.h"
+#include "../types.h"
+#include "../../objects/initializers.h"
+#include "../../objects/function.h"
 
 #include <math.h>
 
@@ -36,11 +36,5 @@ int vu_sec(vd_literal *o, const vd_literal *i);
 int vu_csc(vd_literal *o, const vd_literal *i);
 
 int vu_cot(vd_literal *o, const vd_literal *i);
-
-int vu_asin(vd_literal *o, const vd_literal *i);
-
-int vu_acos(vd_literal *o, const vd_literal *i);
-
-int vu_atan(vd_literal *o, const vd_literal *i);
 
 int vu_log(vd_literal *o, const vd_literal *i);
