@@ -138,11 +138,11 @@ f_node *diff_bin(const f_node *in, vector_size_t argidx, f_attribs *attr) {
             f_node *one = new_fnode();
             *one = (f_node){.name = m_from_cstr("1"),
                             .ty = CONSTANT,
-                            .priority = in->priority,
+                            .priority = in->priority + 1,
                             .cf = {.output = make_scalar(1.0)}};
             *hminus1 = (f_node){.name = m_from_cstr("-"),
                                 .ty = BINARY,
-                                .priority = in->priority,
+                                .priority = in->priority + 1,
                                 .bf = {.op = vb_sub,
                                        .left = copy_fnode_recurse(h),
                                        .right = one}};
