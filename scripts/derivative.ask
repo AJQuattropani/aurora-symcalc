@@ -1,0 +1,10 @@
+set f FUNC(x) = 1+x+x^2+x^3+x^4
+f
+set g GRAD f 0
+g
+set h GRAD g 0
+h
+set j GRAD h 0
+j
+set i GRAD j 0
+i
