@@ -26,7 +26,7 @@ static f_node *least_significant_token_imp(token_array *args,
     sp = i;
     split_data = *curr;
   }
-  fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
+  //fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
 
   switch (split_data.token->value.ty) {
   case BOPER: {
