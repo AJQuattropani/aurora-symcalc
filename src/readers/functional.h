@@ -21,10 +21,6 @@ void function_command(env *context, f_object *fun, const token_array *args);
 /*
  * Implementation of function evaluation for general use.
  */
-void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in);
+vd_literal output_eval(size_t index, f_node *root, depth_t depth, vd_literal *inp_args, vector_size_t inp_size);
 
-/*
- * Simplifies the structure of a function.
- */
-void simplify_command(Object *obj, token_array *args);
 

@@ -1,5 +1,7 @@
 #include "functional.h"
 
+void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in);
+
 void read_eval(Object *obj, token_array *args) {
   Object *func_obj = &args->data[0].token->value;
   f_object *fun;
@@ -68,15 +70,20 @@ Object function_eval(f_object *fun, const token_array *args) {
       }
     }
     
-    vector_list out_cache = alloc_vdlist(fun->attr.depth, inp_size);
-    evaluate_function_imp(fun->root, out_cache.data, inp_args);
-    output = (Object){.ty = VECTOR, .vLiteral = copy_vdliteral(&out_cache.data[0])};
-    free_vdlist(&out_cache);
-
+    output = (Object){.ty = VECTOR, .vLiteral = output_eval(0, fun->root, fun->attr.depth, inp_args, inp_size)};
   cleanup:
     free(inp_args);
   }
   return output;
+}
+
+vd_literal output_eval(size_t index, f_node *root, depth_t depth, vd_literal *inp_args, vector_size_t inp_size) {
+    vd_literal output;
+    vector_list out_cache = alloc_vdlist(depth, inp_size);
+    evaluate_function_imp(root, out_cache.data, inp_args);
+    output = copy_vdliteral(&out_cache.data[index]);
+    free_vdlist(&out_cache);
+    return output;
 }
 
 void function_command(env *context, f_object *fun, const token_array *args) {
