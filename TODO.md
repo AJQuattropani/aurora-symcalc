@@ -1,10 +1,8 @@
 # What TODO:
 
 1. Simplification Features:
-    - Overhaul current system in a new /internal/ file.
+    - Use simplification procedures used by differentiation as an example to solve the problems.
     - Fix no-simplification on case where consteval portions are unable to merge due to a non-const expression separating them in commutative operations.
-    - Give resolve-simplification responsibility for building nodes. Remove redundancy for all binary functions.
-    - Do final pass to check for self-similar branches.
 2. Differentiation Features:
     - Select the variable to partial differentiate w rsp to.
     - Make a copy of the initial function.

@@ -106,7 +106,7 @@ int handle_binary_diff_cleanup(vd_literal *inp_args, f_node *curr,
         m_deletestr(&curr->name);
         *curr = *right;
         free(right);
-        return 1;
+        return 0;
       }
     }
     if (curr->bf.op == vb_add) {
@@ -116,7 +116,7 @@ int handle_binary_diff_cleanup(vd_literal *inp_args, f_node *curr,
         m_deletestr(&curr->name);
         *curr = *right;
         free(right);
-        return 1;
+        return 0;
       }
     }
   }
@@ -172,7 +172,7 @@ int handle_binary_diff_cleanup(vd_literal *inp_args, f_node *curr,
         *curr = *left;
         curr->depth_index = depth;
         free(left);
-        return 1;
+        return 0;
       }
     }
     if (curr->bf.op == vb_add) {
@@ -183,7 +183,7 @@ int handle_binary_diff_cleanup(vd_literal *inp_args, f_node *curr,
         *curr = *left;
         curr->depth_index = depth;
         free(left);
-        return 1;
+        return 0;
       }
     }
   }
