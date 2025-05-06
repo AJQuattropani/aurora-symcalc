@@ -1,7 +1,8 @@
 #include "alloc_stack.h"
 
 void *s_alloc(stack *stack, size_t n) {
-  //fprintf(stdout, "Requested %ld bytes from buffer of size %ld.\n", n, stack->size);
+  // fprintf(stdout, "Requested %ld bytes from buffer of size %ld.\n", n,
+  // stack->size);
   void *ret = stack->buff + stack->top;
   if (stack->top + n > stack->size) {
     fprintf(stderr,
@@ -28,8 +29,3 @@ stack new_stack(size_t num_bytes) {
   }
   return stack;
 }
-
-
-
-
-

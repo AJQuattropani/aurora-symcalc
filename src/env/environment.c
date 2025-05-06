@@ -1,43 +1,71 @@
 #include "environment.h"
 
 __attribute__((always_inline)) inline void default_map(Map map) {
-  cinsert(map, "exit", (_value){.mContext = exit_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "reset", (_value){.mContext = reset_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "delete", (_value){.mContext = delete_object, .ty = CONTEXT, .priority=0});
-  cinsert(map, "printenv", (_value){.mContext = print_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "peak", (_value){.mContext = print_tok, .ty = CONTEXT, .priority=0});
-  cinsert(map, "set", (_value){.mContext = define_object, .ty = CONTEXT, .priority=0});
-  cinsert(map, "open", (_value){.mContext = open_files, .ty = CONTEXT, .priority=0});
-  cinsert(map, "return", (_value){.mContext = return_env, .ty = CONTEXT, .priority=0});
-  cinsert(map, "=", (_value){.reader = read_eval, .ty = SYNTAX_EQUALS, .priority=0});
+  cinsert(map, "exit",
+          (_value){.mContext = exit_env, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "reset",
+          (_value){.mContext = reset_env, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "delete",
+          (_value){.mContext = delete_object, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "printenv",
+          (_value){.mContext = print_env, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "peak",
+          (_value){.mContext = print_tok, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "set",
+          (_value){.mContext = define_object, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "open",
+          (_value){.mContext = open_files, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "return",
+          (_value){.mContext = return_env, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "=",
+          (_value){.reader = read_eval, .ty = SYNTAX_EQUALS, .priority = 0});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
   cinsert(map, "-", (_value){.bOperation = vb_sub, .ty = BOPER, .priority = 1});
   cinsert(map, "*", (_value){.bOperation = vb_mul, .ty = BOPER, .priority = 2});
   cinsert(map, "/", (_value){.bOperation = vb_div, .ty = BOPER, .priority = 2});
   cinsert(map, "^", (_value){.bOperation = vb_pow, .ty = BOPER, .priority = 3});
   cinsert(map, "_", (_value){.bOperation = vb_log, .ty = BOPER, .priority = 3});
-  cinsert(map, "--", (_value){.uOperation = vu_neg, .ty = UOPER, .priority = 3});
-  cinsert(map, "sin", (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
-  cinsert(map, "cos", (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
-  cinsert(map, "tan", (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
-  cinsert(map, "sec", (_value){.uOperation = vu_sec, .ty = UOPER, .priority = 4});
-  cinsert(map, "csc", (_value){.uOperation = vu_csc, .ty = UOPER, .priority = 4});
-  cinsert(map, "cot", (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
-  cinsert(map, "log", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
-  cinsert(map, "ln", (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
-  cinsert(map, "VECTOR", (_value){.reader = read_vector, .ty = READER, .priority = 0});
-  cinsert(map, "LINSPACE", (_value){.reader = read_linspace, .ty = READER, .priority = 0});
-  cinsert(map, "COUNT", (_value){.reader = read_countspace, .ty = READER, .priority = 0});
-  cinsert(map, "FUNC", (_value){.reader = read_function, .ty = READER, .priority = 0});
-  cinsert(map, "SCALAR", (_value){.reader = read_scalar, .ty = READER, .priority = 0});
-  cinsert(map, "PACK", (_value){.reader = read_copy_packed, .ty = READER, .priority = 0});
-  cinsert(map, "GRAD", (_value){.reader = differentiate_command, .ty = READER, .priority = 0});
-//  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER, .priority = 0});
+  cinsert(map, "--",
+          (_value){.uOperation = vu_neg, .ty = UOPER, .priority = 3});
+  cinsert(map, "sin",
+          (_value){.uOperation = vu_sin, .ty = UOPER, .priority = 4});
+  cinsert(map, "cos",
+          (_value){.uOperation = vu_cos, .ty = UOPER, .priority = 4});
+  cinsert(map, "tan",
+          (_value){.uOperation = vu_tan, .ty = UOPER, .priority = 4});
+  cinsert(map, "sec",
+          (_value){.uOperation = vu_sec, .ty = UOPER, .priority = 4});
+  cinsert(map, "csc",
+          (_value){.uOperation = vu_csc, .ty = UOPER, .priority = 4});
+  cinsert(map, "cot",
+          (_value){.uOperation = vu_cot, .ty = UOPER, .priority = 4});
+  cinsert(map, "log",
+          (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
+  cinsert(map, "ln",
+          (_value){.uOperation = vu_log, .ty = UOPER, .priority = 4});
+  cinsert(map, "VECTOR",
+          (_value){.reader = read_vector, .ty = READER, .priority = 0});
+  cinsert(map, "LINSPACE",
+          (_value){.reader = read_linspace, .ty = READER, .priority = 0});
+  cinsert(map, "COUNT",
+          (_value){.reader = read_countspace, .ty = READER, .priority = 0});
+  cinsert(map, "FUNC",
+          (_value){.reader = read_function, .ty = READER, .priority = 0});
+  cinsert(map, "SCALAR",
+          (_value){.reader = read_scalar, .ty = READER, .priority = 0});
+  cinsert(map, "PACK",
+          (_value){.reader = read_copy_packed, .ty = READER, .priority = 0});
+  cinsert(
+      map, "GRAD",
+      (_value){.reader = differentiate_command, .ty = READER, .priority = 0});
+  //  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER,
+  //  .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }
 
-__attribute__((always_inline)) static inline void init_stack(sc_stack *stack, int argc, char *argv[]) {
+__attribute__((always_inline)) static inline void
+init_stack(sc_stack *stack, int argc, char *argv[]) {
   push_file(stack, stdin);
   for (size_t i = argc - 1; i > 0; i--) {
     if (0 != open_file(stack, argv[i])) {
@@ -47,7 +75,8 @@ __attribute__((always_inline)) static inline void init_stack(sc_stack *stack, in
   }
 }
 
-__attribute__((always_inline)) inline void init_env(env *env, int argc, char *argv[]) {
+__attribute__((always_inline)) inline void init_env(env *env, int argc,
+                                                    char *argv[]) {
   init_stack(&env->script_stack, argc, argv);
   default_map(env->map);
   env->status = OK;
@@ -74,7 +103,7 @@ __attribute__((always_inline)) inline void runtime(env *env) {
         g_append_back_c(&env->output_buffer, " ");
         g_append_back_c(&env->output_buffer, "\033[0m");
       }
-      //sprint_views(&env->output_buffer, &vlist);
+      // sprint_views(&env->output_buffer, &vlist);
 
       token_array arr = tokenize(env->map, &vlist);
 
@@ -90,7 +119,7 @@ __attribute__((always_inline)) inline void runtime(env *env) {
         mf_context mc = obj->mContext;
         mc(env, &arr);
         break;
-      } 
+      }
       case PFUNC: {
         g_append_back_c(&env->output_buffer, "\n\t");
         f_object *fun = arr.data[0].token->value.pObject.fObj;
@@ -115,11 +144,11 @@ __attribute__((always_inline)) inline void runtime(env *env) {
       }
       default: {
         break;
-        }
+      }
       }
 
       fprintf(stdout, "> %s\n", env->output_buffer.cstring);
-      
+
       destroy_token_array(&arr);
       g_empty(&env->output_buffer);
       update_map(env->map);
@@ -128,7 +157,7 @@ __attribute__((always_inline)) inline void runtime(env *env) {
         break;
       }
     }
-    
+
     if (RETURN == env->status) {
       env->status = OK;
     }

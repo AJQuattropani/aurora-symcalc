@@ -1,7 +1,7 @@
 #include "operators.h"
 
-
-__attribute__((always_inline)) inline vector_size_t flag_scalar(vector_size_t i) {
+__attribute__((always_inline)) inline vector_size_t
+flag_scalar(vector_size_t i) {
   return SCALAR != i;
 }
 
@@ -15,9 +15,6 @@ int is_num(const vd_literal *check, double val, double tol) {
   }
   return 0;
 }
-
-
-
 
 int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   vector_size_t sc_out = flag_scalar(o->size);
@@ -140,7 +137,7 @@ int vu_sec(vd_literal *o, const vd_literal *i) {
   vector_size_t sc_left = flag_scalar(i->size);
   vector_size_t size = (o->size - 1) * (sc_out) + 1;
   for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = 1.0/cos(i->data[sc_left * j]);
+    o->data[j] = 1.0 / cos(i->data[sc_left * j]);
   }
   return 0;
 }
@@ -150,7 +147,7 @@ int vu_csc(vd_literal *o, const vd_literal *i) {
   vector_size_t sc_left = flag_scalar(i->size);
   vector_size_t size = (o->size - 1) * (sc_out) + 1;
   for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = 1.0/sin(i->data[sc_left * j]);
+    o->data[j] = 1.0 / sin(i->data[sc_left * j]);
   }
   return 0;
 }
@@ -160,7 +157,7 @@ int vu_cot(vd_literal *o, const vd_literal *i) {
   vector_size_t sc_left = flag_scalar(i->size);
   vector_size_t size = (o->size - 1) * (sc_out) + 1;
   for (vector_size_t j = 0; j < size; j++) {
-    o->data[j] = 1.0/tan(i->data[sc_left * j]);
+    o->data[j] = 1.0 / tan(i->data[sc_left * j]);
   }
   return 0;
 }
@@ -174,6 +171,3 @@ int vu_log(vd_literal *o, const vd_literal *i) {
   }
   return 0;
 }
-
-
-

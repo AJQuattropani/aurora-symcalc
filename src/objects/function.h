@@ -1,9 +1,14 @@
 #pragma once
 #include <stdio.h>
 
-#include "vector.h"
-#include "initializers.h"
 #include "../internal/types.h"
+#include "initializers.h"
+#include "vector.h"
+
+static __attribute__((always_inline)) inline void
+update_depth_max(depth_t depth, depth_t *depth_max) {
+  *depth_max = (depth ^ ((depth ^ *depth_max) & -(depth < *depth_max))) + 1;
+}
 
 enum opr_t {
   BINARY,
@@ -38,11 +43,11 @@ struct function_node {
   priority_t priority;
   opr_t ty;
   union {
-    void* __align_data;
+    void *__align_data;
     struct binary_f bf;
     struct unary_f uf;
     struct const_f cf; // none needed for constant
-    struct iden_f xf; // identity: index of input args
+    struct iden_f xf;  // identity: index of input args
   };
 };
 
@@ -55,4 +60,4 @@ void free_fnode_recurse(f_node *node);
 void sprint_function(gString *inp, const f_object *fun);
 void fnode_str_recurse(gString *inp, const f_node *fun);
 
-
+void update_depth(f_node *curr, depth_t depth, depth_t *tot_depth);

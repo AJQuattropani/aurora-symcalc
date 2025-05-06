@@ -1,7 +1,7 @@
 #pragma once
-#include <stdlib.h>
-#include <stdint.h>
 #include <limits.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <time.h>
 
 #include "./allocators/vstring.h"
@@ -56,19 +56,23 @@ typedef int64_t vector_size_t;
 #define MAX_SIZE INT64_MAX
 #define SCALAR INT64_MIN
 struct vector_literal {
-  double* data;
+  double *data;
   vector_size_t size;
 };
-typedef void(*context_modifier)(env *context, const token_array *args);
-typedef context_modifier mf_context; // generic type for functions that modify the runtime environment
+typedef void (*context_modifier)(env *context, const token_array *args);
+typedef context_modifier mf_context; // generic type for functions that modify
+                                     // the runtime environment
 
-typedef int(*binary_operation_literal)(vd_literal *o, const vd_literal *l, const vd_literal *r);
-typedef binary_operation_literal b_opliteral; // generic type for operations on two vectors
+typedef int (*binary_operation_literal)(vd_literal *o, const vd_literal *l,
+                                        const vd_literal *r);
+typedef binary_operation_literal
+    b_opliteral; // generic type for operations on two vectors
 
-typedef int(*unary_operation_literal)(vd_literal *o, const vd_literal *i);
-typedef unary_operation_literal u_opliteral; // generic type for operations on one vector
+typedef int (*unary_operation_literal)(vd_literal *o, const vd_literal *i);
+typedef unary_operation_literal
+    u_opliteral; // generic type for operations on one vector
 
-typedef void(*reader_macro)(Object *obj, token_array *args);
+typedef void (*reader_macro)(Object *obj, token_array *args);
 typedef reader_macro r_macro;
 
 struct function_node;
@@ -78,7 +82,7 @@ typedef struct function_object f_object;
 struct packed_function_object;
 typedef struct packed_function_object pf_object;
 
-typedef unsigned short argcnt_t; 
+typedef unsigned short argcnt_t;
 typedef unsigned short depth_t;
 
 struct function_attributes;
@@ -94,11 +98,10 @@ struct function_object {
   f_attribs attr;
 };
 
-
 struct packed_function_object {
   union {
     f_object *fObj;
-    BYTE* buff;
+    BYTE *buff;
   };
 };
 
@@ -119,10 +122,3 @@ struct object {
   obj_t ty;
   priority_t priority;
 };
-
-
-
-
-
-
-

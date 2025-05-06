@@ -7,7 +7,7 @@
 struct stack;
 typedef struct stack stack;
 struct stack {
-  BYTE* buff;
+  BYTE *buff;
   size_t size;
   size_t top;
 };

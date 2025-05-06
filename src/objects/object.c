@@ -20,7 +20,7 @@ void sprint_object(gString *gstr, const Object *o) {
   case PFUNC:
     sprint_function(gstr, o->pObject.fObj);
     break;
-  case READER: 
+  case READER:
     g_append_back_c(gstr, "READER");
     break;
   case TEMP:
@@ -70,5 +70,5 @@ void free_object(Object *obj) {
 }
 
 __attribute__((always_inline)) inline Object null_object() {
-  return (const Object){{{0}},.ty=NONE,.priority=0};
+  return (const Object){{{0}}, .ty = NONE, .priority = 0};
 }

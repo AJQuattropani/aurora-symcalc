@@ -17,21 +17,21 @@ f_object copy_fobject(const f_object *other) {
 
 f_node *copy_fnode_recurse(const f_node *ref) {
   f_node *dup = new_fnode();
-  switch(ref->ty) {
-    case BINARY:
-      dup->bf.op = ref->bf.op;
-      dup->bf.left = copy_fnode_recurse(ref->bf.left);
-      dup->bf.right = copy_fnode_recurse(ref->bf.right);
+  switch (ref->ty) {
+  case BINARY:
+    dup->bf.op = ref->bf.op;
+    dup->bf.left = copy_fnode_recurse(ref->bf.left);
+    dup->bf.right = copy_fnode_recurse(ref->bf.right);
     break;
-    case UNARY:
-      dup->uf.op = ref->uf.op;
-      dup->uf.in = copy_fnode_recurse(ref->uf.in);
+  case UNARY:
+    dup->uf.op = ref->uf.op;
+    dup->uf.in = copy_fnode_recurse(ref->uf.in);
     break;
-    case CONSTANT:
-      dup->cf.output = copy_vdliteral(&ref->cf.output);
+  case CONSTANT:
+    dup->cf.output = copy_vdliteral(&ref->cf.output);
     break;
-    case IDENTITY:
-      dup->xf.index = ref->xf.index;
+  case IDENTITY:
+    dup->xf.index = ref->xf.index;
     break;
   }
   dup->ty = ref->ty;
@@ -41,13 +41,14 @@ f_node *copy_fnode_recurse(const f_node *ref) {
   return dup;
 }
 
-void free_fobject(f_object *fun) { 
+void free_fobject(f_object *fun) {
   free_fnode_recurse(fun->root);
   *fun = (f_object){0};
 }
 
 void free_fnode_recurse(f_node *node) {
-  if (NULL == node) return;
+  if (NULL == node)
+    return;
   switch (node->ty) {
   case BINARY:
     m_deletestr(&node->name);
@@ -143,3 +144,19 @@ sprint_function([[maybe_unused]] gString *inp,
   fnode_str_recurse(inp, fun->root);
 }
 
+void update_depth(f_node *curr, depth_t depth, depth_t *tot_depth) {
+  update_depth_max(depth, tot_depth);
+  curr->depth_index = depth;
+  switch (curr->ty) {
+  case BINARY:
+    update_depth(curr->bf.left, depth, tot_depth);
+    update_depth(curr->bf.right, depth + 1, tot_depth);
+    break;
+  case UNARY:
+    update_depth(curr->uf.in, depth, tot_depth);
+    break;
+  case CONSTANT:
+  case IDENTITY:
+    break;
+  }
+}

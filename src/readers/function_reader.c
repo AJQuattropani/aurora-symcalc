@@ -1,16 +1,10 @@
 #include "function_reader.h"
 
-static __attribute__((always_inline)) inline void
-update_depth_max(depth_t depth, depth_t *depth_max) {
-  *depth_max = (depth ^ ((depth ^ *depth_max) & -(depth < *depth_max))) + 1;
-}
-
-static f_node *least_significant_token_recurse(token_array *args,
-                                               depth_t depth,
+static f_node *least_significant_token_recurse(token_array *args, depth_t depth,
                                                f_attribs *attr);
 
-static f_node *least_significant_token_imp(token_array *args,
-                                           depth_t depth, f_attribs *attr) {
+static f_node *least_significant_token_imp(token_array *args, depth_t depth,
+                                           f_attribs *attr) {
   update_depth_max(depth, &attr->depth);
 
   size_t sp = 0;
@@ -26,7 +20,7 @@ static f_node *least_significant_token_imp(token_array *args,
     sp = i;
     split_data = *curr;
   }
-  //fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
+  // fprintf(stdout, "Found %s \n", split_data.token->key.cstring);
 
   switch (split_data.token->value.ty) {
   case BOPER: {
@@ -148,31 +142,43 @@ void read_function(Object *obj, token_array *args) {
     *obj = null_object();
     return;
   }
-  
+
   vector_size_t out_size = SCALAR;
   // prepass to avoid an obvious source of recursive deletion hell
   for (size_t i = offs; i < args->size; i++) {
-    if (obj != &args->data[i].token->value) {// patch for preventing function self-referencing
+    if (obj !=
+        &args->data[i]
+             .token->value) { // patch for preventing function self-referencing
       obj_t ty = args->data[i].token->value.ty;
-      switch(ty) {
-        case NONE: break;
-        case READER: break;
-        case SYNTAX_EQUALS: break;
-        case TEMP: continue;
-        case FUNC: continue;
-        case PFUNC: continue;
-        case BOPER: continue;
-        case CONTEXT: continue;
-        case UOPER: continue;
-        case VECTOR: {
-          vector_size_t size = args->data[i].token->value.vLiteral.size;
-          if (out_size == size) continue;
-          if (SCALAR == out_size) {
-            out_size = size;
-            continue;
-          }
-          }
+      switch (ty) {
+      case NONE:
+        break;
+      case READER:
+        break;
+      case SYNTAX_EQUALS:
+        break;
+      case TEMP:
+        continue;
+      case FUNC:
+        continue;
+      case PFUNC:
+        continue;
+      case BOPER:
+        continue;
+      case CONTEXT:
+        continue;
+      case UOPER:
+        continue;
+      case VECTOR: {
+        vector_size_t size = args->data[i].token->value.vLiteral.size;
+        if (out_size == size)
+          continue;
+        if (SCALAR == out_size) {
+          out_size = size;
+          continue;
         }
+      }
+      }
     }
 
     fprintf(stderr, "[ERROR] Invalid token \"%s\" passed to %s.\n",
@@ -181,9 +187,11 @@ void read_function(Object *obj, token_array *args) {
     return;
   }
 
-  *obj = (Object){.fObject = {.root = NULL, .attr = {.argcnt = argnum, .depth = 0, .out_size = out_size}},
-                  .ty = FUNC,
-                  .priority = PRIORITY_MAX};
+  *obj = (Object){
+      .fObject = {.root = NULL,
+                  .attr = {.argcnt = argnum, .depth = 0, .out_size = out_size}},
+      .ty = FUNC,
+      .priority = PRIORITY_MAX};
 
   f_node *root = least_significant_token_recurse(
       &(token_array){.data = args->data + offs, .size = args->size - offs}, 0,
@@ -214,10 +222,8 @@ void read_copy_packed(Object *obj, token_array *args) {
     *obj = null_object();
     return;
   }
-  Object* function = &args->data[0].token->value;
-  *obj = (Object){.pObject = make_packed_copy(&function->fObject), .ty = PFUNC, .priority = PRIORITY_MAX};
+  Object *function = &args->data[0].token->value;
+  *obj = (Object){.pObject = make_packed_copy(&function->fObject),
+                  .ty = PFUNC,
+                  .priority = PRIORITY_MAX};
 }
-
-
-
-

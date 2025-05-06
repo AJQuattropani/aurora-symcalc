@@ -7,7 +7,7 @@
 struct view_string;
 typedef struct view_string vString;
 struct view_string {
-  char* ref;
+  char *ref;
   size_t len;
 };
 
@@ -16,7 +16,7 @@ vString v_view(char *ref);
 struct view_list;
 typedef struct view_list vList;
 struct view_list {
-  vString* data;
+  vString *data;
   size_t capacity;
   size_t size;
 };

@@ -38,8 +38,12 @@ _value *acquire_value(Map map, _key key) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  **node_addr = (_mnode) {
-    .value.ty = NONE, .key = m_from_copy(key), .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
+  **node_addr = (_mnode){.value.ty = NONE,
+                         .key = m_from_copy(key),
+                         .hash_val = index,
+                         .upstr = upstr,
+                         .prev = prev_node,
+                         .next = NULL};
   return &(**node_addr).value;
 }
 
@@ -62,13 +66,16 @@ _mnode *acquire_pair(Map map, _key key) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  **node_addr = (_mnode) {
-    .value.ty = NONE, .key = m_from_copy(key), .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
+  **node_addr = (_mnode){.value.ty = NONE,
+                         .key = m_from_copy(key),
+                         .hash_val = index,
+                         .upstr = upstr,
+                         .prev = prev_node,
+                         .next = NULL};
   return &(**node_addr);
 }
 
-
-void cinsert(Map map, const char* ckey, _value value) {
+void cinsert(Map map, const char *ckey, _value value) {
   mString key = m_from_cstr(ckey);
   size_t index = hash_key(&key);
   _mnode *prev_node = NULL;
@@ -89,8 +96,12 @@ void cinsert(Map map, const char* ckey, _value value) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  (**node_addr) = (_mnode){
-      .key = key, .value = value, .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
+  (**node_addr) = (_mnode){.key = key,
+                           .value = value,
+                           .hash_val = index,
+                           .upstr = upstr,
+                           .prev = prev_node,
+                           .next = NULL};
 }
 
 void insert(Map map, _key key, _value value) {
@@ -113,8 +124,12 @@ void insert(Map map, _key key, _value value) {
     fprintf(stderr, "malloc failed in %s\n", __func__);
     exit(1);
   }
-  (**node_addr) = (_mnode){
-      .key = m_from_copy(key), .value = value, .hash_val = index, .upstr = upstr, .prev = prev_node, .next = NULL};
+  (**node_addr) = (_mnode){.key = m_from_copy(key),
+                           .value = value,
+                           .hash_val = index,
+                           .upstr = upstr,
+                           .prev = prev_node,
+                           .next = NULL};
 }
 
 void delete_pair(Map map, _key key) {
@@ -149,12 +164,13 @@ void remove_node(_mnode *node) {
 }
 
 void update_map(Map map) {
-  for (size_t i = 0; i < STATIC_MAP_SIZE; i++) { 
+  for (size_t i = 0; i < STATIC_MAP_SIZE; i++) {
     _mnode **upstr = &map[i]; // bucket
     while (NULL != *upstr) {
       _mnode *rm = *upstr;
       if (TEMP == rm->value.ty || NONE == rm->value.ty) {
-        //printf("[Cleanup] Removing node belonging to \"%s\" at %p.\n", (*upstr)->key.cstring, (void*)*upstr);
+        // printf("[Cleanup] Removing node belonging to \"%s\" at %p.\n",
+        // (*upstr)->key.cstring, (void*)*upstr);
         remove_node(rm);
         continue;
       }
@@ -180,8 +196,8 @@ void print_map(Map map) {
       continue;
     printf("Bucket %ld: ", bkt);
     for (_mnode *curr = map[bkt]; curr != NULL; curr = curr->next) {
-      //printf("(%.*s, %d), ", (int)curr->key.size, curr->key.cstring,
-      //       curr->value.ty); // may have to change val printing
+      // printf("(%.*s, %d), ", (int)curr->key.size, curr->key.cstring,
+      //        curr->value.ty); // may have to change val printing
 
       printf("(%s, %d), ", curr->key.cstring, curr->value.ty);
     }
@@ -195,7 +211,8 @@ size_t hash_key(const _key *key) {
     val += (key->cstring)[i];
   }
   val %= STATIC_MAP_SIZE;
-  //printf("hashed [%.*s, %ld] : %ld\n", (int)key->size, key->cstring, key->size, val);
+  // printf("hashed [%.*s, %ld] : %ld\n", (int)key->size, key->cstring,
+  // key->size, val);
   return val; // float mod
 }
 
@@ -204,7 +221,3 @@ void mn_destroy(_mnode *node) {
   free_object(&node->value);
   free(node); // free node
 }
-
-
-
-
