@@ -2,8 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "./allocators/mstring.h"
 #include "../objects/object.h"
+#include "./allocators/mstring.h"
 
 typedef Object _value;
 typedef mString _key;
@@ -21,8 +21,8 @@ struct map_node {
   union {
     _kvpair pair;
     struct {
-    _key key;
-    _value value;
+      _key key;
+      _value value;
     };
   };
   size_t hash_val;
@@ -44,7 +44,7 @@ _value *acquire_value(Map map, _key key);
 
 _mnode *acquire_pair(Map map, _key key);
 
-void cinsert(Map map, const char* ckey, _value value);
+void cinsert(Map map, const char *ckey, _value value);
 
 void insert(Map map, _key key, _value value);
 

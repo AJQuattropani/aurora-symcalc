@@ -38,4 +38,3 @@ void push_token_back(token_array *arr, const token *tok) {
   arr->data[arr->size] = *tok;
   arr->size++;
 }
-

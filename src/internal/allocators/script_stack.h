@@ -14,47 +14,52 @@ struct script_stack {
 };
 
 /*
-* Checks if the file is not a std file.
-* return: 0 if true, false otherwise
-*/
+ * Checks if the file is not a std file.
+ * return: 0 if true, false otherwise
+ */
 __attribute__((always_inline)) static inline int closeable(FILE *fptr) {
   return (stdin == fptr) || (stdout == fptr) || (stderr == fptr);
 }
 
 /*
-* Gets the current file. returns NULL if stack is empty.
-*/
-__attribute__((always_inline)) static inline FILE *get_current_file(sc_stack *stack) {
-  if (stack->count <= 0) return NULL;
+ * Gets the current file. returns NULL if stack is empty.
+ */
+__attribute__((always_inline)) static inline FILE *
+get_current_file(sc_stack *stack) {
+  if (stack->count <= 0)
+    return NULL;
   return stack->open_files[stack->count - 1];
 }
 
 /*
-* Pushes an in-use file to the top of the stack.
-* THIS IS FOR STD FILESTREAMS ONLY
-*/
-__attribute__((always_inline)) static inline int push_file(sc_stack *stack, FILE *fptr) {
+ * Pushes an in-use file to the top of the stack.
+ * THIS IS FOR STD FILESTREAMS ONLY
+ */
+__attribute__((always_inline)) static inline int push_file(sc_stack *stack,
+                                                           FILE *fptr) {
   if (MAX_FILES <= stack->count) {
     fprintf(stderr, "[Skipped] File open to prevent stack overflow.\n");
     return 1;
   }
-  stack->open_files[stack->count] = fptr; 
+  stack->open_files[stack->count] = fptr;
   stack->count++;
   return 0;
 }
 
 /*
-* Opens a file and pushes it to the top of the stack.
-* return: 1 on failure, 0 on success
-*/
-__attribute__((always_inline)) static inline int open_file(sc_stack *stack, const char *file_name) {
+ * Opens a file and pushes it to the top of the stack.
+ * return: 1 on failure, 0 on success
+ */
+__attribute__((always_inline)) static inline int
+open_file(sc_stack *stack, const char *file_name) {
   const char *dot = strrchr(file_name, '.');
   if (NULL == dot) {
     fprintf(stderr, "[Skipped] Please provide a file extension.\n");
     return 1;
   }
   if (strcmp(dot + 1, "ask")) {
-    fprintf(stderr, "[Skipped] Specified file requires a .ask file extension.\n");
+    fprintf(stderr,
+            "[Skipped] Specified file requires a .ask file extension.\n");
     return 1;
   }
   if (MAX_FILES <= stack->count) {
@@ -68,17 +73,17 @@ __attribute__((always_inline)) static inline int open_file(sc_stack *stack, cons
     fprintf(stderr, "[Skipped] File %s could not be opened.\n", file_name);
     return 1;
   }
-  
-  stack->open_files[stack->count] = fptr; 
+
+  stack->open_files[stack->count] = fptr;
   stack->count++;
   return 0;
 }
 
 /*
-* Closes current file and decrements stack pointer.
-* return: 1 on empty stack, 0 on success
-*/
-__attribute__((always_inline)) static inline int pop_file(sc_stack* stack) {
+ * Closes current file and decrements stack pointer.
+ * return: 1 on empty stack, 0 on success
+ */
+__attribute__((always_inline)) static inline int pop_file(sc_stack *stack) {
   int curr = stack->count - 1;
   if (curr < 0) {
     return 1;
@@ -94,9 +99,10 @@ __attribute__((always_inline)) static inline int pop_file(sc_stack* stack) {
 }
 
 /*
-* Closes all files until none are left.
-*/
-__attribute__((always_inline)) static inline void destroy_stack(sc_stack* stack) {
-  while (0 == pop_file(stack)); 
+ * Closes all files until none are left.
+ */
+__attribute__((always_inline)) static inline void
+destroy_stack(sc_stack *stack) {
+  while (0 == pop_file(stack))
+    ;
 }
-

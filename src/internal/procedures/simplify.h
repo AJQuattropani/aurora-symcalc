@@ -3,11 +3,21 @@
 #include "../../objects/function.h"
 #include "../../readers/functional.h"
 
-
 /*
  * Implementation of simplication procedure.
  */
 f_object simplify_imp(f_object *fun);
 
+/*
+ * Swaps consteval term with the first non-consteval term in a commutative
+ * chain.
+ */
+int sort_consteval(const b_opliteral cmp, f_node **cnst_swap, f_node **curr);
 
+int reorder_cleanup_imp(f_node *curr);
 
+int simplify_cleanup_imp(vd_literal *inp_args, f_node *curr, depth_t depth,
+                         f_attribs *attr);
+
+int handle_binary_diff_cleanup(vd_literal *inp_args, f_node *curr,
+                               depth_t depth, f_attribs *attr);

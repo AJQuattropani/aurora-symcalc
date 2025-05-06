@@ -50,24 +50,27 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
 
   Object *read_type = &args->data[2].token->value;
   if (READER != read_type->ty && SYNTAX_EQUALS != read_type->ty) {
-    fprintf(stderr, "[SKIPPED] Invalid type %s.\n", args->data[2].token->key.cstring);
+    fprintf(stderr, "[SKIPPED] Invalid type %s.\n",
+            args->data[2].token->key.cstring);
     return;
   }
   r_macro read_macro = read_type->reader;
-  read_macro(into, &(token_array){
-      .data = args->data + 3,
-      .capacity = 0,
-      .size = args->size -
-              3}); // read in remaining args as either function or vector
+  read_macro(
+      into,
+      &(token_array){
+          .data = args->data + 3,
+          .capacity = 0,
+          .size = args->size -
+                  3}); // read in remaining args as either function or vector
 }
 
 void delete_object(env *context, const token_array *args) {
-  static _mnode empty = {.value={.ty=NONE}};
+  static _mnode empty = {.value = {.ty = NONE}};
   if (2 > args->size) {
     fprintf(stderr, "[SKIPPED] No variables listed.\n");
   }
   for (size_t i = 1; i < args->size; i++) {
-    for (size_t j = i+1; j < args->size; j++) {
+    for (size_t j = i + 1; j < args->size; j++) {
       if (args->data[i].token == args->data[j].token) {
         args->data[j].token = &empty;
       }
@@ -75,21 +78,30 @@ void delete_object(env *context, const token_array *args) {
   }
 
   for (size_t i = 1; i < args->size; i++) {
-    _mnode* fig = args->data[i].token;
+    _mnode *fig = args->data[i].token;
     obj_t ty = fig->value.ty;
     switch (ty) {
-    case NONE: __attribute__((fallthrough));
-    case TEMP: __attribute__((fallthrough));
-    case SYNTAX_EQUALS: __attribute__((fallthrough));
-    case CONTEXT: __attribute__((fallthrough));
-    case READER: __attribute__((fallthrough));
-    case BOPER: __attribute__((fallthrough));
+    case NONE:
+      __attribute__((fallthrough));
+    case TEMP:
+      __attribute__((fallthrough));
+    case SYNTAX_EQUALS:
+      __attribute__((fallthrough));
+    case CONTEXT:
+      __attribute__((fallthrough));
+    case READER:
+      __attribute__((fallthrough));
+    case BOPER:
+      __attribute__((fallthrough));
     case UOPER:
-      g_append_back_c(&context->output_buffer, "\n| [SKIPPED] Token is not a deletable type.");
+      g_append_back_c(&context->output_buffer,
+                      "\n| [SKIPPED] Token is not a deletable type.");
       continue;
-    case VECTOR: __attribute__((fallthrough));
-    case FUNC: __attribute__((fallthrough));
-    case PFUNC: 
+    case VECTOR:
+      __attribute__((fallthrough));
+    case FUNC:
+      __attribute__((fallthrough));
+    case PFUNC:
       g_append_back_c(&context->output_buffer, "\n| Token removed.");
       remove_node(fig);
       continue;
@@ -109,4 +121,3 @@ void open_files(env *context, const token_array *args) {
     }
   }
 }
-

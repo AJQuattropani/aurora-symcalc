@@ -1,14 +1,14 @@
 #pragma once
 
-#include "types.h"
-#include "hash_map.h"
 #include "./allocators/mstring.h"
+#include "hash_map.h"
+#include "types.h"
 
 struct token {
-  _mnode* token;
+  _mnode *token;
   //_kvpair* token;
-  //mString key;
-  //Object token;
+  // mString key;
+  // Object token;
   int priority;
 };
 

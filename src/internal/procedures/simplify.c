@@ -1,251 +1,228 @@
 #include "simplify.h"
 
-/*f_object simplify_imp(f_object *fun) {
-  vector_list out_cache = alloc_vdlist(fun->attr.depth, fun->attr.out_size);
-  simplification_t simp;
-  f_node *root = fnode_copysimplify_recurse(fun->root, &simp, out_cache.data);
+//-------------------------------------------------------------------//
 
-  if (NULL == root) {
+int handle_binary_cleanup(vd_literal *inp_args, f_node *curr, depth_t depth,
+                          f_attribs *attr) {
+  int is_left_const =
+      simplify_cleanup_imp(inp_args, curr->bf.left, depth, attr);
+  int is_right_const =
+      simplify_cleanup_imp(inp_args, curr->bf.right, depth + 1, attr);
+
+  if (is_left_const) {
+    if (is_right_const)
+      return 1;
+
+    vd_literal left_consteval = output_eval(depth, curr->bf.left, attr->depth,
+                                            inp_args, attr->out_size);
+    priority_t p = curr->bf.right->priority;
+    free_fnode_recurse(curr->bf.left);
+    curr->bf.left = new_fnode();
     gString name = g_from_capacity(10);
-    sprint_vector(&name, &out_cache.data[0]);
-    root = new_fnode();
-    *root = (f_node){.ty = CONSTANT,
-                      .cf.output =
-                          copy_vdliteral(&out_cache.data[0]),
-                      .depth_index = 0,
-                      .priority = 0,
-                      .name = {.cstring = name.cstring, .size = name.size}};
+    sprint_vector(&name, &left_consteval);
+    *curr->bf.left =
+        (f_node){.name = {.cstring = name.cstring, .size = name.size},
+                 .priority = p,
+                 .depth_index = depth,
+                 .ty = CONSTANT,
+                 .cf = {.output = left_consteval}};
+#define TOLERANCE 0.0000000001
+    if (curr->bf.op == vb_pow) {
+      if (is_num(&curr->bf.left->cf.output, 0.0, TOLERANCE) ||
+          is_num(&curr->bf.left->cf.output, 1.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.right);
+        f_node *left = curr->bf.left;
+        m_deletestr(&curr->name);
+        *curr = *left;
+        free(left);
+        return 1;
+      }
+    }
+    if (curr->bf.op == vb_mul) {
+      if (is_num(&curr->bf.left->cf.output, 0.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.right);
+        f_node *left = curr->bf.left;
+        m_deletestr(&curr->name);
+        *curr = *left;
+        free(left);
+        return 1;
+      } else if (is_num(&curr->bf.left->cf.output, 1.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.left);
+        f_node *right = curr->bf.right;
+        m_deletestr(&curr->name);
+        *curr = *right;
+        free(right);
+        return 0;
+      }
+    }
+    if (curr->bf.op == vb_add) {
+      if (is_num(&curr->bf.left->cf.output, 0.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.left);
+        f_node *right = curr->bf.right;
+        m_deletestr(&curr->name);
+        *curr = *right;
+        free(right);
+        return 0;
+      }
+    }
   }
-
-  free_vdlist(&out_cache);
-
-  return (f_object){.root = root, .attr = fun->attr};
-}*/
-
-/*
-typedef enum Simplification {
-  NOTHING,
-  CONSTEVAL,
-  REMOVE,
-} simplification_t;
-
-simplification_t resolve_simplification(char fname,
-                                        const vd_literal *consteval) {
-  switch (fname) {
-  case '+':
-    if (is_num(consteval, 0, 0.00000000001)) {
-      return REMOVE;
+  if (is_right_const) {
+    vd_literal right_consteval = output_eval(
+        depth + 1, curr->bf.right, attr->depth, inp_args, attr->out_size);
+    priority_t p = curr->bf.right->priority;
+    free_fnode_recurse(curr->bf.right);
+    curr->bf.right = new_fnode();
+    gString name = g_from_capacity(10);
+    sprint_vector(&name, &right_consteval);
+    *curr->bf.right =
+        (f_node){.name = {.cstring = name.cstring, .size = name.size},
+                 .priority = p,
+                 .depth_index = depth + 1,
+                 .ty = CONSTANT,
+                 .cf = {.output = right_consteval}};
+    if (curr->bf.op == vb_pow) {
+      if (is_num(&curr->bf.right->cf.output, 0.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.left);
+        f_node *right = curr->bf.right;
+        m_deletestr(&curr->name);
+        *curr = *right;
+        curr->depth_index = depth;
+        free(right);
+        vd_literal one = make_scalar(1.0);
+        vu_set(&curr->cf.output, &one);
+        free_vdliteral(&one);
+        return 1;
+      } else if (is_num(&curr->bf.right->cf.output, 1.0, 0)) {
+        free_fnode_recurse(curr->bf.right);
+        f_node *left = curr->bf.left;
+        m_deletestr(&curr->name);
+        *curr = *left;
+        curr->depth_index = depth;
+        free(left);
+        return 0;
+      }
     }
-    return NOTHING;
-  case '-':
-    return NOTHING;
-  case '*':
-    if (is_num(consteval, 0, 0.00000000001)) {
-      return CONSTEVAL;
+    if (curr->bf.op == vb_mul) {
+      if (is_num(&curr->bf.right->cf.output, 0.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.left);
+        f_node *right = curr->bf.right;
+        m_deletestr(&curr->name);
+        *curr = *right;
+        curr->depth_index = depth;
+        free(right);
+        return 1;
+      } else if (is_num(&curr->bf.right->cf.output, 1.0, 0)) {
+        free_fnode_recurse(curr->bf.left);
+        f_node *left = curr->bf.left;
+        m_deletestr(&curr->name);
+        *curr = *left;
+        curr->depth_index = depth;
+        free(left);
+        return 0;
+      }
     }
-    if (is_num(consteval, 1, 0.00000000001)) {
-      return REMOVE;
+    if (curr->bf.op == vb_add) {
+      if (is_num(&curr->bf.right->cf.output, 0.0, TOLERANCE)) {
+        free_fnode_recurse(curr->bf.right);
+        f_node *left = curr->bf.left;
+        m_deletestr(&curr->name);
+        *curr = *left;
+        curr->depth_index = depth;
+        free(left);
+        return 0;
+      }
     }
-    return NOTHING;
-  case '/': {
-    return NOTHING;
   }
-  case '^':
-    if (is_num(consteval, 0, 0.00000000001)) {
-      return CONSTEVAL;
-    }
-    if (is_num(consteval, 1, 0.00000000001)) {
-      return REMOVE;
-    }
-    return NOTHING;
-  case '_':
-    return NOTHING;
-  default: {
-    fprintf(stderr, "Unknown name passed to %s: %c", __func__, fname);
-    exit(5);
-  }
-  }
+  update_depth_max(depth + 1 * !(is_left_const || is_right_const),
+                   &attr->depth);
+  return 0;
 }
 
-void simplify_command(Object *obj, token_array *args) {
-  if (1 != args->size) {
-    fprintf(stderr, "[ERROR] Please provide one function to simplify.\n");
-    *obj = null_object();
-    return;
-  }
-  Object *inp = &args->data[0].token->value;
-  f_object *inp_func;
-  switch (inp->ty) {
-  case PFUNC:
-    inp_func = inp->pObject.fObj;
-    break;
-  case FUNC:
-    inp_func = &inp->fObject;
-    break;
-  default:
-    fprintf(stderr, "[ERROR] %s is not a function.\n",
-            args->data[0].token->key.cstring);
-    *obj = null_object();
-    return;
-  }
-
-  f_object out = simplify_imp(inp_func);
-  *obj = (Object){.ty = FUNC, .fObject = out};
-  return;
-}
-
-static f_node *fnode_copysimplify_recurse(f_node *func, simplification_t *simp,
-                                          vd_literal *write_buff) {
-  f_node *out = NULL;
-  switch (func->ty) {
+// returns 1 if the node is consteval
+int simplify_cleanup_imp(vd_literal *inp_args, f_node *curr, depth_t depth,
+                         f_attribs *attr) {
+  curr->depth_index = depth;
+  switch (curr->ty) {
   case BINARY: {
-    simplification_t rsimp;
-    f_node *left = fnode_copysimplify_recurse(func->bf.left, simp, write_buff);
-    f_node *right =
-        fnode_copysimplify_recurse(func->bf.right, &rsimp, write_buff);
-    switch (*simp) {
-    case CONSTEVAL: {
-      switch (rsimp) {
-      case CONSTEVAL: // both consteval? return consteval
-        func->bf.op(&write_buff[func->depth_index],
-                    &write_buff[func->depth_index],
-                    &write_buff[func->depth_index + 1]);
-        return NULL;
-      case NOTHING: // right not consteval?
-        switch (*simp = resolve_simplification(func->name.cstring[0],
-                                       &write_buff[func->depth_index])) {
-        // will fail if so ever a binary function is introduced that is not one
-        // char
-        case NOTHING: {
-          fprintf(stderr, "NOTHING R:\n");
-          left = new_fnode();
-          gString name = g_from_capacity(10);
-          sprint_vector(&name, &write_buff[func->depth_index]);
-          *left = (f_node){
-              .ty = CONSTANT,
-              .cf.output = copy_vdliteral(&write_buff[func->depth_index]),
-              .depth_index = func->depth_index,
-              .priority = func->priority,
-              .name = {.cstring = name.cstring, .size = name.size}};
-          out = new_fnode();
-          out->bf.left = left;
-          out->bf.right = right;
-          fprintf(stderr, "NOTHING R:\n");
-          *simp = NOTHING;
-          }
-          break;
-        case CONSTEVAL: {
-          fprintf(stderr, "CONSTEVAL:\n");
-          func->bf.op(&write_buff[func->depth_index],
-                      &write_buff[func->depth_index],
-                      &write_buff[func->depth_index + 1]);
-          free_fnode_recurse(right);
-          *simp = CONSTEVAL;
-          return NULL;
-          }
-        case REMOVE: {
-          fprintf(stderr, "REMOVE:\n");
-          *simp = NOTHING;
-          return right; // left has no effect
-        }
-        }
-        break;
-      case REMOVE:
-      exit(5);
-      }
-    }
-    break;
-    case NOTHING: {
-      switch (rsimp) {
-      case CONSTEVAL: // left not consteval?
-        switch (*simp = resolve_simplification(func->name.cstring[0],
-                                       &write_buff[func->depth_index + 1])) {
-        case NOTHING: {
-          fprintf(stderr, "NOTHING L:\n");
-          right = new_fnode();
-          gString name = g_from_capacity(10);
-          sprint_vector(&name, &write_buff[func->depth_index + 1]);
-          *right = (f_node){
-              .ty = CONSTANT,
-              .cf.output = copy_vdliteral(&write_buff[func->depth_index + 1]),
-              .depth_index = func->depth_index + 1,
-              .priority = func->priority,
-              .name = {.cstring = name.cstring, .size = name.size}};
-          out = new_fnode();
-          out->bf.right = right;
-          out->bf.left = left;
-          fprintf(stderr, "NOTHING L:\n");
-          *simp = NOTHING;
-          }
-          break;
-        case CONSTEVAL: {
-          fprintf(stderr, "CONSTEVAL:\n");
-          func->bf.op(&write_buff[func->depth_index],
-                      &write_buff[func->depth_index],
-                      &write_buff[func->depth_index + 1]);
-          free_fnode_recurse(left);
-          *simp = CONSTEVAL;
-          return NULL;
-          }
-        case REMOVE: {
-          fprintf(stderr, "REMOVE:\n");
-          *simp = NOTHING;
-          return left; // right has no effect
-          }
-      }
-      break;
-      case NOTHING: // neither consteval? return copy
-        out = new_fnode();
-        out->bf.op = func->bf.op;
-        out->bf.left = left;
-        out->bf.right = right;
-        break;
-      case REMOVE:
-        exit(5);
-      }
-    }
-    break;
-    case REMOVE:
-      exit(5);
-    }
+    return handle_binary_cleanup(inp_args, curr, depth, attr);
   }
-  break;
+  case UNARY:
+    if (simplify_cleanup_imp(inp_args, curr->uf.in, depth, attr))
+      return 1;
+    return 0;
+  case CONSTANT:
+    return 1;
+  case IDENTITY:
+    return 0;
+  }
+  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
+          __func__);
+  exit(1);
+}
+
+int sort_consteval(const b_opliteral cmp, f_node **cnst_swap, f_node **curr) {
+  switch ((*curr)->ty) {
+  case BINARY: {
+    if (cmp == (*curr)->bf.op) {
+      if (sort_consteval(cmp, cnst_swap, &(*curr)->bf.left))
+        return 1;
+      if (sort_consteval(cmp, cnst_swap, &(*curr)->bf.right))
+        return 1;
+      return 0;
+    }
+    f_node *temp = *cnst_swap;
+    *cnst_swap = *curr;
+    *curr = temp;
+    return 1;
+  }
   case UNARY: {
-    f_node *in = fnode_copysimplify_recurse(func->uf.in, simp, write_buff);
-    switch (*simp) {
-    case CONSTEVAL:
-      func->uf.op(&write_buff[func->depth_index],
-                  &write_buff[func->depth_index]);
-      return NULL;
-    case NOTHING:
-      out = new_fnode();
-      out->uf.op = func->uf.op;
-      out->uf.in = in;
-      break;
-    case REMOVE:
-      exit(5);
-    }
+    f_node *temp = *cnst_swap;
+    *cnst_swap = *curr;
+    *curr = temp;
+    return 1;
   }
-  break;
   case CONSTANT: {
-    *simp = CONSTEVAL;
-    vu_set(&write_buff[func->depth_index],
-           &func->cf.output); // copy value to buffer
-    return NULL;
+    return 0;
   }
   case IDENTITY: {
-    *simp = NOTHING;
-    out = new_fnode(); // copy full node
-    out->xf.index = func->xf.index;
-    break;
+    f_node *temp = *cnst_swap;
+    *cnst_swap = *curr;
+    *curr = temp;
+    return 1;
   }
   }
-  fprintf(stderr, "Copy\n");
-  out->ty = func->ty;
-  out->priority = func->priority;
-  out->depth_index = func->depth_index;
-  out->name = m_from_copy(func->name);
-  return out;
+  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
+          __func__);
+  exit(1);
 }
 
-*/
+int reorder_cleanup_imp(f_node *curr) {
+// #define A
+#ifndef A
+  switch (curr->ty) {
+  case BINARY: {
+    int left_const = reorder_cleanup_imp(curr->bf.left);
+    int right_const = reorder_cleanup_imp(curr->bf.right);
+    if (left_const && right_const)
+      return 1;
+    if (curr->bf.op == vb_mul || curr->bf.op == vb_add) {
+      if (right_const)
+        return !sort_consteval(curr->bf.op, &curr->bf.right, &curr->bf.left);
+    }
+    return 0;
+  }
+  case UNARY: {
+    return reorder_cleanup_imp(curr->uf.in);
+  }
+  case CONSTANT:
+    return 1;
+  case IDENTITY:
+    return 0;
+  }
+  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
+          __func__);
+  exit(1);
+#else
+  return 0;
+#endif
+}

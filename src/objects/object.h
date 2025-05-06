@@ -3,10 +3,10 @@
 
 #include "../internal/allocators/gstring.h"
 
-#include "initializers.h"
-#include "vector.h"
 #include "function.h"
+#include "initializers.h"
 #include "packed_function.h"
+#include "vector.h"
 
 Object null_object();
 

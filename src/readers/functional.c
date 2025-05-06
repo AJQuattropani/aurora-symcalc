@@ -69,21 +69,24 @@ Object function_eval(f_object *fun, const token_array *args) {
         goto cleanup;
       }
     }
-    
-    output = (Object){.ty = VECTOR, .vLiteral = output_eval(0, fun->root, fun->attr.depth, inp_args, inp_size)};
+
+    output = (Object){.ty = VECTOR,
+                      .vLiteral = output_eval(0, fun->root, fun->attr.depth,
+                                              inp_args, inp_size)};
   cleanup:
     free(inp_args);
   }
   return output;
 }
 
-vd_literal output_eval(size_t index, f_node *root, depth_t depth, vd_literal *inp_args, vector_size_t inp_size) {
-    vd_literal output;
-    vector_list out_cache = alloc_vdlist(depth, inp_size);
-    evaluate_function_imp(root, out_cache.data, inp_args);
-    output = copy_vdliteral(&out_cache.data[index]);
-    free_vdlist(&out_cache);
-    return output;
+vd_literal output_eval(size_t index, f_node *root, depth_t depth,
+                       vd_literal *inp_args, vector_size_t inp_size) {
+  vd_literal output;
+  vector_list out_cache = alloc_vdlist(depth, inp_size);
+  evaluate_function_imp(root, out_cache.data, inp_args);
+  output = copy_vdliteral(&out_cache.data[index]);
+  free_vdlist(&out_cache);
+  return output;
 }
 
 void function_command(env *context, f_object *fun, const token_array *args) {
@@ -125,5 +128,3 @@ void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in) {
     return;
   }
 }
-
-

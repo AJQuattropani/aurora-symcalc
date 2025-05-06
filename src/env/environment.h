@@ -6,22 +6,16 @@
 #include "../internal/types.h"
 
 #include "../internal/procedures/differentiate.h"
-#include "../internal/procedures/simplify.h"
 #include "../internal/procedures/operators.h"
+#include "../internal/procedures/simplify.h"
 
 #include "../internal/allocators/gstring.h"
 
+#include "../internal/allocators/script_stack.h"
 #include "commands.h"
 #include "interpret.h"
-#include "../internal/allocators/script_stack.h"
 
-
-enum env_status {
-  OK,
-  CALL,
-  RETURN,
-  EXIT
-};
+enum env_status { OK, CALL, RETURN, EXIT };
 typedef enum env_status env_status;
 
 struct environment {
@@ -31,10 +25,8 @@ struct environment {
   gString output_buffer;
 };
 
-
 void default_map(Map map);
 
 void init_env(env *env, int argc, char *argv[]);
 void runtime(env *env);
 void free_env(env *env);
-
