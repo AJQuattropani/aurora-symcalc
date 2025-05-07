@@ -1,8 +1,8 @@
 #include "functional.h"
 
-void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in);
+void evaluate_function_imp(f_node *restrict fun, vd_literal *restrict out, const vd_literal *restrict in);
 
-void read_eval(Object *obj, token_array *args) {
+void read_eval(Object *restrict obj, token_array *restrict args) {
   Object *func_obj = &args->data[0].token->value;
   f_object *fun;
   switch (func_obj->ty) {
@@ -32,7 +32,7 @@ void read_eval(Object *obj, token_array *args) {
   }
 }
 
-Object function_eval(f_object *fun, const token_array *args) {
+Object function_eval(f_object *restrict fun, const token_array *restrict args) {
   if (1 == args->size) {
     return (Object){.ty = FUNC, 0};
   }
@@ -79,8 +79,8 @@ Object function_eval(f_object *fun, const token_array *args) {
   return output;
 }
 
-vd_literal output_eval(size_t index, f_node *root, depth_t depth,
-                       vd_literal *inp_args, vector_size_t inp_size) {
+vd_literal output_eval(size_t index, f_node *restrict root, depth_t depth,
+                       vd_literal *restrict inp_args, vector_size_t inp_size) {
   vd_literal output;
   vector_list out_cache = alloc_vdlist(depth, inp_size);
   evaluate_function_imp(root, out_cache.data, inp_args);
@@ -89,7 +89,7 @@ vd_literal output_eval(size_t index, f_node *root, depth_t depth,
   return output;
 }
 
-void function_command(env *context, f_object *fun, const token_array *args) {
+void function_command(env *restrict context, f_object *restrict fun, const token_array *restrict args) {
   Object o = function_eval(fun, args);
   switch (o.ty) {
   case FUNC:
@@ -108,7 +108,7 @@ void function_command(env *context, f_object *fun, const token_array *args) {
   }
 }
 
-void evaluate_function_imp(f_node *fun, vd_literal *out, const vd_literal *in) {
+void evaluate_function_imp(f_node *restrict fun, vd_literal *restrict out, const vd_literal *restrict in) {
   switch (fun->ty) {
   case BINARY:
     evaluate_function_imp(fun->bf.left, out, in);

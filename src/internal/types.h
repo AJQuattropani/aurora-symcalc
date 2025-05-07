@@ -1,4 +1,7 @@
 #pragma once
+
+#include "../debug.h"
+
 #include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>

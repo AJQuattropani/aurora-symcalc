@@ -11,7 +11,7 @@ vList v_from_capacity(size_t capacity) {
   return list;
 }
 
-void v_push_cstr(vList *list, char *ref, size_t len) {
+void v_push_cstr(vList *restrict list, char *restrict ref, size_t len) {
   if (list->size >= list->capacity) {
     size_t new_capacity = list->size * 2;
     vString *temp =
@@ -27,7 +27,7 @@ void v_push_cstr(vList *list, char *ref, size_t len) {
   list->size += 1;
 }
 
-void v_empty(vList *list) {
+void v_empty(vList *restrict list) {
   list->size = 0;
   if (NULL == list->data) {
     fprintf(stderr, "skipping attempt to empty freed list");
@@ -36,7 +36,7 @@ void v_empty(vList *list) {
   memset(list->data, 0, list->capacity * sizeof(vString));
 }
 
-void v_free(vList *list) {
+void v_free(vList *restrict list) {
   list->capacity = 0;
   list->size = 0;
   if (NULL == list->data) {
@@ -47,10 +47,10 @@ void v_free(vList *list) {
   list->data = NULL;
 }
 
-vString v_view(char *ref) { return (vString){.ref = ref, .len = strlen(ref)}; }
+vString v_view(char *restrict ref) { return (vString){.ref = ref, .len = strlen(ref)}; }
 
-__attribute__((always_inline)) inline void sprint_views(gString *gstr,
-                                                        const vList *list) {
+__attribute__((always_inline)) inline void sprint_views(gString *restrict gstr,
+                                                        const vList *restrict list) {
   for (size_t i = 0; i < list->size; i++) {
     g_append_back_c(gstr, " [");
     g_append_back(gstr, list->data[i].ref, list->data[i].len);

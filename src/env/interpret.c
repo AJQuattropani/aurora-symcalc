@@ -1,11 +1,11 @@
 #include "interpret.h"
 
-ssize_t m_get_line(mString *ln, FILE *file) {
+ssize_t m_get_line(mString *restrict ln, FILE * restrict file) {
   ssize_t read = getline(&ln->cstring, &ln->size, file);
   return read;
 }
 
-ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
+ssize_t v_get_line(vList *restrict vlist, mString *restrict buff, FILE *restrict file) {
   v_empty(vlist);
   ssize_t read = m_get_line(buff, file);
   if (0 >= read || NULL == buff->cstring)
@@ -66,7 +66,7 @@ ssize_t v_get_line(vList *vlist, mString *buff, FILE *file) {
   return read;
 }
 
-token_array tokenize(Map map, const vList *vlist) {
+token_array tokenize(Map map, const vList *restrict vlist) {
   token_array tokens = new_token_array(vlist->size);
   token curr = {NULL, 0};
   for (size_t i = 0; i < vlist->size; i++) {

@@ -12,7 +12,7 @@ f_object simplify_imp(f_object *fun);
  * Swaps consteval term with the first non-consteval term in a commutative
  * chain.
  */
-int sort_consteval(const b_opliteral cmp, f_node **cnst_swap, f_node **curr);
+int sort_consteval(const b_opliteral cmp, f_node** cnst_swap, f_node **curr);
 
 int reorder_cleanup_imp(f_node *curr);
 

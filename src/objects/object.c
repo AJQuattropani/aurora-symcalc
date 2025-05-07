@@ -4,35 +4,36 @@ void sprint_object(gString *gstr, const Object *o) {
   switch (o->ty) {
   case VECTOR:
     sprint_vector(gstr, &o->vLiteral);
-    break;
+    return;
   case CONTEXT:
     g_append_back_c(gstr, "CONTEXT");
-    break;
+    return;
   case BOPER:
     g_append_back_c(gstr, "BINARYOPR");
-    break;
+    return;
   case UOPER:
     g_append_back_c(gstr, "UNARYOPR");
-    break;
+    return;
   case FUNC:
     sprint_function(gstr, &o->fObject);
-    break;
+    return;
   case PFUNC:
     sprint_function(gstr, o->pObject.fObj);
-    break;
+    return;
   case READER:
     g_append_back_c(gstr, "READER");
-    break;
+    return;
   case TEMP:
     g_append_back_c(gstr, "TEMP");
-    break;
+    return;
   case SYNTAX_EQUALS:
     g_append_back_c(gstr, "=");
-    break;
+    return;
   case NONE:
     g_append_back_c(gstr, "NONE");
-    break;
+    return;
   }
+  __UNREACHABLE_BRANCH
 }
 
 void free_object(Object *obj) {
@@ -64,7 +65,7 @@ void free_object(Object *obj) {
   case NONE:
     break;
   default:
-    break;
+    __UNREACHABLE_BRANCH
   }
   memset(obj, 0, sizeof(Object));
 }

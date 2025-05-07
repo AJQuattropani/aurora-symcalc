@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
+set(CMAKE_C_COMPILER "gcc")
 
 project(
   aurora-scicalc
@@ -17,11 +18,10 @@ file(COPY ${PROJECT_SOURCE_DIR}/scripts/ DESTINATION "${CMAKE_CURRENT_BINARY_DIR
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 # file(GLOB HEAD_FILES ${PROJECT_SOURCE_DIR}/src/*.h)
 
-if(MSVC)
-  add_compile_options(/W4)
-else()
-  add_compile_options(-Wall -Wextra -Wpedantic -g -march=native)
-endif()
+# add_compile_options(-Wall -Wextra -Wpedantic -Werror -g -march=native)
+
+set(CMAKE_C_FLAGS_DEBUG_INIT "-Wall -Wextra -Wpedantic -Werror -g -march=native")
+set(CMAKE_C_FLAGS_RELEASE_INIT "-DNDEBUG -Wall -Wextra -Wpedantic -Werror -g -march=native -O3")
 
 add_compile_options(-fsanitize=address)
 add_link_options(-fsanitize=address)

@@ -75,7 +75,7 @@ _mnode *acquire_pair(Map map, _key key) {
   return &(**node_addr);
 }
 
-void cinsert(Map map, const char *ckey, _value value) {
+void cinsert(Map map, const char * restrict ckey, _value value) {
   mString key = m_from_cstr(ckey);
   size_t index = hash_key(&key);
   _mnode *prev_node = NULL;
@@ -151,7 +151,7 @@ void delete_pair(Map map, _key key) {
   printf("skipped deletion of unfound token %s\n", key.cstring);
 }
 
-void remove_node(_mnode *node) {
+void remove_node(_mnode *restrict node) {
   if (NULL != node->prev) {
     node->prev->next = node->next; // this may be redundant
   }
@@ -205,7 +205,7 @@ void print_map(Map map) {
   }
 }
 
-size_t hash_key(const _key *key) {
+size_t hash_key(const _key * restrict key) {
   size_t val = 0;
   for (size_t i = 0; i < key->size; i++) {
     val += (key->cstring)[i];
@@ -216,7 +216,7 @@ size_t hash_key(const _key *key) {
   return val; // float mod
 }
 
-void mn_destroy(_mnode *node) {
+void mn_destroy(_mnode * restrict node) {
   m_deletestr(&node->key);
   free_object(&node->value);
   free(node); // free node

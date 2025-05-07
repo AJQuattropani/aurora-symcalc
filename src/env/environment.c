@@ -65,7 +65,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
 }
 
 __attribute__((always_inline)) static inline void
-init_stack(sc_stack *stack, int argc, char *argv[]) {
+init_stack(sc_stack * restrict stack, int argc, char * restrict argv[]) {
   push_file(stack, stdin);
   for (size_t i = argc - 1; i > 0; i--) {
     if (0 != open_file(stack, argv[i])) {
@@ -75,15 +75,15 @@ init_stack(sc_stack *stack, int argc, char *argv[]) {
   }
 }
 
-__attribute__((always_inline)) inline void init_env(env *env, int argc,
-                                                    char *argv[]) {
+__attribute__((always_inline)) inline void init_env(env *restrict env, int argc,
+                                                    char ** restrict argv) {
   init_stack(&env->script_stack, argc, argv);
   default_map(env->map);
   env->status = OK;
   env->output_buffer = g_from_capacity(256);
 }
 
-__attribute__((always_inline)) inline void free_env(env *env) {
+__attribute__((always_inline)) inline void free_env(env *restrict env) {
   destroy_stack(&env->script_stack);
   empty_map(env->map);
   g_deletestr(&env->output_buffer);
@@ -91,7 +91,7 @@ __attribute__((always_inline)) inline void free_env(env *env) {
 
 #define OUTPUT_BUFFER_SIZE(x) x * 3
 
-__attribute__((always_inline)) inline void runtime(env *env) {
+__attribute__((always_inline)) inline void runtime(env *restrict env) {
   mString mstr;
   vList vlist = v_from_capacity(10);
   FILE *current_file;

@@ -2,8 +2,8 @@
 
 //-------------------------------------------------------------------//
 
-int handle_binary_cleanup(vd_literal *inp_args, f_node *curr, depth_t depth,
-                          f_attribs *attr) {
+int handle_binary_cleanup(vd_literal * restrict inp_args, f_node * restrict curr, depth_t depth,
+                          f_attribs * restrict attr) {
   int is_left_const =
       simplify_cleanup_imp(inp_args, curr->bf.left, depth, attr);
   int is_right_const =
@@ -139,13 +139,12 @@ int handle_binary_cleanup(vd_literal *inp_args, f_node *curr, depth_t depth,
 }
 
 // returns 1 if the node is consteval
-int simplify_cleanup_imp(vd_literal *inp_args, f_node *curr, depth_t depth,
-                         f_attribs *attr) {
+int simplify_cleanup_imp(vd_literal * restrict inp_args, f_node * restrict curr, depth_t depth,
+                         f_attribs * restrict attr) {
   curr->depth_index = depth;
   switch (curr->ty) {
-  case BINARY: {
+  case BINARY:
     return handle_binary_cleanup(inp_args, curr, depth, attr);
-  }
   case UNARY:
     if (simplify_cleanup_imp(inp_args, curr->uf.in, depth, attr))
       return 1;
@@ -155,12 +154,13 @@ int simplify_cleanup_imp(vd_literal *inp_args, f_node *curr, depth_t depth,
   case IDENTITY:
     return 0;
   }
-  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
-          __func__);
-  exit(1);
+  __UNREACHABLE_BRANCH
 }
 
-int sort_consteval(const b_opliteral cmp, f_node **cnst_swap, f_node **curr) {
+/*
+* POINTERS CANNOT BE THE SAME.
+*/
+int sort_consteval(const b_opliteral cmp, f_node ** restrict cnst_swap, f_node ** restrict curr) {
   switch ((*curr)->ty) {
   case BINARY: {
     if (cmp == (*curr)->bf.op) {
@@ -196,7 +196,7 @@ int sort_consteval(const b_opliteral cmp, f_node **cnst_swap, f_node **curr) {
   exit(1);
 }
 
-int reorder_cleanup_imp(f_node *curr) {
+int reorder_cleanup_imp(f_node * restrict curr) {
 // #define A
 #ifndef A
   switch (curr->ty) {

@@ -1,11 +1,11 @@
 #include "vector_reader.h"
 
-__attribute__((always_inline)) inline int try_read_double(double *target,
-                                                          const mString *mstr) {
+__attribute__((always_inline)) inline int try_read_double(double *restrict target,
+                                                          const mString *restrict mstr) {
   return 0 >= sscanf(mstr->cstring, "%lf", target);
 }
 
-Object read_scalar_imp(const token *arg) {
+Object read_scalar_imp(const token *restrict arg) {
   double val;
   if (try_read_double(&val, &arg->token->key)) {
     return null_object();
@@ -14,7 +14,7 @@ Object read_scalar_imp(const token *arg) {
   return as_vdliteral(&obj);
 }
 
-void read_scalar(Object *o, token_array *args) {
+void read_scalar(Object *restrict o, token_array *restrict args) {
   if (args->size == 1) {
     *o = read_scalar_imp(&args->data[0]);
     return;
@@ -22,7 +22,7 @@ void read_scalar(Object *o, token_array *args) {
   *o = null_object();
 }
 
-void read_vector(Object *o, token_array *args) {
+void read_vector(Object *restrict o, token_array *restrict args) {
   vd_literal vector = alloc_vdliteral(args->size);
   for (size_t i = 0; i < args->size; i++) {
     token *curr = &args->data[i];
@@ -42,7 +42,7 @@ void read_vector(Object *o, token_array *args) {
   *o = as_vdliteral(&vector);
 }
 
-void read_linspace(Object *o, token_array *args) {
+void read_linspace(Object *restrict o, token_array *restrict args) {
   if (args->size > 3)
     goto argument_size_error;
   double bounds[3] = {NAN, NAN, NAN};
@@ -87,7 +87,7 @@ argument_size_error:
   return;
 }
 
-void read_countspace(Object *o, token_array *args) {
+void read_countspace(Object *restrict o, token_array *restrict args) {
   if (args->size > 3)
     goto argument_size_error;
   double bounds[3] = {NAN, NAN, NAN};
