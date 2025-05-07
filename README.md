@@ -61,10 +61,11 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 | [vector]   | none                          |Prints the value of the vector.                                          |
 | [other]    | none                          |prints the value of the token, if it exists.                             |
 
-Types of Variables:
+## How it Works:
+Aurora Scientific Calculator is a simple environment for doing math problems from the command line. It is a lightweight engine for constructing mathematical expressions which can be used for symbolic manipulation or numeric computation. The program accepts input from the console, parses the commands for keywords which are then loaded into a map to symbols. Symbols are an abstract representation of different things the program can do, or objects the program constructs. Context-modifying procedures like `set`, `delete`, or `printenv` allow for the construction of new and destruction of objects in the map, switches in environment context such as files to read from, or making global modifications to state. Readers are key words that allow for `set` to explicitly know how to read remaining arguments in the command, such as reading to construct a vector from a definition, a function from a definition, a function from another function, or a modification to an existing function.
+
+Types of Objects:
 - VECTOR: buffers for storing numerical values (SCALAR is a special type of vector with no size)
-- FUNC: program representation of ordered mappings of vectors to vectors
-- PFUNC: memory-packed version of function
+- FUNC: program representation of ordered mappings of vectors to vectors. Functions are stored as syntax trees. Each node in the tree has 0-2 children depending on the type of operation it performs, being unary (1 input), binary (2 inputs), constant (1 input), or identity (base input). Binary and unary operations are composed together in order to build the full function. When the function is evaluated with an input, operations are executed in order to leaves first to the root. Outputs of the child operations are provided as inputs to the parent, for which each node contains a pointer to a program-defined procedure for operating on inputs to generate its output. This cascades upward to the root, whose output is the complete envaluation of the function from the provided input. Storing the function as a syntax tree has the benefit of being able to do symbolic computation as well. Simplification algorithms and symbolic derivatives can be derived from the syntax tree, making the program more than a simple numeric tool, now having analytic capabilities.
 
-Additional documentation will come as features are added.
-
+More information on current and upcoming features is listed in TODO.
