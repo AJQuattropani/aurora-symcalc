@@ -2,6 +2,42 @@
 
 //-------------------------------------------------------------------//
 
+void simplify_command(Object *restrict obj, token_array *restrict args) {
+  if (1 != args->size) {
+    fprintf(stderr, "[ERROR] Please provide one function to simplify.\n");
+    *obj = null_object();
+    return;
+  }
+  Object *inp = &args->data[0].token->value;
+  f_object *inp_func;
+  switch (inp->ty) {
+  case PFUNC:
+    inp_func = inp->pObject.fObj;
+    break;
+  case FUNC:
+    inp_func = &inp->fObject;
+    break;
+  default:
+    fprintf(stderr, "[ERROR] %s is not a function.\n",
+            args->data[0].token->key.cstring);
+    *obj = null_object();
+    return;
+  }
+  f_object out = copy_fobject(inp_func);
+  simplify_imp(&out);
+  
+  *obj = (Object){.fObject = out, .ty = FUNC};
+  return;
+}
+
+void simplify_imp(f_object * restrict fun) {
+  reorder_cleanup_imp(fun->root);
+  vector_list inp_args = alloc_vdlist(fun->attr.argcnt, fun->attr.out_size);
+  simplify_cleanup_imp(inp_args.data, fun->root, 0, &fun->attr);
+  free_vdlist(&inp_args);
+  update_depth(fun->root, 0, &fun->attr.depth);
+}
+
 int handle_binary_cleanup(vd_literal * restrict inp_args, f_node * restrict curr, depth_t depth,
                           f_attribs * restrict attr) {
   int is_left_const =

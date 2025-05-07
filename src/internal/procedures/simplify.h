@@ -3,10 +3,13 @@
 #include "../../objects/function.h"
 #include "../../readers/functional.h"
 
+
+void simplify_command(Object *obj, token_array *args);
+
 /*
  * Implementation of simplication procedure.
  */
-f_object simplify_imp(f_object *fun);
+void simplify_imp(f_object *fun);
 
 /*
  * Swaps consteval term with the first non-consteval term in a commutative
