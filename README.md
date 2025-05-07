@@ -28,8 +28,8 @@ cmake --build .
 
 5. [ALTERNATIVE] Use quickbuild script to make debug and release builds in source directory. Ensure the the shell script has the necessary privileges.
 ```bash
-  chmod u+x quickbuild.sh
-  ./quickbuild.sh
+chmod u+x quickbuild.sh
+./quickbuild.sh
 ```
 
 ## How To Use:
