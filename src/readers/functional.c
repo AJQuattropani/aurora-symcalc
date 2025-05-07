@@ -94,18 +94,18 @@ void function_command(env *restrict context, f_object *restrict fun, const token
   switch (o.ty) {
   case FUNC:
     sprint_function(&context->output_buffer, fun);
-    break;
+    return;
   case VECTOR:
     g_append_back(&context->output_buffer, args->data[0].token->key.cstring,
                   args->data[0].token->key.size);
     g_append_back_c(&context->output_buffer, " = ");
     sprint_vector(&context->output_buffer, &o.vLiteral);
     free_vdliteral(&o.vLiteral);
-    break;
+    return;
   default:
-    fprintf(stderr, "[ERROR] Unhandled type passed to %s.", __func__);
-    exit(3);
+    break;
   }
+  __UNREACHABLE_BRANCH
 }
 
 void evaluate_function_imp(f_node *restrict fun, vd_literal *restrict out, const vd_literal *restrict in) {
@@ -127,4 +127,5 @@ void evaluate_function_imp(f_node *restrict fun, vd_literal *restrict out, const
     vu_set(&out[fun->depth_index], &fun->cf.output);
     return;
   }
+  __UNREACHABLE_BRANCH
 }
