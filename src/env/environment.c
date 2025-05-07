@@ -58,14 +58,14 @@ __attribute__((always_inline)) inline void default_map(Map map) {
   cinsert(
       map, "GRAD",
       (_value){.reader = differentiate_command, .ty = READER, .priority = 0});
-  //  cinsert(map, "REDUCE", (_value){.reader = simplify_command, .ty = READER,
-  //  .priority = 0});
+  cinsert(map, "REDUCE",
+          (_value){.reader = simplify_command, .ty = READER, .priority = 0});
   cinsert(map, "e", as_vdliteral_mv(make_scalar(M_E)));
   cinsert(map, "pi", as_vdliteral_mv(make_scalar(M_PI)));
 }
 
 __attribute__((always_inline)) static inline void
-init_stack(sc_stack * restrict stack, int argc, char * restrict argv[]) {
+init_stack(sc_stack *restrict stack, int argc, char *restrict argv[]) {
   push_file(stack, stdin);
   for (size_t i = argc - 1; i > 0; i--) {
     if (0 != open_file(stack, argv[i])) {
@@ -76,7 +76,7 @@ init_stack(sc_stack * restrict stack, int argc, char * restrict argv[]) {
 }
 
 __attribute__((always_inline)) inline void init_env(env *restrict env, int argc,
-                                                    char ** restrict argv) {
+                                                    char **restrict argv) {
   init_stack(&env->script_stack, argc, argv);
   default_map(env->map);
   env->status = OK;
