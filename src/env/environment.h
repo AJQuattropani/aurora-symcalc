@@ -27,6 +27,6 @@ struct environment {
 
 void default_map(Map map);
 
-void init_env(env *env, int argc, char *argv[]);
+void init_env(env *env, int argc, char **argv);
 void runtime(env *env);
 void free_env(env *env);

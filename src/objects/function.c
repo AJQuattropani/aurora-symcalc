@@ -9,13 +9,13 @@ f_node *new_fnode() {
   return no;
 }
 
-f_object copy_fobject(const f_object *other) {
+f_object copy_fobject(const f_object *restrict other) {
   f_object copy = *other;
   copy.root = copy_fnode_recurse(other->root);
   return copy;
 }
 
-f_node *copy_fnode_recurse(const f_node *ref) {
+f_node *copy_fnode_recurse(const f_node *restrict ref) {
   f_node *dup = new_fnode();
   switch (ref->ty) {
   case BINARY:
@@ -33,6 +33,8 @@ f_node *copy_fnode_recurse(const f_node *ref) {
   case IDENTITY:
     dup->xf.index = ref->xf.index;
     break;
+  default:
+    __UNREACHABLE_BRANCH
   }
   dup->ty = ref->ty;
   dup->priority = ref->priority;
@@ -41,14 +43,15 @@ f_node *copy_fnode_recurse(const f_node *ref) {
   return dup;
 }
 
-void free_fobject(f_object *fun) {
+void free_fobject(f_object *restrict fun) {
   free_fnode_recurse(fun->root);
   *fun = (f_object){0};
 }
 
-void free_fnode_recurse(f_node *node) {
-  if (NULL == node)
-    return;
+void free_fnode_recurse(f_node *restrict node) {
+  if (NULL == node) {
+    __UNREACHABLE_BRANCH
+  }
   switch (node->ty) {
   case BINARY:
     m_deletestr(&node->name);
@@ -68,11 +71,13 @@ void free_fnode_recurse(f_node *node) {
   case IDENTITY:
     m_deletestr(&node->name);
     break;
+  default:
+    __UNREACHABLE_BRANCH
   }
   free(node);
 }
 
-void fnode_str_recurse(gString *inp, const f_node *fun) {
+void fnode_str_recurse(gString *restrict inp, const f_node *restrict fun) {
   switch (fun->ty) {
   case BINARY: {
     if (fun->priority < fun->bf.left->priority) {
@@ -108,11 +113,12 @@ void fnode_str_recurse(gString *inp, const f_node *fun) {
     return;
   }
   }
+  __UNREACHABLE_BRANCH
 }
 
 __attribute__((always_inline)) inline void
-sprint_function([[maybe_unused]] gString *inp,
-                [[maybe_unused]] const f_object *fun) {
+sprint_function([[maybe_unused]] gString *restrict inp,
+                [[maybe_unused]] const f_object *restrict fun) {
   // space to implement function-to-string conversion
   g_append_back_c(inp, "(");
 
@@ -137,26 +143,28 @@ sprint_function([[maybe_unused]] gString *inp,
   }
   g_append_back_c(inp, ")");
 
-  if (NULL == fun->root)
-    return;
+  if (NULL == fun->root) {
+    __UNREACHABLE_BRANCH;
+    }
   g_append_back_c(inp, "=");
 
   fnode_str_recurse(inp, fun->root);
 }
 
-void update_depth(f_node *curr, depth_t depth, depth_t *tot_depth) {
+void update_depth(f_node *restrict curr, depth_t depth, depth_t *restrict tot_depth) {
   update_depth_max(depth, tot_depth);
   curr->depth_index = depth;
   switch (curr->ty) {
   case BINARY:
     update_depth(curr->bf.left, depth, tot_depth);
     update_depth(curr->bf.right, depth + 1, tot_depth);
-    break;
+    return;
   case UNARY:
     update_depth(curr->uf.in, depth, tot_depth);
-    break;
+    return;
   case CONSTANT:
   case IDENTITY:
-    break;
+    return;
   }
+  __UNREACHABLE_BRANCH
 }

@@ -1,24 +1,24 @@
 #include "commands.h"
 
-void exit_env(env *context, [[maybe_unused]] const token_array *args) {
+void exit_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
   context->status = EXIT;
 }
 
-void return_env(env *context, [[maybe_unused]] const token_array *args) {
+void return_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
   context->status = RETURN;
 }
 
-void reset_env(env *context, [[maybe_unused]] const token_array *args) {
+void reset_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
   empty_map(context->map);
   default_map(context->map);
   context->status = OK;
 }
 
-void print_env(env *context, [[maybe_unused]] const token_array *args) {
+void print_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
   print_map(context->map);
 }
 
-void print_tok(env *context, const token_array *args) {
+void print_tok(env *restrict context, const token_array *restrict args) {
   g_append_back_c(&context->output_buffer, "\n\t");
   if (2 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for print call.\n");
@@ -34,7 +34,7 @@ void print_tok(env *context, const token_array *args) {
   }
 }
 
-void define_object([[maybe_unused]] env *context, const token_array *args) {
+void define_object([[maybe_unused]] env *restrict context, const token_array *restrict args) {
   if (4 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for set call.\n");
     return;
@@ -64,7 +64,7 @@ void define_object([[maybe_unused]] env *context, const token_array *args) {
                   3}); // read in remaining args as either function or vector
 }
 
-void delete_object(env *context, const token_array *args) {
+void delete_object(env * restrict context, const token_array * restrict args) {
   static _mnode empty = {.value = {.ty = NONE}};
   if (2 > args->size) {
     fprintf(stderr, "[SKIPPED] No variables listed.\n");
@@ -106,10 +106,11 @@ void delete_object(env *context, const token_array *args) {
       remove_node(fig);
       continue;
     }
+    __UNREACHABLE_BRANCH
   }
 }
 
-void open_files(env *context, const token_array *args) {
+void open_files(env *restrict context, const token_array *restrict args) {
   if (1 > args->size) {
     fprintf(stderr, "[SKIPPED] Insufficient arguments for open call.\n");
     return;

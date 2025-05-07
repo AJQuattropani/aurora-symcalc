@@ -1,6 +1,6 @@
 #include "mstring.h"
 
-mString m_from_cstr(const char *cstr) {
+mString m_from_cstr(const char *restrict cstr) {
   mString mstr = (mString){.cstring = NULL, .size = 0};
   if (NULL == cstr) {
     printf("No reference cstr. Returning an empty string.\n");
@@ -16,7 +16,7 @@ mString m_from_cstr(const char *cstr) {
   return mstr;
 }
 
-__attribute__((always_inline)) inline mString m_wrapper(char *cstr) {
+__attribute__((always_inline)) inline mString m_wrapper(char *restrict cstr) {
   return (const mString){.cstring = cstr, .size = strlen(cstr)};
 }
 
@@ -43,7 +43,7 @@ mString m_from_size(size_t strlen) {
   return mstr;
 }
 
-__attribute__((always_inline)) inline void m_deletestr(mString *mstr) {
+__attribute__((always_inline)) inline void m_deletestr(mString * restrict mstr) {
   free(mstr->cstring);
   mstr->cstring = NULL;
   mstr->size = 0;

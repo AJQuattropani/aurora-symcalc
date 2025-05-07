@@ -13,7 +13,7 @@ static f_node *diff_identity(const f_node *in, vector_size_t argidx,
 
 //-------------------------------------------------------------------//
 
-void differentiate_command(Object *obj, token_array *args) {
+void differentiate_command(Object *restrict obj, token_array *restrict args) {
   if (2 != args->size) {
     fprintf(stderr, "[ERROR] Please provide one function and one index to a "
                     "variable to simplify.\n");
@@ -64,7 +64,7 @@ void differentiate_command(Object *obj, token_array *args) {
   return;
 }
 
-void differentiation_cleanup(f_object *out) {
+void differentiation_cleanup(f_object *restrict out) {
   reorder_cleanup_imp(out->root);
   vector_list inp_args = alloc_vdlist(out->attr.argcnt, out->attr.out_size);
   simplify_cleanup_imp(inp_args.data, out->root, 0, &out->attr);
@@ -72,7 +72,7 @@ void differentiation_cleanup(f_object *out) {
   update_depth(out->root, 0, &out->attr.depth);
 }
 
-f_node *differentiate_node(const f_node *in, vector_size_t argidx,
+f_node *differentiate_node(const f_node *restrict in, vector_size_t argidx,
                            f_attribs *attr) {
   switch (in->ty) {
   case BINARY:
@@ -84,12 +84,10 @@ f_node *differentiate_node(const f_node *in, vector_size_t argidx,
   case IDENTITY:
     return diff_identity(in, argidx, attr);
   }
-  fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
-          __func__);
-  exit(1);
+  __UNREACHABLE_BRANCH
 }
 
-int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
+int differentiate(f_object *restrict out, const f_object *restrict in, vector_size_t argidx) {
   if (argidx >= in->attr.argcnt || argidx < 0)
     return 1;
   out->root = differentiate_node(in->root, argidx, &out->attr);
@@ -110,7 +108,7 @@ int differentiate(f_object *out, const f_object *in, vector_size_t argidx) {
   return 0;
 }
 
-f_node *diff_bin(const f_node *in, vector_size_t argidx, f_attribs *attr) {
+f_node *diff_bin(const f_node *restrict in, vector_size_t argidx, f_attribs *restrict attr) {
   f_node *g = in->bf.left;
   f_node *gx = differentiate_node(in->bf.left, argidx, attr);
   f_node *h = in->bf.right;
@@ -332,7 +330,7 @@ f_node *diff_bin(const f_node *in, vector_size_t argidx, f_attribs *attr) {
   return f_prime;
 }
 
-f_node *diff_un(const f_node *in, vector_size_t argidx, f_attribs *attr) {
+f_node *diff_un(const f_node *restrict in, vector_size_t argidx, f_attribs *restrict attr) {
   f_node *dg = differentiate_node(in->uf.in, argidx, attr);
 
   if (NULL == dg)
@@ -472,14 +470,14 @@ f_node *diff_un(const f_node *in, vector_size_t argidx, f_attribs *attr) {
   return fprime;
 }
 
-f_node *diff_cnst([[maybe_unused]] const f_node *in,
+f_node *diff_cnst([[maybe_unused]] const f_node *restrict in,
                   [[maybe_unused]] vector_size_t arg_num,
-                  [[maybe_unused]] f_attribs *attr) {
+                  [[maybe_unused]] f_attribs * restrict attr) {
   return NULL;
 }
 
-f_node *diff_identity(const f_node *in, vector_size_t arg_num,
-                      [[maybe_unused]] f_attribs *attr) {
+f_node *diff_identity(const f_node * restrict in, vector_size_t arg_num,
+                      [[maybe_unused]] f_attribs * restrict attr) {
   if (arg_num == in->xf.index) {
     f_node *one = new_fnode();
     *one = (f_node){.name = m_from_cstr("1"),

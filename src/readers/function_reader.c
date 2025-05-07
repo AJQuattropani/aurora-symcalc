@@ -1,10 +1,10 @@
 #include "function_reader.h"
 
-static f_node *least_significant_token_recurse(token_array *args, depth_t depth,
-                                               f_attribs *attr);
+static f_node *least_significant_token_recurse(token_array *restrict args, depth_t depth,
+                                               f_attribs *restrict attr);
 
-static f_node *least_significant_token_imp(token_array *args, depth_t depth,
-                                           f_attribs *attr) {
+static f_node *least_significant_token_imp(token_array *restrict args, depth_t depth,
+                                           f_attribs *restrict attr) {
   update_depth_max(depth, &attr->depth);
 
   size_t sp = 0;
@@ -109,8 +109,8 @@ static f_node *least_significant_token_imp(token_array *args, depth_t depth,
 }
 
 __attribute__((always_inline)) inline f_node *
-least_significant_token_recurse(token_array *args, depth_t depth,
-                                f_attribs *attr) {
+least_significant_token_recurse(token_array *restrict args, depth_t depth,
+                                f_attribs *restrict attr) {
   if (args->size <= 0) {
     fprintf(stderr,
             "[ERROR] Recursive call in %s failed to reach a base case.\n",
@@ -120,7 +120,7 @@ least_significant_token_recurse(token_array *args, depth_t depth,
   return least_significant_token_imp(args, depth, attr);
 }
 
-void read_function(Object *obj, token_array *args) {
+void read_function(Object *restrict obj, token_array *restrict args) {
   argcnt_t argnum = 0;
 
   for (; argnum < args->size; argnum++) {
@@ -212,7 +212,7 @@ void read_function(Object *obj, token_array *args) {
   obj->fObject.root = root;
 }
 
-void read_copy_packed(Object *obj, token_array *args) {
+void read_copy_packed(Object *restrict obj, token_array *restrict args) {
   if (1 != args->size) {
     fprintf(stderr, "[ERROR] Please provide only one function to pack.\n");
     *obj = null_object();

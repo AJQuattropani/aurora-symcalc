@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-void count_bytes(size_t *counter, f_node *node) {
+void count_bytes(size_t *restrict counter, f_node * restrict node) {
   *counter += offsetof(f_node, __align_data);
   *counter += node->name.size;
   switch (node->ty) {
@@ -26,9 +26,10 @@ void count_bytes(size_t *counter, f_node *node) {
     // fprintf(stdout, "Request: counter %ld\n", *counter);
     return;
   }
+  __UNREACHABLE_BRANCH
 }
 
-f_node *f_pack_duplicate(stack *stack, const f_node *ref) {
+f_node *f_pack_duplicate(stack* restrict stack, const f_node * restrict ref) {
   f_node *dup;
   switch (ref->ty) {
   case BINARY:
@@ -54,6 +55,8 @@ f_node *f_pack_duplicate(stack *stack, const f_node *ref) {
                                        sizeof(struct iden_f));
     dup->xf.index = ref->xf.index;
     break;
+  default:
+    __UNREACHABLE_BRANCH
   }
   dup->ty = ref->ty;
   dup->priority = ref->priority;
@@ -66,7 +69,7 @@ f_node *f_pack_duplicate(stack *stack, const f_node *ref) {
   return dup;
 }
 
-pf_object make_packed_copy(f_object *fobj) {
+pf_object make_packed_copy(f_object* restrict fobj) {
   size_t num_bytes = 0;
   num_bytes += sizeof(f_object);
 

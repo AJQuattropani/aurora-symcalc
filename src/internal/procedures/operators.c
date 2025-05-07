@@ -5,7 +5,7 @@ flag_scalar(vector_size_t i) {
   return SCALAR != i;
 }
 
-int is_num(const vd_literal *check, double val, double tol) {
+int is_num(const vd_literal * restrict check, double val, double tol) {
   vector_size_t sc_check = flag_scalar(check->size);
   vector_size_t size = (check->size - 1) * (sc_check) + 1;
   for (vector_size_t j = 0; j < size; j++) {
@@ -16,7 +16,7 @@ int is_num(const vd_literal *check, double val, double tol) {
   return 0;
 }
 
-int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);
@@ -27,7 +27,7 @@ int vb_add(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
-int vb_sub(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_sub(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);
@@ -38,7 +38,7 @@ int vb_sub(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
-int vb_mul(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_mul(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);
@@ -49,7 +49,7 @@ int vb_mul(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
-int vb_div(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_div(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);
@@ -60,7 +60,7 @@ int vb_div(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
-int vb_pow(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_pow(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);
@@ -71,7 +71,7 @@ int vb_pow(vd_literal *o, const vd_literal *l, const vd_literal *r) {
   return 0;
 }
 
-int vb_log(vd_literal *o, const vd_literal *l, const vd_literal *r) {
+int vb_log(vd_literal *o, const vd_literal *l, const vd_literal *restrict r) {
   vector_size_t sc_out = flag_scalar(o->size);
   vector_size_t sc_left = flag_scalar(l->size);
   vector_size_t sc_right = flag_scalar(r->size);

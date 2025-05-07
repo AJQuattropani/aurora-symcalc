@@ -1,6 +1,6 @@
 #include "alloc_stack.h"
 
-void *s_alloc(stack *stack, size_t n) {
+void *s_alloc(stack *restrict stack, size_t n) {
   // fprintf(stdout, "Requested %ld bytes from buffer of size %ld.\n", n,
   // stack->size);
   void *ret = stack->buff + stack->top;
@@ -15,7 +15,7 @@ void *s_alloc(stack *stack, size_t n) {
   return ret;
 }
 
-void free_stack(stack *stack) {
+void free_stack(stack *restrict stack) {
   free(stack->buff);
   memset(stack, 0, sizeof(struct stack));
 }

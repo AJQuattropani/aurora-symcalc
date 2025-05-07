@@ -8,7 +8,7 @@ gString g_from_capacity(size_t capacity) {
   return g;
 }
 
-void g_deletestr(gString *gstr) {
+void g_deletestr(gString *restrict gstr) {
   free(gstr->cstring);
   gstr->size = 0;
 }
@@ -19,7 +19,7 @@ void g_empty(gString *gstr) {
 }
 
 /*__attribute__((always_inline)) inline*/ void
-g_append_back(gString *gstr, const char *appendix, size_t len) {
+g_append_back(gString *restrict gstr, const char *restrict appendix, size_t len) {
   if (gstr->size + len + 1 > gstr->capacity) {
     char *temp = (char *)realloc(gstr->cstring, (gstr->size + len) * 2 + 1);
     if (NULL == temp) {
@@ -34,7 +34,7 @@ g_append_back(gString *gstr, const char *appendix, size_t len) {
 }
 
 /*__attribute__((always_inline)) inline*/ void
-g_append_back_c(gString *gstr, const char *appendix) {
+g_append_back_c(gString *restrict gstr, const char *restrict appendix) {
   size_t len = strlen(appendix);
   g_append_back(gstr, appendix, len);
 }
