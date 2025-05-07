@@ -27,3 +27,5 @@ void g_empty(gString *gstr);
 void g_append_back(gString *gstr, const char *appendix, size_t len);
 
 void g_append_back_c(gString *gstr, const char *appendix);
+
+void g_put_char(gString *gstr, char c, size_t times);

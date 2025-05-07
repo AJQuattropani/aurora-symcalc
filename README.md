@@ -55,6 +55,7 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 | delete     | names...                      |Flags the symbols for deletion.                                          |
 | open       | "filepath"                    |Read and execute a .ask.                                                 |
 | peak       | names...                      |Prints the value of the symbols from a list of names.                    |
+| tree       | [function]s...                |Prints the symbolic tree representation of the function.                 |
 | printenv   | none                          |Prints all environment variables.                                        |
 | [function] | none                          |Prints function as string representation.                                |
 |            | (input...)                    |Evaluate with the given scalar/vector arguments, print output to console.|

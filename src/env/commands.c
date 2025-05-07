@@ -19,18 +19,35 @@ void print_env(env *restrict context, [[maybe_unused]] const token_array *restri
 }
 
 void print_tok(env *restrict context, const token_array *restrict args) {
-  g_append_back_c(&context->output_buffer, "\n\t");
   if (2 > args->size) {
-    fprintf(stderr, "[SKIPPED] Insufficient arguments for print call.\n");
+    g_append_back_c(&context->output_buffer, "No arguments provided.\n");
     return;
   }
+  g_append_back_c(&context->output_buffer, "\n\t");
 
   for (size_t i = 1; i < args->size; i++) {
     token *curr = &args->data[i];
-    g_append_back_c(&context->output_buffer, curr->token->key.cstring);
+    g_append_back(&context->output_buffer, curr->token->key.cstring, curr->token->key.size);
     g_append_back_c(&context->output_buffer, " ");
     sprint_object(&context->output_buffer, &curr->token->value);
     g_append_back_c(&context->output_buffer, ",");
+  }
+}
+
+void print_tree(env *restrict context, const token_array *restrict args) {
+  if (2 > args->size) {
+    g_append_back_c(&context->output_buffer, "No arguments provided.\n");
+    return;
+  }
+  for (size_t i = 1; i < args->size; i++) {
+    g_put_char(&context->output_buffer, '\n', 1);
+    token *curr = &args->data[i];
+    g_append_back(&context->output_buffer, curr->token->key.cstring, curr->token->key.size);
+    if (FUNC != curr->token->value.ty) {
+      g_append_back_c(&context->output_buffer, "Skipped, not a function.\n");
+      continue;
+    }
+    sprint_tree(&context->output_buffer, &curr->token->value.fObject);
   }
 }
 

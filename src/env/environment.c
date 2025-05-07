@@ -17,6 +17,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
           (_value){.mContext = open_files, .ty = CONTEXT, .priority = 0});
   cinsert(map, "return",
           (_value){.mContext = return_env, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "tree", (_value){.mContext = print_tree, .ty = CONTEXT, .priority = 0});
   cinsert(map, "=",
           (_value){.reader = read_eval, .ty = SYNTAX_EQUALS, .priority = 0});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
