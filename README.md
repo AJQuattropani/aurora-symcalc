@@ -3,6 +3,7 @@
 In-Dev Project for performing conventional and abstract calculations on input functions such as direct evaluation, graphing, symbolic differentiation, root-finding, integration, and more via a command-line interface.
 
 ## How To Build:
+This project currently requires compilation with GCC.
 1. Make a new directory and cd into new directory.
 ```bash
 mkdir Aurora && cd Aurora
@@ -25,11 +26,10 @@ cmake --build .
 ./aurora-scicalc
 ```
 
-5. [OPTIONAL] To generate unit test files, make a new folder at the location of the project/test directory (.../Aurora/). Follow steps to build, but instead of building from the project folder, build from the 'test' subdirectory. CMake will build multiple executable files, each for running its own tests.
+5. [ALTERNATIVE] Use quickbuild script to make debug and release builds in source directory. Ensure the the shell script has the necessary privileges.
 ```bash
-mkdir test && cd test
-cmake ../aurora-scicalc/test
-cmake --build .
+  chmod u+x quickbuild.sh
+  ./quickbuild.sh
 ```
 
 ## How To Use:
@@ -37,7 +37,6 @@ Aurora Scientific Calculator is a script environment. Open program via the termi
 
 Once you are in the environment, Aurora Scientific Calculator accepts commands from the user. These can be defining new functions, values, or operating on functions.
 
-[TODO add list of currently implemented commands]
 | Command    | Arguments                     |  Description                                                            |
 |:-----------|:------------------------------|:------------------------------------------------------------------------|
 | exit       | none                          |Closes the program.                                                      |
@@ -66,9 +65,6 @@ Types of Variables:
 - VECTOR: buffers for storing numerical values (SCALAR is a special type of vector with no size)
 - FUNC: program representation of ordered mappings of vectors to vectors
 - PFUNC: memory-packed version of function
-
-To test or experiment with interplay of elements in the program, or perform unit tests, new test files can be generated in `./test/`. CMake will generate a separate output executable for each file in this directory.
-
 
 Additional documentation will come as features are added.
 
