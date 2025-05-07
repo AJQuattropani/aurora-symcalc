@@ -40,6 +40,7 @@ void print_tree(env *restrict context, const token_array *restrict args) {
     return;
   }
   for (size_t i = 1; i < args->size; i++) {
+    g_put_char(&context->output_buffer, '\n', 1);
     token *curr = &args->data[i];
     g_append_back(&context->output_buffer, curr->token->key.cstring, curr->token->key.size);
     if (FUNC != curr->token->value.ty) {
@@ -47,7 +48,6 @@ void print_tree(env *restrict context, const token_array *restrict args) {
       continue;
     }
     sprint_tree(&context->output_buffer, &curr->token->value.fObject);
-    g_put_char(&context->output_buffer, '\n', 1);
   }
 }
 
