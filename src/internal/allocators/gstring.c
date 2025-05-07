@@ -38,3 +38,17 @@ g_append_back_c(gString *restrict gstr, const char *restrict appendix) {
   size_t len = strlen(appendix);
   g_append_back(gstr, appendix, len);
 }
+
+void g_put_char(gString *gstr, char c, size_t times) {
+  if (gstr->size + times + 1 > gstr->capacity) {
+    char *temp = (char *)realloc(gstr->cstring, (gstr->size + times) * 2 + 1);
+    if (NULL == temp) {
+      fprintf(stderr, "realloc failed in %s", __func__);
+    }
+    gstr->cstring = temp;
+    gstr->capacity = (gstr->size + times) * 2 + 1;
+    gstr->cstring[gstr->capacity - 1] = '\0';
+  }
+  memset(gstr->cstring + gstr->size, c, times);
+  gstr->size = gstr->size + times; 
+}
