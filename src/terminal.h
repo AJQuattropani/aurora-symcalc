@@ -7,7 +7,17 @@
 #include <termios.h>
 #include <readline/history.h>
 
-#define TERMINAL
+#pragma once
+
+//#define TERMINAL
+
+#if NDEBUG
+#define __UNREACHABLE_BRANCH __builtin_unreachable();
+#else
+#undef TERMINAL
+#define __UNREACHABLE_BRANCH fprintf(stderr, "[FATAL] Reached dangerous exception in %s at %d.\n", __func__, __LINE__); exit(1);
+#endif
+
 #ifdef TERMINAL
 #define enter_alt_screen printf("\033[?1049h\033[H");
 #define exit_alt_screen printf("\033[?1049l");
