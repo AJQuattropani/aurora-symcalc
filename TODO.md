@@ -11,7 +11,7 @@
     - LaTex
     - C/C++ function
     - Python function
-    - Function branch
+8. Add testing system.
 
 # KNOWN BUGS:
 
