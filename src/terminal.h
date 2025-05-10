@@ -5,10 +5,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <termios.h>
+#include <readline/history.h>
 
 #define TERMINAL
-#define enter_alt_screen puts("\033[?1049h\033[H");
-#define exit_alt_screen puts("\033[?1049l");
+#ifdef TERMINAL
+#define enter_alt_screen printf("\033[?1049h\033[H");
+#define exit_alt_screen printf("\033[?1049l");
+#else
+#define enter_alt_screen
+#define exit_alt_screen
+#endif
 
 static struct termios original_settings;
 

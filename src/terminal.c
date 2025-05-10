@@ -26,8 +26,13 @@ void on_signal(int signum) {
   exit(signum);
 }
 
-__attribute__((constructor)) void start() { set_terminal(); }
+__attribute__((constructor)) void start() { 
+  set_terminal();
+  using_history();
+}
 
-__attribute__((destructor)) void end() { reset_terminal(); }
+__attribute__((destructor)) void end() { 
+  reset_terminal(); 
+}
 
 void move_cursor(int x) { fprintf(stdout, "\033[0;%dH", x); }
