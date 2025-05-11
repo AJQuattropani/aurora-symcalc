@@ -10,9 +10,5 @@
     - C/C++ function
     - Python function
 7. Add testing system.
-8. Clean up and important readline for console input.
-
-# KNOWN BUGS:
-
-
+8. Clean up and implement readline for console input.
 
