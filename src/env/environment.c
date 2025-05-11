@@ -13,7 +13,7 @@ __attribute__((always_inline)) inline void default_map(Map map) {
           (_value){.mContext = print_tok, .ty = CONTEXT, .priority = 0});
   cinsert(map, "set",
           (_value){.mContext = define_object, .ty = CONTEXT, .priority = 0});
-  cinsert(map, "open",
+  cinsert(map, "run",
           (_value){.mContext = open_files, .ty = CONTEXT, .priority = 0});
   cinsert(map, "return",
           (_value){.mContext = return_env, .ty = CONTEXT, .priority = 0});
