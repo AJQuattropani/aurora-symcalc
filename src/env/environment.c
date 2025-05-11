@@ -13,11 +13,12 @@ __attribute__((always_inline)) inline void default_map(Map map) {
           (_value){.mContext = print_tok, .ty = CONTEXT, .priority = 0});
   cinsert(map, "set",
           (_value){.mContext = define_object, .ty = CONTEXT, .priority = 0});
-  cinsert(map, "open",
+  cinsert(map, "run",
           (_value){.mContext = open_files, .ty = CONTEXT, .priority = 0});
   cinsert(map, "return",
           (_value){.mContext = return_env, .ty = CONTEXT, .priority = 0});
   cinsert(map, "tree", (_value){.mContext = print_tree, .ty = CONTEXT, .priority = 0});
+  cinsert(map, "feed", (_value){.mContext = set_output, .ty = CONTEXT, .priority = 0});
   cinsert(map, "=",
           (_value){.reader = read_eval, .ty = SYNTAX_EQUALS, .priority = 0});
   cinsert(map, "+", (_value){.bOperation = vb_add, .ty = BOPER, .priority = 1});
@@ -82,12 +83,14 @@ __attribute__((always_inline)) inline void init_env(env *restrict env, int argc,
   default_map(env->map);
   env->status = OK;
   env->output_buffer = g_from_capacity(256);
+  env->out = stdout;
 }
 
 __attribute__((always_inline)) inline void free_env(env *restrict env) {
   destroy_stack(&env->script_stack);
   empty_map(env->map);
   g_deletestr(&env->output_buffer);
+  if (closeable(env->out) == 0) fclose(env->out);
 }
 
 #define OUTPUT_BUFFER_SIZE(x) x * 3
@@ -98,12 +101,7 @@ __attribute__((always_inline)) inline void runtime(env *restrict env) {
   FILE *current_file;
   while (NULL != (current_file = get_current_file(&env->script_stack))) {
     while (0 <= v_get_line(&vlist, &mstr, current_file)) {
-      if (stdout != current_file) {
-        g_append_back_c(&env->output_buffer, "\033[0;32m");
-        g_append_back_c(&env->output_buffer, mstr.cstring);
-        g_append_back_c(&env->output_buffer, " ");
-        g_append_back_c(&env->output_buffer, "\033[0m");
-      }
+      
       // sprint_views(&env->output_buffer, &vlist);
 
       token_array arr = tokenize(env->map, &vlist);
@@ -112,6 +110,11 @@ __attribute__((always_inline)) inline void runtime(env *restrict env) {
         destroy_token_array(&arr);
         g_empty(&env->output_buffer);
         continue;
+      }
+      
+      if (stdout == env->out && *mstr.cstring != '\n' && *mstr.cstring != '\0') {
+        g_append_back_c(&env->output_buffer, mstr.cstring);
+        g_append_back_c(&env->output_buffer, " ");
       }
 
       Object *obj = &arr.data[0].token->value;
@@ -122,24 +125,24 @@ __attribute__((always_inline)) inline void runtime(env *restrict env) {
         break;
       }
       case PFUNC: {
-        g_append_back_c(&env->output_buffer, "\n\t");
+        g_append_back_c(&env->output_buffer, "\n");
         f_object *fun = arr.data[0].token->value.pObject.fObj;
         function_command(env, fun, &arr);
         break;
       }
       case FUNC: {
-        g_append_back_c(&env->output_buffer, "\n\t");
+        g_append_back_c(&env->output_buffer, "\n");
         f_object *fun = &arr.data[0].token->value.fObject;
         function_command(env, fun, &arr);
         break;
       }
       case VECTOR: {
-        g_append_back_c(&env->output_buffer, "\n\t");
+        g_append_back_c(&env->output_buffer, "\n");
         sprint_object(&env->output_buffer, obj);
         break;
       }
       case NONE: {
-        g_append_back_c(&env->output_buffer, "\n\t");
+        g_append_back_c(&env->output_buffer, "\n");
         g_append_back_c(&env->output_buffer, "Unknown token.");
         break;
       }
@@ -148,7 +151,10 @@ __attribute__((always_inline)) inline void runtime(env *restrict env) {
       }
       }
 
-      fprintf(stdout, "> %s\n", env->output_buffer.cstring);
+      if (stdout != env->out)
+        fprintf(env->out, "%s", env->output_buffer.cstring);
+      else
+        fprintf(env->out, "%s\n", env->output_buffer.cstring);
 
       destroy_token_array(&arr);
       g_empty(&env->output_buffer);

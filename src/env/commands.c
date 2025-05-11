@@ -12,6 +12,10 @@ void reset_env(env *restrict context, [[maybe_unused]] const token_array *restri
   empty_map(context->map);
   default_map(context->map);
   context->status = OK;
+  //if (closeable(context->out) == 0) {
+  //  fclose(context->out);
+  //  context->out = stdout;
+  //}
 }
 
 void print_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
@@ -23,7 +27,7 @@ void print_tok(env *restrict context, const token_array *restrict args) {
     g_append_back_c(&context->output_buffer, "No arguments provided.\n");
     return;
   }
-  g_append_back_c(&context->output_buffer, "\n\t");
+  g_append_back_c(&context->output_buffer, "\n");
 
   for (size_t i = 1; i < args->size; i++) {
     token *curr = &args->data[i];
@@ -139,3 +143,27 @@ void open_files(env *restrict context, const token_array *restrict args) {
     }
   }
 }
+
+void set_output(env *restrict context, const token_array *restrict args) {
+  if (2 < args->size) {
+    fprintf(stderr, "[SKIPPED] Too many arguments for output call.\n");
+    return;
+  }
+  if (closeable(context->out) == 0) {
+    fclose(context->out);
+    context->out = NULL;
+  }
+  if (2 > args->size) {
+    context->out = stdout;
+    return;
+  }
+
+  context->out = fopen(args->data[1].token->key.cstring, "w");
+  if (context->out == NULL) {
+    context->out = stdout;
+    return;
+  }
+}
+
+
+

@@ -23,6 +23,7 @@ struct environment {
   sc_stack script_stack;
   env_status status;
   gString output_buffer;
+  FILE* out;
 };
 
 void default_map(Map map);

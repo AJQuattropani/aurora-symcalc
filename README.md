@@ -53,7 +53,8 @@ Once you are in the environment, Aurora Scientific Calculator accepts commands f
 |            | name = [function]             |Copy a function.                                                         |
 |            | name = [function] (inputs...) |Evaluate the function and set variable to output.                        |
 | delete     | names...                      |Flags the symbols for deletion.                                          |
-| open       | "filepath"                    |Read and execute a .ask.                                                 |
+| run        | "filepath"                    |Read and execute a .ask.                                                 |
+| feed       | "filepath"                    |Pipe output of instructions to a file.                                   |
 | peak       | names...                      |Prints the value of the symbols from a list of names.                    |
 | tree       | [function]s...                |Prints the symbolic tree representation of the function.                 |
 | printenv   | none                          |Prints all environment variables.                                        |
