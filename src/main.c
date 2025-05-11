@@ -1,8 +1,3 @@
-#include "terminal.h"
-
-#ifdef TERMINAL
-#else
-#endif
 
 #include "env/environment.h"
 
