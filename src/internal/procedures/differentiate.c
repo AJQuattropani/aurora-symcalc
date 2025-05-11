@@ -64,13 +64,13 @@ void differentiate_command(Object *restrict obj, token_array *restrict args) {
   return;
 }
 
-void differentiation_cleanup(f_object *restrict out) {
+/*void differentiation_cleanup(f_object *restrict out) {
   reorder_cleanup_imp(out->root);
   vector_list inp_args = alloc_vdlist(out->attr.argcnt, out->attr.out_size);
   simplify_cleanup_imp(inp_args.data, out->root, 0, &out->attr);
   free_vdlist(&inp_args);
   update_depth(out->root, 0, &out->attr.depth);
-}
+}*/
 
 f_node *differentiate_node(const f_node *restrict in, vector_size_t argidx,
                            f_attribs *attr) {
@@ -104,7 +104,8 @@ int differentiate(f_object *restrict out, const f_object *restrict in, vector_si
   out->attr.out_size = in->attr.out_size;
   out->attr.depth = in->attr.depth;
 
-  differentiation_cleanup(out);
+  //differentiation_cleanup(out);
+  simplify_imp(out);
   return 0;
 }
 

@@ -33,7 +33,16 @@ void simplify_command(Object *restrict obj, token_array *restrict args) {
 void simplify_imp(f_object * restrict fun) {
   reorder_cleanup_imp(fun->root);
   vector_list inp_args = alloc_vdlist(fun->attr.argcnt, fun->attr.out_size);
-  simplify_cleanup_imp(inp_args.data, fun->root, 0, &fun->attr);
+
+  if (1 == simplify_cleanup_imp(inp_args.data, fun->root, 0, &fun->attr)) {
+    vd_literal tconsteval = output_eval(0, fun->root, fun->attr.depth, inp_args.data, fun->attr.out_size);
+    free_fnode_recurse(fun->root);
+    fun->root = new_fnode();
+    gString name = g_from_capacity(10);
+    sprint_vector(&name, &tconsteval);
+    *fun->root = (f_node){.name = {.cstring = name.cstring, .size = name.size},
+      .priority = 0, .depth_index = 0, .ty = CONSTANT, .cf = {.output = tconsteval}};
+  }
   free_vdlist(&inp_args);
   update_depth(fun->root, 0, &fun->attr.depth);
 }

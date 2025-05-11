@@ -135,6 +135,11 @@ void read_function(Object *restrict obj, token_array *restrict args) {
     args->data[argnum].token->value = (Object){
         .ty = TEMP, .other = (uint64_t)argnum, .priority = PRIORITY_MAX};
   }
+  if (argnum == 0) {
+    fprintf(stderr, "[ERROR] Function must accept at least one argument.\n");
+    *obj = null_object();
+    return;
+  }
 
   argcnt_t offs = argnum + 1;
   if (offs >= args->size) {
