@@ -31,7 +31,7 @@ void simplify_command(Object *restrict obj, token_array *restrict args) {
 }
 
 void simplify_imp(f_object * restrict fun) {
-  reorder_cleanup_imp(fun->root);
+  (void)reorder_cleanup_imp(fun->root); //discarded on purpose
   vector_list inp_args = alloc_vdlist(fun->attr.argcnt, fun->attr.out_size);
 
   if (1 == simplify_cleanup_imp(inp_args.data, fun->root, 0, &fun->attr)) {

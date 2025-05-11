@@ -8,9 +8,9 @@
 #include "operators.h"
 #include "simplify.h"
 
-f_node *differentiate_node(const f_node *in, vector_size_t argidx,
+[[nodiscard]] f_node *differentiate_node(const f_node *in, vector_size_t argidx,
                            f_attribs *attr);
 
-int differentiate(f_object *out, const f_object *in, vector_size_t argidx);
+[[nodiscard]] int differentiate(f_object *out, const f_object *in, vector_size_t argidx);
 
 void differentiate_command(Object *obj, token_array *args);
