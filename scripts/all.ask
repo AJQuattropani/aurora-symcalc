@@ -1,8 +1,8 @@
-open "./scripts/erf.ask"
+run "./scripts/erf.ask"
 reset
-open "./scripts/supersin.ask"
+run "./scripts/supersin.ask"
 reset
-open "./scripts/taylor.ask"
+run "./scripts/taylor.ask"
 reset
 
 exit

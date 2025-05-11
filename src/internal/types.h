@@ -35,7 +35,7 @@ typedef struct object Object;
  * dynamic reinterpretation.
  */
 enum object_type {
-  NONE = 0,
+  NONE,
   TEMP,
   SYNTAX_EQUALS,
   VECTOR,

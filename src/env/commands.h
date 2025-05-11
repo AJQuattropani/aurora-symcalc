@@ -35,3 +35,5 @@ void delete_object(env *context, const token_array *args);
 void open_files(env *context, const token_array *args);
 
 void print_tree(env *context, const token_array *args);
+
+void set_output(env *context, const token_array *args);
