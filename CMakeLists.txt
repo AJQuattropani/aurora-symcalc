@@ -21,7 +21,7 @@ file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 
 # add_compile_options(-Wall -Wextra -Wpedantic -Werror -g -march=native)
 
-set(SHARED_FLAGS "-lncurses -lreadline -std=gnu11 -Wall -Wextra -Wpedantic -Werror -g -march=native")
+set(SHARED_FLAGS "-lncurses -lreadline -std=gnu23 -Wall -Wextra -Wpedantic -Werror -g -march=native")
 set(CMAKE_C_FLAGS_DEBUG_INIT SHARED_FLAGS)
 set(CMAKE_C_FLAGS_RELEASE_INIT SHARED_FLAGS "-DNDEBUG -O3")
 
