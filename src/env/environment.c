@@ -159,7 +159,7 @@ __attribute__((always_inline)) inline void runtime(env *restrict env) {
       }
     }
 
-    if (RETURN == env->status) {
+    if (RET == env->status) {
       env->status = OK;
     }
     if (CALL == env->status) {

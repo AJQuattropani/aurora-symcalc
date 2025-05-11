@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../debug.h"
+#include "../terminal.h"
 
 #include <limits.h>
 #include <stdint.h>

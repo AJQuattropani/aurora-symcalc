@@ -103,9 +103,9 @@ void function_command(env *restrict context, f_object *restrict fun, const token
     free_vdliteral(&o.vLiteral);
     return;
   default:
-    break;
+    g_append_back_c(&context->output_buffer, "[Skipped] Invalid command.");
+    return;
   }
-  __UNREACHABLE_BRANCH
 }
 
 void evaluate_function_imp(f_node *restrict fun, vd_literal *restrict out, const vd_literal *restrict in) {

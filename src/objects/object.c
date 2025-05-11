@@ -62,6 +62,8 @@ void free_object(Object *obj) {
   case READER:
     free_reader(&obj->reader);
     break;
+  case TEMP:
+    break;
   case NONE:
     break;
   default:

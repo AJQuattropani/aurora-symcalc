@@ -15,7 +15,7 @@
 #include "commands.h"
 #include "interpret.h"
 
-enum env_status { OK, CALL, RETURN, EXIT };
+enum env_status { OK, CALL, RET, EXIT };
 typedef enum env_status env_status;
 
 struct environment {

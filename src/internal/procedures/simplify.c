@@ -233,8 +233,6 @@ int sort_consteval(const b_opliteral cmp, f_node ** restrict cnst_swap, f_node *
 }
 
 int reorder_cleanup_imp(f_node * restrict curr) {
-// #define A
-#ifndef A
   switch (curr->ty) {
   case BINARY: {
     int left_const = reorder_cleanup_imp(curr->bf.left);
@@ -258,7 +256,4 @@ int reorder_cleanup_imp(f_node * restrict curr) {
   fprintf(stderr, "[FATAL] Reached end of control statement in %s.\n",
           __func__);
   exit(1);
-#else
-  return 0;
-#endif
 }

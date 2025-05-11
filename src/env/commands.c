@@ -5,7 +5,7 @@ void exit_env(env *restrict context, [[maybe_unused]] const token_array *restric
 }
 
 void return_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
-  context->status = RETURN;
+  context->status = RET;
 }
 
 void reset_env(env *restrict context, [[maybe_unused]] const token_array *restrict args) {
