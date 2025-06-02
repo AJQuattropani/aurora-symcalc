@@ -1,6 +1,6 @@
 # Aurora Symbolic Calculator
 
-<img src="photos/example1.png" alt="Example of program features." style="width=200">
+<img src="pictures/example1.png" alt="Example of program features." style="width=200">
 
 In-Dev Project for performing conventional and abstract calculations on input functions such as direct evaluation, graphing, symbolic differentiation, root-finding, integration, and more via a command-line interface.
 
